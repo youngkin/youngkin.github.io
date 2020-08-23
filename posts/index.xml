@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Posts on My New Hugo Site</title>
-    <link>youngkin.github.io/posts/</link>
+    <link>https://youngkin.github.io/posts/</link>
     <description>Recent content in Posts on My New Hugo Site</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Sat, 22 Aug 2020 18:02:32 -0600</lastBuildDate>
     
-	<atom:link href="youngkin.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://youngkin.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>My First Post</title>
-      <link>youngkin.github.io/posts/my-first-post/</link>
+      <link>https://youngkin.github.io/posts/my-first-post/</link>
       <pubDate>Sat, 22 Aug 2020 18:02:32 -0600</pubDate>
       
-      <guid>youngkin.github.io/posts/my-first-post/</guid>
+      <guid>https://youngkin.github.io/posts/my-first-post/</guid>
       <description></description>
     </item>
     
