@@ -15,15 +15,15 @@
     
 
     
-    <meta name="title" content="Software Engineering - UNDER CONSTRUCTION" />
-    <meta property="og:title" content="Software Engineering - UNDER CONSTRUCTION" />
-    <meta property="twitter:title" content="Software Engineering - UNDER CONSTRUCTION" />
+    <meta name="title" content="How to Set Up a Raspberry Pi Cluster" />
+    <meta property="og:title" content="How to Set Up a Raspberry Pi Cluster" />
+    <meta property="twitter:title" content="How to Set Up a Raspberry Pi Cluster" />
     
 
     
-    <meta name="description" content="">
-    <meta property="og:description" content="" />
-    <meta property="twitter:description" content="" />
+    <meta name="description" content="Everything you need to buy, install, and stand up your own datacenter">
+    <meta property="og:description" content="Everything you need to buy, install, and stand up your own datacenter" />
+    <meta property="twitter:description" content="Everything you need to buy, install, and stand up your own datacenter" />
     
 
     
@@ -34,9 +34,9 @@
     <meta name="keyword"  content="">
     <link rel="shortcut icon" href="/img/favicon.ico">
 
-    <title>404 Page not found-</title>
+    <title>How to Set Up a Raspberry Pi Cluster-</title>
 
-    <link rel="canonical" href="/404.html">
+    <link rel="canonical" href="/post/how_to_set_up_a_raspberry_pi_cluster/">
 
     <link rel="stylesheet" href="/css/iDisqus.min.css"/>
 	
@@ -140,14 +140,37 @@
 
 
 
-<header class="intro-header" style="background-image: url('/images/main_go_wideandtall_dark_blur.jpeg')">
+
+<style type="text/css">
+    header.intro-header {
+        background-image: url('/images/main_go_wideandtall_dark_blur.jpeg')
+    }
+</style>
+<header class="intro-header">
     <div class="container">
         <div class="row">
-            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 ">
-                <div class="site-heading">
-                    <h1>Software Engineering - UNDER CONSTRUCTION </h1>
-                    
-		    <span class="subheading">$ grep -rni &#34;The how&#39;s and why&#39;s&#34; .</span>
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/raspberry-pi" title="Raspberry Pi">
+                            Raspberry Pi
+                        </a>
+                        
+                    </div>
+                    <h1>How to Set Up a Raspberry Pi Cluster</h1>
+                    <h2 class="subheading"></h2>
+                    <span class="meta">
+                        Posted by 
+                        
+                                Rich Youngkin
+                         
+                        on 
+                        Sunday, August 23, 2020
+                        
+                        
+                        
+                    </span>
                 </div>
             </div>
         </div>
@@ -157,22 +180,87 @@
 
 
 
-<header class="intro-header" style="background-image: url('/images/404-bg.jpg')">
-	<div class="container">
-		<div class="row">
-			<div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-				<div class="site-heading" id="tag-heading">
-					<h1>404</h1>
-					<span class="subheading">We couldn&#39;t find what you were looking for...</span>
-				</div>
-			</div>
-		</div>
-	</div>
-</header>
+<article>
+    <div class="container">
+        <div class="row">
 
-<script>
-	document.body.classList.add('page-fullscreen');
-</script>
+            
+            <div class="
+                col-lg-11 col-lg-offset-1
+                col-md-10 col-md-offset-1
+                post-container">
+
+                
+                <p><a href="https://unsplash.com/@isodme">
+  <figure>
+    <img src="/images/router.jpeg" alt="Router with cables">
+    <center><figcaption>Jonathon @ Unsplash</figcaption></center>
+  </figure>
+
+</a></p>
+<h2 id="the-full-text-of-this-article-can-be-found-on-mediumhttpsmediumcombetter-programminghow-to-set-up-a-raspberry-pi-cluster-ff484a1c6be9sourcefriends_linkskc679e5274ed39a5002e2b9ac97c966c7">The full text of this article can be found on <a href="https://medium.com/better-programming/how-to-set-up-a-raspberry-pi-cluster-ff484a1c6be9?source=friends_link&amp;sk=c679e5274ed39a5002e2b9ac97c966c7">Medium</a>.</h2>
+<p>This is the second article of the series described in <a href="https://medium.com/better-programming/develop-and-deploy-kubernetes-applications-on-a-raspberry-pi-cluster-fbd4d97a904c?source=friends_link&amp;sk=df18f8cdfc8b90aa25b2b6676346d1ec">Develop and Deploy Kubernetes Applications on a Raspberry Pi Cluster</a>. After completing the steps outlined in this article, you&rsquo;ll be ready to learn <a href="https://medium.com/better-programming/develop-and-deploy-kubernetes-applications-on-a-raspberry-pi-cluster-fbd4d97a904c?source=friends_link&amp;sk=df18f8cdfc8b90aa25b2b6676346d1ec">How to Install Kubernetes on a Raspberry Pi Cluster</a>, the next article in the series.
+As this article references a couple of other articles relevant to the task, you might find it helpful to have them open in another browser window so you can cross-reference between them and this one as needed.
+There are five main sections to this article:</p>
+<ol>
+<li>My Target Cluster Topology - This section describes what we&rsquo;ll build in this article.</li>
+<li>Initial Setup - This section describes what equipment is needed, how to install the OS, and how to complete the initial configuration of each Raspberry Pi.</li>
+<li>Configure the Network - This section describes the process to follow to configure the actual Raspberry Pi cluster. At the end of the section, we&rsquo;ll have a working cluster.</li>
+<li>Set Up Keyless SSH Access Between Hosts- This section will cover how to configure key-less ssh access between the nodes of the cluster. It will also describe how to set up a reverse-ssh tunnel to a host in the external network to allow any permitted host in the external network ssh access into any of the permitting cluster nodes. This isn&rsquo;t possible out of the box because the Pi router won&rsquo;t forward IP traffic from the external network into the cluster network.</li>
+<li>Set Up i2cssh- This section covers how to have simultaneous terminal sessions open to several hosts. i2cssh is a terminal multiplexer similar to tmux. With i2cssh, you can have commands replicated to every terminal session. This is useful if you want to execute the same commands on multiple hosts at the same time.</li>
+</ol>
+
+
+                
+
+                <hr>
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/post/my-sixth-post/" data-toggle="tooltip" data-placement="top" title="My Sixth Post">&larr;
+                            Previous Post</a>
+                    </li>
+                    
+                    
+                </ul>
+
+                
+<div id="disqus-comment"></div>
+
+
+
+            </div>
+            
+            <div class="
+                col-lg-11 col-lg-offset-1
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                        
+                        
+                        
+                        <a href="/tags/raspberry-pi" title="raspberry-pi">
+                            raspberry-pi
+                        </a>
+                        
+                        
+                    </div>
+                </section>
+                
+
+                
+                
+            </div>
+        </div>
+    </div>
+</article>
+
 
 
 
