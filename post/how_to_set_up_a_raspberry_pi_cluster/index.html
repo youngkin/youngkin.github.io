@@ -21,9 +21,9 @@
     
 
     
-    <meta name="description" content="Everything you need to buy, install, and stand up your own datacenter">
-    <meta property="og:description" content="Everything you need to buy, install, and stand up your own datacenter" />
-    <meta property="twitter:description" content="Everything you need to buy, install, and stand up your own datacenter" />
+    <meta name="description" content="Need to setup an inexpensive computing cluster? This article tells you what you need to buy, how to install the OS and configure the Raspberry Pis, how to set up networking, and other things you need to know to sinplify ongoing administration and maintenance of the cluster.">
+    <meta property="og:description" content="Need to setup an inexpensive computing cluster? This article tells you what you need to buy, how to install the OS and configure the Raspberry Pis, how to set up networking, and other things you need to know to sinplify ongoing administration and maintenance of the cluster." />
+    <meta property="twitter:description" content="Need to setup an inexpensive computing cluster? This article tells you what you need to buy, how to install the OS and configure the Raspberry Pis, how to set up networking, and other things you need to know to sinplify ongoing administration and maintenance of the cluster." />
     
 
     
@@ -31,10 +31,10 @@
     
     
 
-    <meta name="keyword"  content="">
+    <meta name="keyword"  content="Rich, Youngkin, Raspberry, Pi, Docker, Kubernetes, Go, Golang, Microservice">
     <link rel="shortcut icon" href="/img/favicon.ico">
 
-    <title>How to Set Up a Raspberry Pi Cluster-</title>
+    <title>How to Set Up a Raspberry Pi Cluster-Rich Youngkin Blog</title>
 
     <link rel="canonical" href="/post/how_to_set_up_a_raspberry_pi_cluster/">
 
@@ -94,6 +94,14 @@
                         <a href="/">Home</a>
                     </li>
                     
+                        
+                        <li>
+                            <a href="/categories/kubernetes">kubernetes</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/raspberry-pi">raspberry-pi</a>
+                        </li>
                         
                     
                     
@@ -157,6 +165,14 @@
                             Raspberry Pi
                         </a>
                         
+                        <a class="tag" href="/tags/networking" title="Networking">
+                            Networking
+                        </a>
+                        
+                        <a class="tag" href="/tags/cluster" title="Cluster">
+                            Cluster
+                        </a>
+                        
                     </div>
                     <h1>How to Set Up a Raspberry Pi Cluster</h1>
                     <h2 class="subheading"></h2>
@@ -166,7 +182,7 @@
                                 Rich Youngkin
                          
                         on 
-                        Sunday, August 23, 2020
+                        Wednesday, August 26, 2020
                         
                         
                         
@@ -191,8 +207,13 @@
                 post-container">
 
                 
-                <h2 id="the-full-text-of-this-article-can-be-found-on-mediumhttpsmediumcombetter-programminghow-to-set-up-a-raspberry-pi-cluster-ff484a1c6be9sourcefriends_linkskc679e5274ed39a5002e2b9ac97c966c7">The full text of this article can be found on <a href="https://medium.com/better-programming/how-to-set-up-a-raspberry-pi-cluster-ff484a1c6be9?source=friends_link&amp;sk=c679e5274ed39a5002e2b9ac97c966c7">Medium</a>.</h2>
-<p>This is the second article of the series described in <a href="https://medium.com/better-programming/develop-and-deploy-kubernetes-applications-on-a-raspberry-pi-cluster-fbd4d97a904c?source=friends_link&amp;sk=df18f8cdfc8b90aa25b2b6676346d1ec">Develop and Deploy Kubernetes Applications on a Raspberry Pi Cluster</a>. After completing the steps outlined in this article, you&rsquo;ll be ready to learn <a href="https://medium.com/better-programming/develop-and-deploy-kubernetes-applications-on-a-raspberry-pi-cluster-fbd4d97a904c?source=friends_link&amp;sk=df18f8cdfc8b90aa25b2b6676346d1ec">How to Install Kubernetes on a Raspberry Pi Cluster</a>, the next article in the series.
+                <blockquote>
+<p>Photo by <a href="https://unsplash.com/@isodme">Jonathan</a> on <a href="https://unsplash.com/s/photos/sailor?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Unsplash</a></p>
+</blockquote>
+<h2 id="the-full-text-of-this-article-can-be-found-on-mediumhttpsmediumcombetter-programminghow-to-set-up-a-raspberry-pi-cluster-ff484a1c6be9sourcefriends_linkskc679e5274ed39a5002e2b9ac97c966c7">The full text of this article can be found on <a href="https://medium.com/better-programming/how-to-set-up-a-raspberry-pi-cluster-ff484a1c6be9?source=friends_link&amp;sk=c679e5274ed39a5002e2b9ac97c966c7">Medium</a>.</h2>
+<hr>
+<p>This article covers what you need to know to setup your own Raspberry Pi cluster, including you what you need to buy, how to install the OS and configure the Raspberry Pis, how to set up networking, and other things you need to know to sinplify ongoing administration and maintenance of the cluster.</p>
+<p>This is the second article of the series described in <a href="https://medium.com/better-programming/develop-and-deploy-kubernetes-applications-on-a-raspberry-pi-cluster-fbd4d97a904c?source=friends_link&amp;sk=df18f8cdfc8b90aa25b2b6676346d1ec">Develop and Deploy Kubernetes Applications on a Raspberry Pi Cluster</a>. After completing the steps outlined in this article, you&rsquo;ll be ready to learn <a href="https://medium.com/better-programming/how-to-install-kubernetes-on-a-raspberry-pi-cluster-49ad9a762d08?source=friends_link&amp;sk=d9a6bba68c42a1321dd9008a92a1a330">How to Install Kubernetes on a Raspberry Pi Cluster</a>, the next article in the series.
 As this article references a couple of other articles relevant to the task, you might find it helpful to have them open in another browser window so you can cross-reference between them and this one as needed.
 There are five main sections to this article:</p>
 <ol>
@@ -202,6 +223,15 @@ There are five main sections to this article:</p>
 <li>Set Up Keyless SSH Access Between Hosts- This section will cover how to configure key-less ssh access between the nodes of the cluster. It will also describe how to set up a reverse-ssh tunnel to a host in the external network to allow any permitted host in the external network ssh access into any of the permitting cluster nodes. This isn&rsquo;t possible out of the box because the Pi router won&rsquo;t forward IP traffic from the external network into the cluster network.</li>
 <li>Set Up i2cssh- This section covers how to have simultaneous terminal sessions open to several hosts. i2cssh is a terminal multiplexer similar to tmux. With i2cssh, you can have commands replicated to every terminal session. This is useful if you want to execute the same commands on multiple hosts at the same time.</li>
 </ol>
+<h2 id="articles-in-the-series">Articles in the Series</h2>
+<p>The full set of articles are:</p>
+<ul>
+<li><a href="https://medium.com/better-programming/setup-a-raspberry-pi-cluster-ff484a1c6be9">Set up a Raspberry Pi Cluster</a> : Describes how to set up and configure a group of Raspberry Pis into a cluster. This includes defining the networking within the cluster and to an external network.</li>
+<li><a href="https://medium.com/better-programming/install-kubernetes-on-a-raspberry-pi-cluster-49ad9a762d08">Install Kubernetes on a Raspberry Pi Cluster</a>: This includes installing &amp; configuring Kubernetes as well as building and deploying a simple service. This latter step involves a minimal application that can be used to test the Kubernetes cluster as well as simple external network access to the application.</li>
+<li><a href="https://medium.com/@RichYoungkin/install-kubernetes-ingress-on-a-raspberry-pi-cluster-e8d5086c5009">Install Kubernetes Ingress on a Raspberry Pi Cluster</a>: Ingress is a useful way to support external access to services inside the cluster. In this article I’ll be describe how to install, configure, and test Traefik as an Ingress Controller. This article also includes installing and configuring Helm. Helm will be used to deploy Traefik. Helm will also be used in later articles in the series.</li>
+<li><a href="https://medium.com/better-programming/kubernetes-application-monitoring-on-a-raspberry-pi-cluster-fa8f2762b00c">Kubernetes Application Monitoring on a Raspberry Pi Cluster</a> — Install Prometheus, Grafana, and an EFK (Elasticsearch/Fluentd/Kibana) as a monitoring stack. It also covers installing Telegraf on the cluster to monitor machine level metrics for hosts on the cluster. E.g., CPU load and temperature, disk usage</li>
+<li><a href="https://medium.com/better-programming/how-to-install-mysql-on-a-raspberry-pi-ad3f69b4a094">How to Install MariaDB on a Raspberry Pi</a> — The title says it all. One thing to note, MariaDB is a drop-in replacement for MySQL</li>
+</ul>
 
 
                 
@@ -210,10 +240,15 @@ There are five main sections to this article:</p>
                 <ul class="pager">
                     
                     <li class="previous">
-                        <a href="/post/my-sixth-post/" data-toggle="tooltip" data-placement="top" title="My Sixth Post">&larr;
+                        <a href="/post/develop_and_deploy_kubernetes_applications_on_a_raspberry_pi_cluster/" data-toggle="tooltip" data-placement="top" title="Develop and Deploy Kubernetes Applications on a Raspberry Pi Cluster">&larr;
                             Previous Post</a>
                     </li>
                     
+                    
+                    <li class="next">
+                        <a href="/post/install-kubernetes-on-a-respberry-pi-cluster/" data-toggle="tooltip" data-placement="top" title="Install Kubernetes on a Raspberry Pi Cluster">Next
+                            Post &rarr;</a>
+                    </li>
                     
                 </ul>
 
@@ -238,9 +273,51 @@ There are five main sections to this article:</p>
                         
                         
                         
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/kubernetes" title="kubernetes">
+                            kubernetes
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/networking" title="networking">
+                            networking
+                        </a>
+                        
+                        
+                        
+                        
+                        
                         <a href="/tags/raspberry-pi" title="raspberry-pi">
                             raspberry-pi
                         </a>
+                        
+                        
                         
                         
                     </div>
@@ -284,15 +361,6 @@ There are five main sections to this article:</p>
 		    
                     
                     
-                    <li>
-                        <a href="https://twitter.com">
-                            <span class="fa-stack fa-lg">
-                                <i class="fa fa-circle fa-stack-2x"></i>
-                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
                     
                     
 
@@ -333,7 +401,25 @@ There are five main sections to this article:</p>
                     </li>
             
                     
+                    <li>
+                        <a target="_blank" href="https://stackoverflow.com/users/2646870/rich">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-stack-overflow fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+            
                     
+                    <li>
+                        <a target="_blank" href="https://www.reddit.com/user/elevation5280">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-reddit fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+            
                     
                     
             

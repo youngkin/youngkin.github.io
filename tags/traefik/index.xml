@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Traefik on Rich Youngkin</title>
+    <link>https://youngkin.github.io/tags/traefik/</link>
+    <description>Recent content in Traefik on Rich Youngkin</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 26 Aug 2020 13:05:37 -0600</lastBuildDate>
+    
+	<atom:link href="https://youngkin.github.io/tags/traefik/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Install Kubernetes Ingress on a Raspberry Pi Cluster</title>
+      <link>https://youngkin.github.io/post/install-kuberenetes-ingress-on-a-raspberry-pi-cluster/</link>
+      <pubDate>Wed, 26 Aug 2020 13:05:37 -0600</pubDate>
+      
+      <guid>https://youngkin.github.io/post/install-kuberenetes-ingress-on-a-raspberry-pi-cluster/</guid>
+      <description>Photo by Tianshu Liu on Unsplash
+ The full text of this article can be found on Medium  This is the fourth article in the series described in Develop and Deploy Kubernetes Applications on a Raspberry Pi Cluster. The previous article described how to install Kubernetes on a Raspberry Pi cluster. This article is about Kubernetes Ingress. The next article, Kubernetes Application Monitoring on a Raspberry Pi Cluster, covers setting up Prometheus, Grafana, and a Elasticsearch, Fluentd, and Kibana (EFK) stack on the cluster.</description>
+    </item>
+    
+    <item>
+      <title>Develop and Deploy Kubernetes Applications on a Raspberry Pi Cluster</title>
+      <link>https://youngkin.github.io/post/develop_and_deploy_kubernetes_applications_on_a_raspberry_pi_cluster/</link>
+      <pubDate>Wed, 26 Aug 2020 01:01:31 -0600</pubDate>
+      
+      <guid>https://youngkin.github.io/post/develop_and_deploy_kubernetes_applications_on_a_raspberry_pi_cluster/</guid>
+      <description>&lt;p&gt;Want to set up a Kubernetes lab, but don&amp;rsquo;t want use Minikube or spend a lot of money on hardware. This is the first post in a series that describes how to set up a complete Kubernetes cluster on a cluster of Raspberry Pis. This will include topics such as setting up a logging infrastructure, monitoring, Ingress, and other platform level capabilities.&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>
