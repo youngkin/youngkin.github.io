@@ -15,9 +15,9 @@
     
 
     
-    <meta name="title" content="[DRAFT!] Create a Free Web/Blog Site Using Github Pages and Hugo" />
-    <meta property="og:title" content="[DRAFT!] Create a Free Web/Blog Site Using Github Pages and Hugo" />
-    <meta property="twitter:title" content="[DRAFT!] Create a Free Web/Blog Site Using Github Pages and Hugo" />
+    <meta name="title" content="Create a Free Blog Site Using Github Pages and Hugo" />
+    <meta property="og:title" content="Create a Free Blog Site Using Github Pages and Hugo" />
+    <meta property="twitter:title" content="Create a Free Blog Site Using Github Pages and Hugo" />
     
 
     
@@ -34,7 +34,7 @@
     <meta name="keyword"  content="Rich, Youngkin, Raspberry, Pi, Docker, Kubernetes, Go, Golang, Microservice">
     <link rel="shortcut icon" href="/img/favicon.ico">
 
-    <title>[DRAFT!] Create a Free Web/Blog Site Using Github Pages and Hugo-Rich Youngkin Blog</title>
+    <title>Create a Free Blog Site Using Github Pages and Hugo-Rich Youngkin Blog</title>
 
     <link rel="canonical" href="/post/createafreeblogsite/">
 
@@ -94,6 +94,10 @@
                         <a href="/">Home</a>
                     </li>
                     
+                        
+                        <li>
+                            <a href="/categories/blog">blog</a>
+                        </li>
                         
                         <li>
                             <a href="/categories/kubernetes">kubernetes</a>
@@ -161,8 +165,20 @@
                 <div class="post-heading">
                     <div class="tags">
                         
+                        <a class="tag" href="/tags/blog" title="blog">
+                            blog
+                        </a>
+                        
+                        <a class="tag" href="/tags/github-pages" title="Github Pages">
+                            Github Pages
+                        </a>
+                        
+                        <a class="tag" href="/tags/hugo" title="Hugo">
+                            Hugo
+                        </a>
+                        
                     </div>
-                    <h1>[DRAFT!] Create a Free Web/Blog Site Using Github Pages and Hugo</h1>
+                    <h1>Create a Free Blog Site Using Github Pages and Hugo</h1>
                     <h2 class="subheading"></h2>
                     <span class="meta">
                         Posted by 
@@ -195,7 +211,7 @@
                 post-container">
 
                 
-                <p>Want to create your own web site, but don&rsquo;t want to get tied into any of the big hosted solutions or subscription publishing sites? This article describes how to use Github Pages with Hugo to create, maintain, and host your own web site.</p>
+                <p>Want to create your own blog, but don&rsquo;t want to get tied into any of the big hosted solutions or subscription publishing sites? This article describes how to use Github Pages with Hugo to create, maintain, and host your own blog site.</p>
 <h2 id="overview">Overview</h2>
 <blockquote>
 <p>Prerequisites:</p>
@@ -210,24 +226,28 @@
 </ol>
 </blockquote>
 <p>This article is a fairly detailed tutorial on how to create a full featured website/blog using Hugo and Github Pages. If you just want a quick overview of how to use Hugo I recommend going to the <a href="https://gohugo.io/getting-started/quick-start/">Hugo Quickstart page</a>. If you want a quickstart on setting up a Hugo/Github Pages site I recommend going to the <a href="https://gohugo.io/hosting-and-deployment/hosting-on-github/">Hugo Github Pages quickstart page</a>.</p>
-<p>At its core Github Pages is a combination of a Github repository and a published web site. One consequence of this is that any commit to the master branch of the repository is immediately published. One way to create a Github Pages website is to also create an associated &ldquo;workspace&rdquo; Github respository. This is what is described here.</p>
-<p>Hugo is an Open Source static website generator. It is quite powerful and the websites that can be created with Hugo can be quite sophisticated. Hugo is the base engine used to interpret how to create a website based on a predefined template. Hugo calls these templates themes. Skins are another word for themes. A theme is a combination of HTML and CSS. The HTML is used for site layout. CSS is used to define colors, fonts, font size, and other non-layout related attributes that define how the website looks. This combination is quite powerful. The website&rsquo;s page definitions themselves, i.e., the website&rsquo;s content, are defined using standard Markdown syntax.</p>
-<p>Hugo also comes with an HTML server that can be used during development to provide immediate feedback on any changes that are made to web pages. Hugo will also generate a complete static website based on a theme&rsquo;s layout, CSS, and the markdown files that define the content. <em><strong>TALK ABOUT HUGO DEV VS. GENERATE VS PUBLISH MODES?</strong></em></p>
-<p>The Hugo themes as well as the website&rsquo;s page definitions are stored in what I above called the &ldquo;workspace&rdquo; repository. This is the primary authoring space. The Hugo web server operates against this repository. Through the magic of Git Submodules, the final set of committed changes to the master branch in the workspace respository are immediately made available in the Github Pages respository.</p>
+<p>At its core Github Pages is a combination of a Github repository and a published web site. One consequence of this is that any commit to the master branch of the repository is immediately published. One way to create a Github Pages website is to also create an associated &ldquo;workspace&rdquo; Github repository. This is what is described here.</p>
+<p>Hugo is an Open Source static website generator. It is quite powerful and the websites that can be created with Hugo can be quite sophisticated. Hugo is the base engine used to interpret how to create a website based on a predefined template. Hugo calls these templates themes. &ldquo;Skin&rdquo; is another word for themes. A theme is a combination of HTML and CSS. The HTML is used for site layout. CSS is used to define colors, fonts, font size, and other non-layout related attributes that define how the website looks. This combination is quite powerful. The website&rsquo;s page definitions themselves, i.e., the website&rsquo;s content, are defined using standard Markdown syntax.</p>
+<p>Hugo also comes with an HTML server that can be used during development to provide immediate feedback on any changes that are made to web pages. Hugo can be used in 2 ways:</p>
+<ol>
+<li>Development mode - This mode using its HTML server to render pages as they are being modified during development. Running the server during development provides immediate feedback when changes are made to the content.</li>
+<li>Build mode - Hugo will also generate a complete static website based on a theme&rsquo;s layout, CSS, and the markdown files that define the content. The output of this mode is what will be published.</li>
+</ol>
+<p>The Hugo themes as well as the website&rsquo;s page definitions are stored in what I above called the &ldquo;workspace&rdquo; repository. This is the primary authoring space. The Hugo web server operates against this repository. Through the magic of Git Submodules, the final set of committed changes to the master branch in the workspace repository are immediately made available in the Github Pages repository.</p>
 <blockquote>
 <p>Brief segue on <a href="https://github.blog/2016-02-01-working-with-submodules/">Git Submodules</a>:</p>
-<p>Git Submodules are a way of including one, <strong>hosted</strong>, Github respository in another, <strong>hosting</strong>, repository. The entire content of the hosted respository is available in the hosting repository as if it was just a normal subdirectory in the hosting respository. Changes to the hosted repository can be made in the context of the hosting respository. Committing any such changes are immediately available in the hosted respository.</p>
+<p>Git Submodules are a way of including one, <strong>hosted</strong>, Github repository in another, <strong>hosting</strong>, repository. The entire content of the hosted repository is available in the hosting repository as if it was just a normal subdirectory in the hosting repository. Changes to the hosted repository can be made in the context of the hosting repository. Committing any such changes are immediately available in the hosted repository.</p>
 </blockquote>
-<p>In the context of Submodules, the Github Pages repository is the <strong>hosted</strong> repository. It contains the published content of the website. In contrast, the respository containing the Hugo theme(s) and the development versions of the content is the <strong>hosting</strong> repository. When the website content is ready for publishing Hugo is used to generate the static website. Hugo generates the content into the submodule associated with the, <strong>hosted</strong>, Github Pages respository. When ready, the changes are committed in the <strong>hosting</strong> respository and they become immediately available, and thereby published, in the Github Pages respository.</p>
+<p>In the context of Submodules, the Github Pages repository is the <strong>hosted</strong> repository. It contains the published content of the website. In contrast, the repository containing the Hugo theme(s) and the development versions of the content is the <strong>hosting</strong> repository. When the website content is ready for publishing Hugo is used to generate the static website. Hugo generates the content into the submodule associated with the, <strong>hosted</strong>, Github Pages repository. When ready, the changes are committed in the <strong>hosting</strong> repository and they become immediately available, and thereby published, in the Github Pages repository.</p>
 <h2 id="initial-github-setup">Initial Github setup</h2>
-<p>The two respositories, the Github Pages respository and the hosting development respository, need to be created. There are 2 options for the Github Pages respository:</p>
+<p>The two respositories, the Github Pages repository and the hosting development repository, need to be created. There are 2 options for the Github Pages repository:</p>
 <ol>
 <li>Personal or Organizational</li>
 <li>Project</li>
 </ol>
-<p>See the <a href="https://help.github.com/articles/user-organization-and-project-pages/#user--organization-pages">Github Pages help documentation</a> for more details about the differences. This article describes how to create a Personal Github Pages respository.</p>
-<p>Creating the Github Pages respository is fairly straightforward, but there is one very important restriction on its name. The respository&rsquo;s name must be of the form <code>&lt;github_username&gt;.github.io</code>. For example, <code>youngkin.github.io</code>. This will be the URL of the website. So the Github pages respository is just a normal Github respository, just with a very specific name. See the <a href="https://pages.github.com/">Github Pages quickstart guide</a> if you need more details on how to create a respository.</p>
-<p>The second step is to create the respository where the website development/authoring will take place. This is just a normal Github respository. See the <a href="https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/creating-a-new-repository">Github documentation</a> if you need more details about how to create a respository.</p>
+<p>See the <a href="https://help.github.com/articles/user-organization-and-project-pages/#user--organization-pages">Github Pages help documentation</a> for more details about the differences. This article describes how to create a Personal Github Pages repository.</p>
+<p>Creating the Github Pages repository is fairly straightforward, but there is one very important restriction on its name. The repository&rsquo;s name must be of the form <code>&lt;github_username&gt;.github.io</code>. For example, <code>smith.github.io</code> where <code>smith</code> is the associated user&rsquo;s account name. This will be the URL of the website. So the Github pages repository is just a normal Github repository, just with a very specific name. We&rsquo;ll use this repository name, <code>smith.github.io</code> in the rest of the article when referring to the Github Pages repository. See the <a href="https://pages.github.com/">Github Pages quickstart guide</a> if you need more details on how to create a repository.</p>
+<p>The second step is to create the repository where the website development/authoring will take place. This is just a normal Github repository. For the purposes of this article, we&rsquo;ll use <code>myblog.dev.repo</code> for the name of the development repository. See the <a href="https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/creating-a-new-repository">Github documentation</a> if you need more details about how to create a repository.</p>
 <h2 id="install-hugo">Install Hugo</h2>
 <p>There are a number of ways to install Hugo:</p>
 <ul>
@@ -243,15 +263,15 @@
 </ul>
 <p>Docker images are also available. For more details on installing Hugo see the <a href="https://gohugo.io/getting-started/installing/">Hugo documentation</a>.</p>
 <h2 id="create-a-basic-site">Create a basic site</h2>
-<p><em><strong>Specify names for the 2 github repos and use those names in the rest of the doc just to keep things easy to understand?</strong></em></p>
 <h3 id="initialize-the-new-site">Initialize the new site</h3>
-<p>The first thing to do is to clone the development/authoring respository on to your local machine.</p>
-<p>With the Github respositories setup and Hugo installed it&rsquo;s time to initialze the website. Hugo provides this capability through the <code>hugo</code> command line:</p>
+<p>The first thing to do is to clone the development/authoring repository on to your local machine:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git clone git@github.com:smith/myblog.dev.repo.git
+</code></pre></div><p>With the Github respositories setup and Hugo installed it&rsquo;s time to initialze the website. Hugo provides this capability through the <code>hugo</code> command line:</p>
 <ol>
-<li>Change directories into the root of the development/authoring respository</li>
-<li>Run <code>hugo new site .</code>.
+<li>Change directories into the root of the <code>myblog.dev.repo</code> repository</li>
+<li>Run <code>hugo new site .</code>
 <ol>
-<li><code>hugo new site</code> is telling Hugo to create a new site. The final parameter in the command, the <code>.</code>, is telling Hugo which directory to create the new site. In this case we&rsquo;re going to create it in our development/authoring respository.</li>
+<li><code>hugo new site</code> is telling Hugo to create a new site. The final parameter in the command, the <code>.</code>, is telling Hugo which directory to create the new site. In this case we&rsquo;re going to create it in our development/authoring repository, <code>myblog.dev.repo</code>.</li>
 </ol>
 </li>
 </ol>
@@ -264,7 +284,7 @@
   |--themes
   |--config.toml
   +--archetypes
-</code></pre><p>The directories and file that we&rsquo;re interested in for this article are:</p>
+</code></pre><p>The directories and files that we&rsquo;re interested in for this article are:</p>
 <ul>
 <li><code>content</code> - this is where content under development is located, i.e., the various markdown files for a site&rsquo;s pages.</li>
 <li><code>static</code> - content that doesn&rsquo;t change, such as images</li>
@@ -273,41 +293,40 @@
 <li><code>archetypes</code> - Template(s) used by the <code>hugo new &lt;contentdir/contentfile.md&gt;</code> command, used to create new content markdown files</li>
 </ul>
 <h3 id="pick-and-install-the-sites-theme">Pick and install the site&rsquo;s theme</h3>
-<p>The next step is to choose a theme to use. See the <a href="https://themes.gohugo.io/">Hugo themes page</a> and select the one that looks best to you. The Hugo <a href="https://themes.gohugo.io/gohugo-theme-ananke/">Ananke theme</a> is a popular one. I chose the <a href="https://themes.gohugo.io/hugo-theme-cleanwhite/">Clean White theme</a>. Once you&rsquo;ve picked a theme you need to add it to the development/authoring repo. Like with the Github Pages repo this is accomplished via a git submodule:</p>
-<pre><code>git submodule add &lt;theme's-github-url&gt; &lt;target-directory&gt;
-</code></pre><p>I chose a customized version of the Clean White theme:</p>
-<pre><code>git submodule add git@github.com:youngkin/hugo-theme-cleanwhite-rsy.git themes/hugo-theme-cleanwhite-rsy
-</code></pre><p>The <code>&lt;target-directory&gt;</code> should be a subdirectory of <code>themes</code>. <code>themes</code> is where Hugo expects loaded themes to be located.</p>
+<p>The next step is to choose a theme to use. See the <a href="https://themes.gohugo.io/">Hugo themes page</a> and select the one that looks best to you. The Hugo <a href="https://themes.gohugo.io/gohugo-theme-ananke/">Ananke theme</a> is a popular one. I chose the <a href="https://themes.gohugo.io/hugo-theme-cleanwhite/">Clean White theme</a>. Once you&rsquo;ve picked a theme you need to add it to the development/authoring repo. Like with the Github Pages repo, this is accomplished via a git submodule:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git submodule add &lt;theme-github-url&gt; &lt;target-directory&gt;
+</code></pre></div><p>I chose a customized version of the Clean White theme:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git submodule add git@github.com:youngkin/hugo-theme-cleanwhite-rsy.git themes/hugo-theme-cleanwhite-rsy
+</code></pre></div><p>The <code>&lt;target-directory&gt;</code> should be a subdirectory of <code>themes</code>. <code>themes</code> is where Hugo expects loaded themes to be located.</p>
 <blockquote>
 <p>I&rsquo;ll discuss my reasons for customizing the Clean White theme, as well as describe what I did, later in this article.</p>
 </blockquote>
 <p>Some basic customization of a Hugo generated website is specified in the <code>config.toml</code> file. For now we&rsquo;ll just tell Hugo to use our chosen theme.</p>
-<pre><code>echo 'theme = &quot;&lt;theme-name&gt;&quot;' &gt;&gt; config.toml
-</code></pre><p>In my case I used</p>
-<pre><code>echo 'theme = &quot;hugo-theme-cleanwhite-rsy&quot;' &gt;&gt; config.toml
-</code></pre><p>The <code>theme-name</code> is from the name of the directory where you placed the theme.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">echo <span style="color:#e6db74">&#39;theme = &#34;&lt;theme-name&gt;&#34;&#39;</span> &gt;&gt; config.toml
+</code></pre></div><p>In my case I used</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">echo <span style="color:#e6db74">&#39;theme = &#34;hugo-theme-cleanwhite-rsy&#34;&#39;</span> &gt;&gt; config.toml
+</code></pre></div><p>The theme name is the name of the directory where you placed the theme.</p>
 <h3 id="test-the-new-site-locally">Test the new site locally</h3>
 <p>Now it&rsquo;s time to create some content and test everything we&rsquo;ve done so far. The first step is to create some content:</p>
-<pre><code>hugo new post/testpage.md
-</code></pre><p>The new page will be located at <code>content/post/testpage.md</code>, <code>post</code> being the parent directory given in the previous command. This command places all content in the <code>content</code> directory. <code>content</code> is also the directory Hugo uses as the source of content when generating the static web site. The file will look something like this:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">hugo new post/testpage.md
+</code></pre></div><p>The new page will be located at <code>content/post/testpage.md</code>, <code>post</code> being the parent directory given in the previous command. This command places all content in the <code>content</code> directory. <code>content</code> is one of the directories Hugo uses as the source of content when generating the static web site. The file will look something like this:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-markdown" data-lang="markdown">---
 title: &#34;Testpage&#34;
 date: 2020-08-27T13:43:09-06:00
 draft: true
 ---
-
 </code></pre></div><p>You can inspect the generated file. The generated content comes from the <code>archetypes/default.md</code> file which is the template used for all new content. The content between the <code>---</code> lines is metadata for the page. Text after the 2nd <code>---</code> line is the body of the web page.</p>
 <p>The next step is to test the installation by starting the Hugo web server and navigating to the development site:</p>
-<pre><code>hugo server -D
-</code></pre><p>Near the bottom of the logged output you&rsquo;ll see a line like this:</p>
-<pre><code>Web Server is available at http://localhost:1313/ (bind address 127.0.0.1)
-</code></pre><p>Copy the URL into a browser and you should see the home page of the new site. Depending on the theme chosen, you should see something like this:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">hugo server -D
+</code></pre></div><p>Near the bottom of the logged output you&rsquo;ll see a line like this:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">Web Server is available at http://localhost:1313/ <span style="color:#f92672">(</span>bind address 127.0.0.1<span style="color:#f92672">)</span>
+</code></pre></div><p>Copy the URL into a browser and you should see the home page of the new site. Depending on the theme chosen, you should see something like this:</p>
 <p><img style="border:2px solid black" src="/images/My_New_Hugo_Site.png" align="left"><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br></p>
 <h2 id="authoring-a-site">Authoring a site</h2>
 <p>Now we&rsquo;re ready to start creating the actual site that we want to publish. The first thing you might want to do is delete the <code>content/post/testpage.md</code> file created previously. This was created just to test the installation and is no longer needed.</p>
 <h3 id="configuration">Configuration</h3>
-<p>As mentioned above, the basic configuration for a Hugo website is specified in the <code>config.toml</code> file. Hugo&rsquo;s <a href="https://gohugo.io/getting-started/configuration/">Getting Started documentation</a> covers configuration in detail. Here is what a basic, but functional, configuration looks like:</p>
-<pre><code>baseurl = &quot;https://&lt;your-github-id-here&gt;.github.io&quot;
+<p>As mentioned above, the basic configuration for a Hugo website is specified in the <code>config.toml</code> file. Hugo&rsquo;s <a href="https://gohugo.io/getting-started/configuration/">Getting Started documentation</a> covers configuration in detail. The configuration for this blog is a basic, but functional, configuration. It looks like this (<i style="color:#1E90FF;">remember, <code>smith</code> is our fictional Github account name, you&rsquo;ll need to replace it with your own account name</i>):</p>
+<pre><code>baseurl = &quot;https://smith.github.io&quot;
 title = &quot;Rich Youngkin&quot;
 theme = &quot;hugo-theme-cleanwhite-rsy&quot;
 languageCode = &quot;en-us&quot;
@@ -352,22 +371,22 @@ paginate = 5000 #frontpage pagination
   reddit         = &quot;https://www.reddit.com/user/elevation5280&quot;
 </code></pre><p>Taken line-by-line, here&rsquo;s what each one means:</p>
 <ul>
-<li><code>baseurl</code> - This is the URL of the published web site. For a Github Pages site it must be of the form <code>https://&lt;your-github-id-here&gt;.github.io</code>, e.g., <code>https://youngkin.github.io</code>.</li>
+<li><code>baseurl</code> - This is the URL of the published web site. For a Github Pages site it must be of the form <code>https://&lt;your-github-id-here&gt;.github.io</code>, e.g., <code>https://smith.github.io</code>.</li>
 <li><code>title</code> - This is the text displayed in the top left, header, area of every page on the site. It is a button control that will take you to the home page. Typically it&rsquo;s your name.</li>
 <li><code>theme</code> - The theme used by the site</li>
 <li><code>language</code> - The <a href="https://en.wikipedia.org/wiki/IETF_language_tag">IETF language tag</a> specifying the primary language of the website. The language code, e.g., <code>en</code>, can have a suffix specifying an optional country code or region to subdivide the language into various dialects. <code>en-us</code> means United States English. <code>en-gb</code> means Great Britian English.</li>
 <li><code>paginate</code> - how many blog entry summaries to display on the home page</li>
-<li><code>[markup]</code> - this is a section that specifies the Markup/down syntax used. It&rsquo;s optional. The Goldmark renderer is used by default. Blackfriday was the previous renderer and can still be used if specified. Goldmark has more capability than Blackfriday, but by default it won&rsquo;t render HTML tags due to security concerns. I wanted to use HTML tags in my pages, primarily for image scaling and placement. I had originally swapped out Goldmark for Blackfriday but later decided that I might like the extra functionality provided by Goldmark. To get the HTML tag support I needed, I had to add this <code>[markup]</code> section and set <code>unsafe = true</code>. See the <a href="https://gohugo.io/getting-started/configuration-markup">Hugo Configure Markup document</a> for more details.</li>
+<li><code>[markup]</code> - this is a section that specifies the Markup/down syntax used. It&rsquo;s optional. The Goldmark renderer is used by default. Blackfriday was the previous renderer and can still be used if specified. Goldmark has more capability than Blackfriday, but by default it won&rsquo;t render HTML tags due to security concerns. I wanted to use HTML tags in my pages, primarily for image scaling and placement, as well as customizing text rendering. I had originally swapped out Goldmark for Blackfriday but later decided that I might like the extra functionality provided by Goldmark. To get the HTML tag support I needed, I had to add this <code>[markup]</code> section and set <code>unsafe = true</code>. See the <a href="https://gohugo.io/getting-started/configuration-markup">Hugo Configure Markup document</a> for more details.</li>
 <li><code>[params]</code> - These are the basic parameter settings available
 <ul>
 <li><code>header_image</code> - the background image to use as the default in the headers of all pages. It is the only image that will be used for the home and about pages</li>
 <li><code>title</code> - This is the text used in the title, or banner, displayed at the top of every web page.</li>
 <li><code>slogan</code> - This is a subtitle displayed just below the title in the header of all web pages</li>
 <li><code>SEOTitle</code> &amp; <code>keyword</code> - These have something to do with search engine optimization. I included them in the hope that this would make my site more visible. More <a href="https://moonbooth.com/hugo/seo/">information can be found in this tutorial</a>.</li>
-<li><code>sidebar_about_description</code>, <code>sidebar_avatar</code>, &amp; <code>about_me</code> - The sidebar is a concise &ldquo;about me&rdquo; entry. You can use the description to provide a short bio and the avatar to provide an image. <code>about_me</code> controls whether the sidebar is shown.</li>
-<li><code>featured_tags</code> &amp; <code>featured_condition_size</code> - These are used to specify whether you want to display tags used to describe pages to show up in a tag cloud on each page. <code>feature_condition_size</code> specifies the minimum number of articles, that must have a given tag before that tag shows up in the tag cloud. It is important to note that tags will only be displayed when <code>feature_condition_size + 1</code> articles with a given tag exist.</li>
+<li><code>sidebar_about_description</code>, <code>sidebar_avatar</code>, &amp; <code>about_me</code> - The sidebar contains a concise &ldquo;about me&rdquo; biography. You can use the description to provide a short bio and the avatar to provide an image. <code>about_me</code> controls whether the sidebar is shown.</li>
+<li><code>featured_tags</code> &amp; <code>featured_condition_size</code> - These are used to specify whether you want to display tags used to describe pages to show up in a tag cloud on each page. <code>feature_condition_size</code> specifies the minimum number of articles that must have a given tag before that tag shows up in the tag cloud. It is important to note that tags will only be displayed when <code>feature_condition_size + 1</code> articles with a given tag exist.</li>
 <li><code>image_404</code> &amp; <code>title_404</code> - These specify how a 404 Not Found page looks. One is the image, the other is the textual title.</li>
-<li><code>omit_categories</code> - Categories are like a higher level tag. For example, New Mexico, Colorado, Utah, Wyoming, Idaho, and Montana might all be tags for articles pertaining to those U.S. states. There might be a category &ldquo;Best Ski Areas in the World&rdquo; that could be used to group those tags into a higher level grouping. Defined Categories may be included in the navigation bar at the top of each page. <code>omit_categories</code> controls whether categories will be displayed in the top navigation bar.</li>
+<li><code>omit_categories</code> - Categories are like a higher level tag. For example, New Mexico, Colorado, Utah, Wyoming, Idaho, and Montana might all be tags for articles pertaining to those U.S. states. There might be a category &ldquo;Best Ski Areas in the World&rdquo; that could be used to group those tags into a higher level grouping. Defined Categories can be included in the navigation bar at the top of each page. <code>omit_categories</code> controls whether categories will be displayed in the top navigation bar.</li>
 <li><code>[[params.additional_menus]]</code> - This allows the specification of additional menu items to be put in the top navigation bar, for example an &ldquo;About&rdquo; page.</li>
 <li><code>[params.social]</code> - This entire sub-section is used to put badges associated with different social media sites on the Hugo generated site. There are other social media sites available such as twitter and facebook.</li>
 </ul>
@@ -391,57 +410,80 @@ categories: []
 </code></pre></div><p>Here&rsquo;s what each line means:</p>
 <ul>
 <li><code>---</code> - these lines delineate the metadata section of the page</li>
-<li><code>title: &quot;{{ replace .Name &quot;-&quot; &quot; &quot; | title }}&quot;</code> - specifies that the title will be replaced with the file name given to the new page after replacing dashes ('-') with spaces. This is a quick, handy, way to generate titles automatically. For example, <code>My-New-Post.md</code> becomes &ldquo;My New Post&rdquo; in the page&rsquo;s title.</li>
+<li><code>title: &quot;{{ replace .Name &quot;-&quot; &quot; &quot; | title }}&quot;</code> - specifies that the page&rsquo;s title will be generated from the file name after replacing dashes ('-') with spaces. This is a quick, handy, way to generate titles automatically. For example, <code>My-New-Post.md</code> becomes &ldquo;My New Post&rdquo; in the page&rsquo;s title.</li>
 <li><code>description</code> - specifies text to be used in an article&rsquo;s summary on the home page. This text will not be displayed in the article. It is related to the <code># Descriptive text here...</code> line a little lower in the file.</li>
-<li><code>date</code> - replaced with the date the post was created. It can be changed if you want to modify it, for example after updating the page. There are more sophisticated things you can do with dates, such as published date, last modified date, expiration date, etc. Those all have special meanings. See the <a href="https://gohugo.io/getting-started/configuration/#configure-dates">Hugo documentation</a> for more details.</li>
+<li><code>date</code> - replaced with the date the post was created. The generated date can be changed if you want to modify it, for example after updating the page. There are more sophisticated things you can do with dates, such as published date, last modified date, expiration date, etc. Those all have special meanings. See the <a href="https://gohugo.io/getting-started/configuration/#configure-dates">Hugo documentation</a> for more details.</li>
 <li><code>draft</code> - specifies whether a page is in draft or publish state. Pages in draft state can be seen when viewing the site running on the Hugo web server, but they will not be visible from a published web site such as Github Pages.</li>
 <li><code>image</code> - specifies the image to display at the top of the page. If not specified, the <code>header_image</code> in <code>config.toml</code> will be used.</li>
-<li><code>tags</code> - specifies a low level subject grouping. Taking my example from above, U.S. states might be an appropriate subject grouping for pages pertaining to U.S. states.</li>
-<li><code>categories</code> - specifies a high level subject grouping. Again, taking my example from above, some U.S. states can be put in the category of &ldquo;Best Ski Areas in the World&rdquo;.</li>
-<li><code># Descriptive text here...</code> &amp; <code>&lt;!--more--&gt;</code> - These are used as an alternative to the <code>description</code> line in the metadata section. This can be used if the amount of descriptive text desired is more than can be comfortably put in the <code>description</code> line. <code>&lt;~--more..&gt;</code> is used to indicate the end of this form of descriptive text. Unlike <code>description</code> above, this text does appear in the article. An alternative to both the <code>description</code> line and these lines is to not specify either. In this case the first 70 words of the article will be used in the article summary.</li>
+<li><code>tags</code> - specifies a comma separated list of low level subject groupings. Taking my example from above, U.S. states might be an appropriate subject grouping for pages pertaining to U.S. states. For example, <code>tags: [&quot;Colorado&quot;, &quot;Utah&quot;, ...]</code>.</li>
+<li><code>categories</code> - specifies a specifies a comma separated list of high level subject groupings. Again, taking my example from above, some U.S. states can be put in the category of &ldquo;Best Ski Areas in the World&rdquo;.</li>
+<li><code># Descriptive text here...</code> &amp; <code>&lt;!--more--&gt;</code> - These lines are used as an alternative to the <code>description</code> line in the metadata section. This can be used if the amount of descriptive text desired is more than can be comfortably put in the <code>description</code> line. <code>&lt;!--more..&gt;</code> is used to indicate the end of this type of descriptive text. Unlike <code>description</code> above, this text does appear in the article. An alternative to both the <code>description</code> line and these lines is to not specify either. In this case the first 70 words of the article will be used in the article summary.</li>
 </ul>
 <h3 id="writing">Writing</h3>
 <p>Now that we have our respositories setup, Hugo installed, our initialized Hugo development repository, and a basic understanding of Hugo website and page configuration, we can start authoring content. All content is written using Markup syntax. See the <a href="https://www.markdownguide.org/tools/hugo/">Hugo Markdown Guide</a> for more information and syntax details. As noted in the Configuration section above, using the Goldmark <code>unsafe</code> option allows you to use standard HTML tags in the content if desired.</p>
 <h2 id="publishing-content-to-github-pages">Publishing content to Github Pages</h2>
 <p>At some point you&rsquo;re going to be ready to make your site live. To do this you&rsquo;ll want to generate the static content to be published from the development content. This development content is generally found in the <code>content</code> and <code>static</code> directories that were created when the site was initialized. The output of the generation process is generally placed in the <code>public</code> directory, but this can be modified. For our purposes we&rsquo;re just going to let Hugo take this default behavior.</p>
-<h3 id="linking-the-development-respository-to-the-github-pages-respository">Linking the development respository to the Github Pages respository</h3>
-<p>Before you can publish to your Github Pages site, you need to link your development respository to your Github Pages respository, <code>&lt;your-github-account-name&gt;.github.io</code>. You only need to do this once. To do the linking we&rsquo;ll use Git Submodules as discussed previously. The command to use is:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git submodule add -b master git@&lt;your-github-account-name&gt;.github.io.git public
-</code></pre></div><p>In my case I used:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git submodule add -b master git@youngkin.github.io.git public
+<h3 id="linking-the-development-repository-to-the-github-pages-repository">Linking the development repository to the Github Pages repository</h3>
+<p><strong>This step only needs to be done once.</strong></p>
+<p>Before you can publish to your Github Pages site, you need to link your development repository, <code>myblog.dev.repo</code> in our case, to your Github Pages repository. We&rsquo;re using <code>smith.github.io</code> as the Github Pages repository name. To do the linking we&rsquo;ll use Git Submodules as discussed previously. The command to use is:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git submodule add -b master git@smith.github.io.git public
 </code></pre></div><p>The important parts of the command are:</p>
 <ul>
 <li><code>-b master</code> - This links to the hosted repository&rsquo;s <code>master</code> branch</li>
-<li><code>public</code> - This links the hosting, i.e., this, repository&rsquo;s <code>public</code> directory with the hosted respository. So any changes in the <code>public</code> directory, when committed, will be pushed to the Github Pages respository, <code>&lt;your-github-account-name&gt;.github.io.git</code>.</li>
+<li><code>public</code> - This links the hosting, i.e., this repository&rsquo;s <code>public</code> directory, with the hosted repository. So any changes in the <code>public</code> directory, when committed, will be pushed to the Github Pages repository, <code>smith.github.io.git</code>.</li>
 </ul>
-<p>To illustrate the linking of the development respository to the Github Pages respository do the following:</p>
+<p>To illustrate the linking of the development repository to the Github Pages repository do the following:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git remote -v
 </code></pre></div><p>The output should look something like this:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">origin	https://github.com/&lt;your-github-account-name&gt;/&lt;your-github-account-name&gt;.github.io.git <span style="color:#f92672">(</span>fetch<span style="color:#f92672">)</span>
-origin	https://github.com/&lt;your-github-account-name&gt;/&lt;your-github-account-name&gt;.github.io.git <span style="color:#f92672">(</span>push<span style="color:#f92672">)</span>
-</code></pre></div><p>In my environment it looks like this:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">origin	https://github.com/youngkin/youngkin.github.io.git <span style="color:#f92672">(</span>fetch<span style="color:#f92672">)</span>
-origin	https://github.com/youngkin/youngkin.github.io.git <span style="color:#f92672">(</span>push<span style="color:#f92672">)</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">origin	https://github.com/smith/smith.github.io.git <span style="color:#f92672">(</span>fetch<span style="color:#f92672">)</span>
+origin	https://github.com/smith/smith.github.io.git <span style="color:#f92672">(</span>push<span style="color:#f92672">)</span>
 </code></pre></div><h3 id="publishing-the-site">Publishing the site</h3>
 <p>When you&rsquo;re ready to publish the site you&rsquo;ll need to generate the static content. This is done by running:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">hugo -D
-</code></pre></div><p>As mentioned above, the default behavior is to generate the content into the <code>public</code> directory, the directory we linked to the Github Pages respository. At this point there&rsquo;s only one more thing left to do, we need to go through the usual <code>git add ...</code>, <code>git commit ...</code>, and <code>git push origin master</code> steps to publish to Github Pages.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">./deploy.sh
+</code></pre></div><p>This command does several things:</p>
+<ol>
+<li>It builds the static content via <code>hugo -D</code></li>
+<li>It stages everything in the <code>project-root/public</code> directory for commit via <code>git add .</code></li>
+<li>It commits everything in the <code>project-root/public</code> directory via <code>git commit -m &quot;&lt;commit message&gt;</code> (the &ldquo;commit message&rdquo; is generated by the script)</li>
+<li>It pushes the changes to master via <code>git push origin master</code></li>
+<li>It stages everything in the <code>project-root</code> directory for commit via <code>git add .</code></li>
+<li>It commits everything in the <code>project-root</code> directory via <code>git commit -m &quot;&lt;commit message&gt;</code></li>
+<li>It pushes the changes to master via <code>git push origin master</code></li>
+</ol>
+<blockquote>
+<p><strong style="color:#ff0000;">CAUTION!!!!!</strong> Everything in <code>public</code> and the <code>project root</code> directories is staged for commit. This means that all additions or changes you made will be committed. This can be an issue if you have new temporary files that you have no intention of committing. If you don&rsquo;t want this behavior you can modify the script to comment out the <code>git add .</code> commands.</p>
+</blockquote>
 <h2 id="the-finished-product">The finished product</h2>
 <p>This web site! The source code is available on Github for:</p>
 <ul>
 <li><a href="https://github.com/youngkin/hugoblog">The blog source code</a></li>
-<li><a href="https://github.com/youngkin/hugo-theme-cleanwhite-rsy.">The modified Clean White theme</a></li>
+<li><a href="https://github.com/youngkin/hugo-theme-cleanwhite-rsy">The modified Clean White theme</a></li>
 <li><a href="https://github.com/youngkin/youngkin.github.io">The published Github Pages repo</a></li>
 </ul>
 <h2 id="references">References</h2>
 <ul>
-<li><a href="https://www.markdownguide.org/tools/hugo/">https://www.markdownguide.org/tools/hugo/</a></li>
-<li><a href="https://gohugo.io/hosting-and-deployment/hosting-on-github/">https://gohugo.io/hosting-and-deployment/hosting-on-github/</a></li>
-<li><a href="https://gohugo.io/getting-started/">https://gohugo.io/getting-started/</a></li>
-<li><a href="https://guides.github.com/features/pages/">https://guides.github.com/features/pages/</a></li>
-<li><a href="https://themes.gohugo.io/">https://themes.gohugo.io/</a> ## Customizations</li>
+<li><a href="https://gohugo.io/getting-started/quick-start/">Hugo Quickstart page</a></li>
+<li><a href="https://gohugo.io/hosting-and-deployment/hosting-on-github/">Hugo Github Pages quickstart page</a></li>
+<li><a href="https://github.blog/2016-02-01-working-with-submodules/">Git Submodules</a></li>
+<li><a href="https://help.github.com/articles/user-organization-and-project-pages/#user--organization-pages">Github Pages help documentation</a></li>
+<li><a href="https://pages.github.com/">Github Pages quickstart guide</a></li>
+<li><a href="https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/creating-a-new-repository">Github documentation</a></li>
+<li><a href="https://github.com/gohugoio/hugo/releases">Hugo downloads page</a></li>
+<li><a href="https://gohugo.io/getting-started/installing/">Hugo installation documentation</a></li>
+<li><a href="https://themes.gohugo.io/">Hugo themes page</a></li>
+<li><a href="https://themes.gohugo.io/gohugo-theme-ananke/">Ananke theme page</a></li>
+<li><a href="https://themes.gohugo.io/hugo-theme-cleanwhite/">Clean White theme page</a></li>
+<li><a href="https://gohugo.io/getting-started/">Hugo’s Getting Started documentation</a></li>
+<li><a href="https://en.wikipedia.org/wiki/IETF_language_tag">IETF language tag spec</a></li>
+<li><a href="https://gohugo.io/getting-started/configuration-markup">Hugo Configure Markup document</a></li>
+<li><a href="https://moonbooth.com/hugo/seo/">SEO tutorial</a></li>
+<li><a href="https://gohugo.io/content-management/archetypes/">Hugo Archetypes</a></li>
+<li><a href="https://gohugo.io/getting-started/configuration">Hugo Configuration</a></li>
+<li><a href="https://www.markdownguide.org/tools/hugo/">Hugo Markdown Guide</a></li>
 </ul>
-<p>I used the <a href="https://themes.gohugo.io/hugo-theme-cleanwhite/">Clean White theme</a>. I wanted a different look for:</p>
+<h2 id="appendix">Appendix</h2>
+<h3 id="theme-customizations">Theme Customizations</h3>
+<p>I used the <a href="https://themes.gohugo.io/hugo-theme-cleanwhite/">Clean White theme</a>, but I wanted a different look for:</p>
 <ul>
 <li>Title and Description (looking for &ldquo;green screen&rdquo; feel)</li>
 <li>Tags - too dim, wanted to darken</li>
@@ -449,7 +491,7 @@ origin	https://github.com/youngkin/youngkin.github.io.git <span style="color:#f9
 </ul>
 <p>Here&rsquo;s what I changed:</p>
 <ul>
-<li>I created my own &ldquo;fork&rdquo; of the <a href="https://github.com/youngkin/hugo-theme-cleanwhite-rsy">Clean White theme</a>
+<li>I copied <a href="https://github.com/zhaohuabing/hugo-theme-cleanwhite">Clean White theme Github repository</a> to <a href="https://github.com/youngkin/hugo-theme-cleanwhite-rsy">my own copy</a>
 <ul>
 <li>I modified <code>themes/hugo-theme-cleanwhite-rsy/static/css/hux-blog.min.css</code>
 <ul>
@@ -459,25 +501,18 @@ origin	https://github.com/youngkin/youngkin.github.io.git <span style="color:#f9
 </ul>
 </li>
 </ul>
-<h3 id="change-the-blog-header">Change the Blog Header:</h3>
-<p>
-  <img src="/images/BlogHeader.png" alt="Blog Header">
-
-</p>
-<p>&ldquo;Green screen&rdquo; look for blog title, change <code>color: #00FA9A</code></p>
-<ul>
-<li>Snippet:</li>
-</ul>
+<h4 id="change-the-blog-header">Change the Blog Header</h4>
+<p>I wanted to change the text fonts, font size, and color in the <strong>Navigation Bar</strong>, <strong>Blog Title</strong>, and the <strong>Blog Subtitle</strong>.</p>
+<p><img src="/images/BlogHeader.png" /></p>
+<figcaption><center><i style="color:green;">My blog header</i></center></figcaption>
+<p>I changed the text color in the <strong>Blog Title</strong> to green by changing the <code>color: #00FA9A</code> element. Here&rsquo;s the context for the changes:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-css" data-lang="css">.<span style="color:#a6e22e">intro-header</span> .<span style="color:#a6e22e">page-heading</span><span style="color:#f92672">,</span>
 .<span style="color:#a6e22e">intro-header</span> .<span style="color:#a6e22e">post-heading</span><span style="color:#f92672">,</span>
 .<span style="color:#a6e22e">intro-header</span> .<span style="color:#a6e22e">site-heading</span> {
   <span style="color:#66d9ef">padding</span> : <span style="color:#ae81ff">85</span><span style="color:#66d9ef">px</span> <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">55</span><span style="color:#66d9ef">px</span>;
   <span style="color:#66d9ef">color</span>   : <span style="color:#ae81ff">#00FA9A</span>;
 }
-</code></pre></div><p>&ldquo;Green screen&rdquo; for Navigation bar at top of page, change <code>color: #00FA9A</code></p>
-<ul>
-<li>Snippet:</li>
-</ul>
+</code></pre></div><p>I changed the text color in the <strong>Navigation Bar</strong> to green by changing the <code>color: #00FA9A</code> element. Here&rsquo;s the context for the changes:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-css" data-lang="css">  .<span style="color:#a6e22e">navbar-custom</span> .<span style="color:#a6e22e">navbar-brand</span> {
     <span style="color:#66d9ef">padding</span>     : <span style="color:#ae81ff">20</span><span style="color:#66d9ef">px</span>;
     <span style="color:#66d9ef">color</span>       : <span style="color:#ae81ff">#00FA9A</span>;
@@ -490,10 +525,7 @@ origin	https://github.com/youngkin/youngkin.github.io.git <span style="color:#f9
     <span style="color:#66d9ef">padding</span> : <span style="color:#ae81ff">20</span><span style="color:#66d9ef">px</span>;
     <span style="color:#66d9ef">color</span>   : <span style="color:#ae81ff">#00FA9A</span>;
   }
-</code></pre></div><p>Terminal font and yellow color for blog subheading (slogan), change <code>color: #FFD700</code> and <code>font-size: 25px</code>, Add <code>font-family: Courier New, monospace;</code></p>
-<ul>
-<li>Snippet:</li>
-</ul>
+</code></pre></div><p>I changed the text rendering (font and font-color) for the <strong>Blog Subtitle</strong> (&lsquo;slogan&rsquo; in <code>config.toml</code>) by changing <code>color: #FFD700</code>,<code>font-size: 25px</code>, and adding <code>font-family: Courier New, monospace;</code>. Here&rsquo;s the context for the changes.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-css" data-lang="css">.<span style="color:#a6e22e">intro-header</span> .<span style="color:#a6e22e">page-heading</span> .<span style="color:#a6e22e">subheading</span><span style="color:#f92672">,</span>
 .<span style="color:#a6e22e">intro-header</span> .<span style="color:#a6e22e">site-heading</span> .<span style="color:#a6e22e">subheading</span> {
   <span style="color:#66d9ef">display</span>     : <span style="color:#66d9ef">block</span>;
@@ -523,12 +555,11 @@ origin	https://github.com/youngkin/youngkin.github.io.git <span style="color:#f9
   <span style="color:#66d9ef">line-height</span> : <span style="color:#ae81ff">1.7</span>;
   <span style="color:#66d9ef">line-height</span> : <span style="color:#ae81ff">1.1</span>;
 }
-</code></pre></div><h3 id="change-the-sidebar">Change the Sidebar</h3>
-<p><img style="border:2px solid black" src="/images/BlogSideBar.png" align="left"><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br></p>
-<p>Get a darker gray for the &ldquo;About Me&rdquo; description and the &ldquo;social&rdquo; badges background color, change  <code>.sidebar-container {...}</code>, and <code>.sidebar-container a {...}</code> <code>color</code> element to <code>#555555</code></p>
-<ul>
-<li>Snippet:</li>
-</ul>
+</code></pre></div><h4 id="change-the-sidebar">Change the Sidebar</h4>
+<p>In the Sidebar I wanted to change the text and border color of the &ldquo;FEATURED TAGS&rdquo;, the text color of the short bio, and the background color of the social networking &lsquo;badges&rsquo;.</p>
+<p><img style="border:2px solid black" src="/images/BlogSideBar.png" align="center" /></p>
+<figcaption align="left"><center><i style="color:green;">My Sidebar</i></center></figcaption>
+<p>The color of the &ldquo;About Me&rdquo; short bio and the social badges was too light for my tastes. I changed these colors to a darker gray by changing <code>.sidebar-container {...}</code> and <code>.sidebar-container a {...}</code> color elements to <code>#555555</code>. Here&rsquo;s the context for these changes:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-css" data-lang="css">.<span style="color:#a6e22e">sidebar-container</span> {
   <span style="color:#66d9ef">color</span>     : <span style="color:#ae81ff">#555555</span>;
   <span style="color:#66d9ef">font-size</span> : <span style="color:#ae81ff">14</span><span style="color:#66d9ef">px</span>;
@@ -547,10 +578,7 @@ origin	https://github.com/youngkin/youngkin.github.io.git <span style="color:#f9
 .<span style="color:#a6e22e">sidebar-container</span> <span style="color:#f92672">a</span> {
   <span style="color:#66d9ef">color</span> : <span style="color:#ae81ff">#555555</span><span style="color:#75715e">!important</span>;
 }
-</code></pre></div><p>Get a darker gray for &ldquo;Featured Tags&rdquo; in the sidebar to improve readability <code>.sidebar-container .tags a {...}</code> <code>color</code> element to <code>#555555</code>, <code>.tags a {... color: ... border:...}</code></p>
-<ul>
-<li>Snippet:</li>
-</ul>
+</code></pre></div><p>As above, the text and border color of the &ldquo;Featured Tags&rdquo; was too light for me. I changed this to a darker gray by changing the <code>.sidebar-container .tags a {...}</code> <code>color</code> to <code>#555555</code> and the <code>.tags a {... color: ... border:...}</code> color and border elements to <code>#FFD700</code> and <code>1px solid rgba(255,215,0,0.8)</code> respectively. Here&rsquo;s the context for these changes:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-css" data-lang="css">.<span style="color:#a6e22e">sidebar-container</span> .<span style="color:#a6e22e">tags</span> <span style="color:#f92672">a</span> {
   <span style="color:#66d9ef">border-color</span> : <span style="color:#ae81ff">#555555</span>;
 }
@@ -570,13 +598,13 @@ origin	https://github.com/youngkin/youngkin.github.io.git <span style="color:#f9
   <span style="color:#66d9ef">line-height</span>     : <span style="color:#ae81ff">24</span><span style="color:#66d9ef">px</span>;
 }
 
-</code></pre></div><h2 id="gimp">GIMP</h2>
-<p>I used <a href="https://www.gimp.org/">GIMP</a> to manipulate the blog images to:</p>
+</code></pre></div><h3 id="image-manipulation">Image manipulation</h3>
+<p>I wanted to modify some of the images used in the site, primarily the background images used in the page headers. I used <a href="https://www.gimp.org/">GIMP</a> to manipulate the blog images. I mostly changed the following:</p>
 <ul>
-<li>Resize the images to fit within the page</li>
-<li>Add a dark layer over the top of the images to increase contrast with the blog header elements (i.e., navigation bar, title, subtitle)
+<li>Resized the images to fit within the page</li>
+<li>Added a dark layer over the top of the images to increase contrast with the blog header elements (i.e., navigation bar, title, subtitle)
 <ul>
-<li>Layer colors to darken images - 4d4d4d and 373737 and generally an opacity of 80%</li>
+<li>I mostly used <code>#4d4d4d</code> and <code>#373737</code> as the colors, a <code>mode</code> of <code>normal</code>, and an <code>Opacity</code> of 80%</li>
 </ul>
 </li>
 </ul>
@@ -612,6 +640,12 @@ origin	https://github.com/youngkin/youngkin.github.io.git <span style="color:#f9
                     <hr class="hidden-sm hidden-xs">
                     <h5><a href="/tags/">FEATURED TAGS</a></h5>
                     <div class="tags">
+                        
+                        
+                        
+                        
+                        
+                        
                         
                         
                         

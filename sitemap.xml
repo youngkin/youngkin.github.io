@@ -3,7 +3,32 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://youngkin.github.io/tags/blog/</loc>
+    <lastmod>2020-08-26T13:09:42-06:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://youngkin.github.io/categories/blog/</loc>
+    <lastmod>2020-08-26T13:09:42-06:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://youngkin.github.io/categories/</loc>
+    <lastmod>2020-08-26T13:09:42-06:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://youngkin.github.io/post/createafreeblogsite/</loc>
+    <lastmod>2020-08-26T13:09:42-06:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://youngkin.github.io/tags/github-pages/</loc>
+    <lastmod>2020-08-26T13:09:42-06:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://youngkin.github.io/tags/hugo/</loc>
     <lastmod>2020-08-26T13:09:42-06:00</lastmod>
   </url>
   
@@ -18,8 +43,8 @@
   </url>
   
   <url>
-    <loc>https://youngkin.github.io/categories/</loc>
-    <lastmod>2020-08-26T13:07:25-06:00</lastmod>
+    <loc>https://youngkin.github.io/tags/</loc>
+    <lastmod>2020-08-26T13:09:42-06:00</lastmod>
   </url>
   
   <url>
@@ -44,11 +69,6 @@
   
   <url>
     <loc>https://youngkin.github.io/categories/raspberry-pi/</loc>
-    <lastmod>2020-08-26T13:07:25-06:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://youngkin.github.io/tags/</loc>
     <lastmod>2020-08-26T13:07:25-06:00</lastmod>
   </url>
   
