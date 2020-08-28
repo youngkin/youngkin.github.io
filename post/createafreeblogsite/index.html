@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+    <meta property="og:site_name" content="Rich Youngkin">
+    <meta property="og:type" content="article">
+
+    
+    <meta property="og:image" content="https://youngkin.github.io/images/main_go_wideandtall_darklayer.jpeg">
+    <meta property="twitter:image" content="https://youngkin.github.io/images/main_go_wideandtall_darklayer.jpeg" />
+    
+
+    
+    <meta name="title" content="Create a Free Web/Blog Site Using Github Pages and Hugo" />
+    <meta property="og:title" content="Create a Free Web/Blog Site Using Github Pages and Hugo" />
+    <meta property="twitter:title" content="Create a Free Web/Blog Site Using Github Pages and Hugo" />
+    
+
+    
+    <meta name="description" content="">
+    <meta property="og:description" content="" />
+    <meta property="twitter:description" content="" />
+    
+
+    
+    <meta property="twitter:card" content="summary" />
+    
+    
+
+    <meta name="keyword"  content="Rich, Youngkin, Raspberry, Pi, Docker, Kubernetes, Go, Golang, Microservice">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>Create a Free Web/Blog Site Using Github Pages and Hugo-Rich Youngkin Blog</title>
+
+    <link rel="canonical" href="/post/createafreeblogsite/">
+
+    <link rel="stylesheet" href="/css/iDisqus.min.css"/>
+	
+    
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    
+    <link rel="stylesheet" href="/css/zanshang.css">
+    
+    
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    
+    
+
+    
+    
+    <script src="/js/jquery.min.js"></script>
+    
+    
+    <script src="/js/bootstrap.min.js"></script>
+    
+    
+    <script src="/js/hux-blog.min.js"></script>
+
+    
+    
+
+</head>
+
+
+
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Rich Youngkin</a>
+        </div>
+
+        
+        
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    
+                        
+                        <li>
+                            <a href="/categories/kubernetes">kubernetes</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/raspberry-pi">raspberry-pi</a>
+                        </li>
+                        
+                    
+                    
+		    
+                        <li><a href="/top/about/">ABOUT</a></li>
+                    
+
+                    
+                </ul>
+            </div>
+        </div>
+        
+    </div>
+    
+</nav>
+<script>
+    
+    
+    
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        
+            $navbar.className = " ";
+            
+            setTimeout(function(){
+                
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+
+
+<style type="text/css">
+    header.intro-header {
+        background-image: url('/images/github-pagesLightBlue.jpeg')
+    }
+</style>
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                    </div>
+                    <h1>Create a Free Web/Blog Site Using Github Pages and Hugo</h1>
+                    <h2 class="subheading"></h2>
+                    <span class="meta">
+                        Posted by 
+                        
+                                Rich Youngkin
+                         
+                        on 
+                        Wednesday, August 26, 2020
+                        
+                        
+                        
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+
+
+<article>
+    <div class="container">
+        <div class="row">
+
+            
+            <div class="
+                col-lg-11 col-lg-offset-1
+                col-md-10 col-md-offset-1
+                post-container">
+
+                
+                <p>Want to create your own web site, but don&rsquo;t want to get tied into any of the big hosted solutions or subscription publishing sites? This article describes how to use Github Pages with Hugo to create, maintain, and host your own web site.</p>
+<h2 id="overview">Overview</h2>
+<blockquote>
+<p>Prerequisites:</p>
+<ol>
+<li>A basic knowledge of git and Github. For significant customizations beyond what&rsquo;s available natively in Hugo and the chosen Hugo theme, a basic understanding of HTML and CSS will be required.</li>
+<li>Git version 2.24.3 or higher</li>
+<li>Mac development machine
+<ol>
+<li>Windows and Linux are also supported. Much of what&rsquo;s described here is applicable to both of these. But the exact steps I followed were performed on a Mac.</li>
+</ol>
+</li>
+</ol>
+</blockquote>
+<p>This article is a fairly detailed tutorial on how to create a full featured website/blog using Hugo and Github Pages. If you just want a quick overview of how to use Hugo I recommend going to the <a href="https://gohugo.io/getting-started/quick-start/">Hugo Quickstart page</a>. If you want a quickstart on setting up a Hugo/Github Pages site I recommend going to the <a href="https://gohugo.io/hosting-and-deployment/hosting-on-github/">Hugo Github Pages quickstart page</a>.</p>
+<p>At its core Github Pages is a combination of a Github repository and a published web site. One consequence of this is that any commit to the master branch of the repository is immediately published. One way to create a Github Pages website is to also create an associated &ldquo;workspace&rdquo; Github respository. This is what is described here.</p>
+<p>Hugo is an Open Source static website generator. It is quite powerful and the websites that can be created with Hugo can be quite sophisticated. Hugo is the base engine used to interpret how to create a website based on a predefined template. Hugo calls these templates themes. Skins are another word for themes. A theme is a combination of HTML and CSS. The HTML is used for site layout. CSS is used to define colors, fonts, font size, and other non-layout related attributes that define how the website looks. This combination is quite powerful. The website&rsquo;s page definitions themselves, i.e., the website&rsquo;s content, are defined using standard Markdown syntax.</p>
+<p>Hugo also comes with an HTML server that can be used during development to provide immediate feedback on any changes that are made to web pages. Hugo will also generate a complete static website based on a theme&rsquo;s layout, CSS, and the markdown files that define the content. <em><strong>TALK ABOUT HUGO DEV VS. GENERATE VS PUBLISH MODES?</strong></em></p>
+<p>The Hugo themes as well as the website&rsquo;s page definitions are stored in what I above called the &ldquo;workspace&rdquo; repository. This is the primary authoring space. The Hugo web server operates against this repository. Through the magic of Git Submodules, the final set of committed changes to the master branch in the workspace respository are immediately made available in the Github Pages respository.</p>
+<blockquote>
+<p>Brief segue on <a href="https://github.blog/2016-02-01-working-with-submodules/">Git Submodules</a>:</p>
+<p>Git Submodules are a way of including one, <strong>hosted</strong>, Github respository in another, <strong>hosting</strong>, repository. The entire content of the hosted respository is available in the hosting repository as if it was just a normal subdirectory in the hosting respository. Changes to the hosted repository can be made in the context of the hosting respository. Committing any such changes are immediately available in the hosted respository.</p>
+</blockquote>
+<p>In the context of Submodules, the Github Pages repository is the <strong>hosted</strong> repository. It contains the published content of the website. In contrast, the respository containing the Hugo theme(s) and the development versions of the content is the <strong>hosting</strong> repository. When the website content is ready for publishing Hugo is used to generate the static website. Hugo generates the content into the submodule associated with the, <strong>hosted</strong>, Github Pages respository. When ready, the changes are committed in the <strong>hosting</strong> respository and they become immediately available, and thereby published, in the Github Pages respository.</p>
+<h2 id="initial-github-setup">Initial Github setup</h2>
+<p>The two respositories, the Github Pages respository and the hosting development respository, need to be created. There are 2 options for the Github Pages respository:</p>
+<ol>
+<li>Personal or Organizational</li>
+<li>Project</li>
+</ol>
+<p>See the <a href="https://help.github.com/articles/user-organization-and-project-pages/#user--organization-pages">Github Pages help documentation</a> for more details about the differences. This article describes how to create a Personal Github Pages respository.</p>
+<p>Creating the Github Pages respository is fairly straightforward, but there is one very important restriction on its name. The respository&rsquo;s name must be of the form <code>&lt;github_username&gt;.github.io</code>. For example, <code>youngkin.github.io</code>. This will be the URL of the website. So the Github pages respository is just a normal Github respository, just with a very specific name. See the <a href="https://pages.github.com/">Github Pages quickstart guide</a> if you need more details on how to create a respository.</p>
+<p>The second step is to create the respository where the website development/authoring will take place. This is just a normal Github respository. See the <a href="https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/creating-a-new-repository">Github documentation</a> if you need more details about how to create a respository.</p>
+<h2 id="install-hugo">Install Hugo</h2>
+<p>There are a number of ways to install Hugo:</p>
+<ul>
+<li>There are binary releases available on the <a href="https://github.com/gohugoio/hugo/releases">Hugo downloads page</a>.</li>
+<li>On a Mac using Homebrew is the simplest, <code>brew install hugo</code>.</li>
+<li>On Linux, with Homebrew installed, <code>brew install hugo</code>.</li>
+<li>There are a couple of ways to install on Windows using Chocolatey:
+<ul>
+<li>choco install hugo[-extended] -confirm</li>
+<li>scoop install hugo[-extended]</li>
+</ul>
+</li>
+</ul>
+<p>Docker images are also available. For more details on installing Hugo see the <a href="https://gohugo.io/getting-started/installing/">Hugo documentation</a>.</p>
+<h2 id="create-a-basic-site">Create a basic site</h2>
+<p><em><strong>Specify names for the 2 github repos and use those names in the rest of the doc just to keep things easy to understand?</strong></em></p>
+<h3 id="initialize-the-new-site">Initialize the new site</h3>
+<p>The first thing to do is to clone the development/authoring respository on to your local machine.</p>
+<p>With the Github respositories setup and Hugo installed it&rsquo;s time to initialze the website. Hugo provides this capability through the <code>hugo</code> command line:</p>
+<ol>
+<li>Change directories into the root of the development/authoring respository</li>
+<li>Run <code>hugo new site .</code>.
+<ol>
+<li><code>hugo new site</code> is telling Hugo to create a new site. The final parameter in the command, the <code>.</code>, is telling Hugo which directory to create the new site. In this case we&rsquo;re going to create it in our development/authoring respository.</li>
+</ol>
+</li>
+</ol>
+<p><code>hugo new site &lt;dirname&gt;</code> creates the following directory structure:</p>
+<pre><code>site_root
+  |--layout
+  |--content
+  |--static
+  |--data
+  |--themes
+  |--config.toml
+  +--archetypes
+</code></pre><p>The directories and file that we&rsquo;re interested in for this article are:</p>
+<ul>
+<li><code>content</code> - this is where content under development is located, i.e., the various markdown files for a site&rsquo;s pages.</li>
+<li><code>static</code> - content that doesn&rsquo;t change, such as images</li>
+<li><code>themes</code> - Where the site&rsquo;s theme(s) are located</li>
+<li><code>config.toml</code> - The basic configuration for the site, e.g., the site&rsquo;s name</li>
+<li><code>archetypes</code> - Template(s) used by the <code>hugo new &lt;contentdir/contentfile.md&gt;</code> command, used to create new content markdown files</li>
+</ul>
+<h3 id="pick-and-install-the-sites-theme">Pick and install the site&rsquo;s theme</h3>
+<p>The next step is to choose a theme to use. See the <a href="https://themes.gohugo.io/">Hugo themes page</a> and select the one that looks best to you. The Hugo <a href="https://themes.gohugo.io/gohugo-theme-ananke/">Ananke theme</a> is a popular one. I chose the <a href="https://themes.gohugo.io/hugo-theme-cleanwhite/">Clean White theme</a>. Once you&rsquo;ve picked a theme you need to add it to the development/authoring repo. Like with the Github Pages repo this is accomplished via a git submodule:</p>
+<pre><code>git submodule add &lt;theme's-github-url&gt; &lt;target-directory&gt;
+</code></pre><p>I chose a customized version of the Clean White theme:</p>
+<pre><code>git submodule add git@github.com:youngkin/hugo-theme-cleanwhite-rsy.git themes/hugo-theme-cleanwhite-rsy
+</code></pre><p>The <code>&lt;target-directory&gt;</code> should be a subdirectory of <code>themes</code>. <code>themes</code> is where Hugo expects loaded themes to be located.</p>
+<blockquote>
+<p>I&rsquo;ll discuss my reasons for customizing the Clean White theme, as well as describe what I did, later in this article.</p>
+</blockquote>
+<p>Some basic customization of a Hugo generated website is specified in the <code>config.toml</code> file. For now we&rsquo;ll just tell Hugo to use our chosen theme.</p>
+<pre><code>echo 'theme = &quot;&lt;theme-name&gt;&quot;' &gt;&gt; config.toml
+</code></pre><p>In my case I used</p>
+<pre><code>echo 'theme = &quot;hugo-theme-cleanwhite-rsy&quot;' &gt;&gt; config.toml
+</code></pre><p>The <code>theme-name</code> is from the name of the directory where you placed the theme.</p>
+<h3 id="test-the-new-site-locally">Test the new site locally</h3>
+<p>Now it&rsquo;s time to create some content and test everything we&rsquo;ve done so far. The first step is to create some content:</p>
+<pre><code>hugo new post/testpage.md
+</code></pre><p>The new page will be located at <code>content/post/testpage.md</code>, <code>post</code> being the parent directory given in the previous command. This command places all content in the <code>content</code> directory. <code>content</code> is also the directory Hugo uses as the source of content when generating the static web site. The file will look something like this:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-markdown" data-lang="markdown">---
+title: &#34;Testpage&#34;
+date: 2020-08-27T13:43:09-06:00
+draft: true
+---
+
+</code></pre></div><p>You can inspect the generated file. The generated content comes from the <code>archetypes/default.md</code> file which is the template used for all new content. The content between the <code>---</code> lines is metadata for the page. Text after the 2nd <code>---</code> line is the body of the web page.</p>
+<p>The next step is to test the installation by starting the Hugo web server and navigating to the development site:</p>
+<pre><code>hugo server -D
+</code></pre><p>Near the bottom of the logged output you&rsquo;ll see a line like this:</p>
+<pre><code>Web Server is available at http://localhost:1313/ (bind address 127.0.0.1)
+</code></pre><p>Copy the URL into a browser and you should see the home page of the new site. Depending on the theme chosen, you should see something like this:</p>
+<p><img style="border:2px solid black" src="/images/My_New_Hugo_Site.png" align="left"><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br></p>
+<h2 id="authoring-a-site">Authoring a site</h2>
+<p>Now we&rsquo;re ready to start creating the actual site that we want to publish. The first thing you might want to do is delete the <code>content/post/testpage.md</code> file created previously. This was created just to test the installation and is no longer needed.</p>
+<h3 id="configuration">Configuration</h3>
+<p>As mentioned above, the basic configuration for a Hugo website is specified in the <code>config.toml</code> file. Hugo&rsquo;s <a href="https://gohugo.io/getting-started/configuration/">Getting Started documentation</a> covers configuration in detail. Here is what a basic, but functional, configuration looks like:</p>
+<pre><code>baseurl = &quot;https://&lt;your-github-id-here&gt;.github.io&quot;
+title = &quot;Rich Youngkin&quot;
+theme = &quot;hugo-theme-cleanwhite-rsy&quot;
+languageCode = &quot;en-us&quot;
+paginate = 5000 #frontpage pagination
+
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
+
+[params]
+  header_image = &quot;images/main_go_wideandtall_darklayer.jpeg&quot;
+  title = &quot;Software Engineering&quot;
+  slogan = &quot;$ grep -rni \&quot;The how's and why's\&quot; .&quot;
+  SEOTitle = &quot;Rich Youngkin Blog&quot;
+  keyword = &quot;Rich, Youngkin, Raspberry, Pi, Docker, Kubernetes, Go, Golang, Microservice&quot;
+ 
+  # Sidebar settings
+  sidebar_about_description = &quot;Father, Husband, Skier, Cyclist, and, oh yeah, Software Developer&quot;
+  sidebar_avatar = &quot;images/MeAtJackson.jpeg&quot;
+  about_me = true
+
+  featured_tags = true 
+  featured_condition_size = 2 # How many posts have to have a given tag to be featured (greater-than)
+
+  image_404 = &quot;images/404-bg.jpg&quot;
+  title_404 = &quot;We couldn't find what you were looking for...&quot;
+
+  omit_categories = false
+
+  [[params.addtional_menus]]
+  title =  &quot;ABOUT&quot;
+  href =  &quot;/top/about/&quot;
+
+  [params.social]
+  rss            = true
+  email          = &quot;rich.youngkin@gmail.com&quot;
+  linkedin       = &quot;https://www.linkedin.com/in/richard-youngkin-0749763&quot;
+  github         = &quot;https://github.com/youngkin&quot;
+  medium         = &quot;https://medium.com/@RichYoungkin&quot;
+  stackoverflow  = &quot;https://stackoverflow.com/users/2646870/rich&quot;
+  reddit         = &quot;https://www.reddit.com/user/elevation5280&quot;
+</code></pre><p>Taken line-by-line, here&rsquo;s what each one means:</p>
+<ul>
+<li><code>baseurl</code> - This is the URL of the published web site. For a Github Pages site it must be of the form <code>https://&lt;your-github-id-here&gt;.github.io</code>, e.g., <code>https://youngkin.github.io</code>.</li>
+<li><code>title</code> - This is the text displayed in the top left, header, area of every page on the site. It is a button control that will take you to the home page. Typically it&rsquo;s your name.</li>
+<li><code>theme</code> - The theme used by the site</li>
+<li><code>language</code> - The <a href="https://en.wikipedia.org/wiki/IETF_language_tag">IETF language tag</a> specifying the primary language of the website. The language code, e.g., <code>en</code>, can have a suffix specifying an optional country code or region to subdivide the language into various dialects. <code>en-us</code> means United States English. <code>en-gb</code> means Great Britian English.</li>
+<li><code>paginate</code> - how many blog entry summaries to display on the home page</li>
+<li><code>[markup]</code> - this is a section that specifies the Markup/down syntax used. It&rsquo;s optional. The Goldmark renderer is used by default. Blackfriday was the previous renderer and can still be used if specified. Goldmark has more capability than Blackfriday, but by default it won&rsquo;t render HTML tags due to security concerns. I wanted to use HTML tags in my pages, primarily for image scaling and placement. I had originally swapped out Goldmark for Blackfriday but later decided that I might like the extra functionality provided by Goldmark. To get the HTML tag support I needed, I had to add this <code>[markup]</code> section and set <code>unsafe = true</code>. See the <a href="https://gohugo.io/getting-started/configuration-markup">Hugo Configure Markup document</a> for more details.</li>
+<li><code>[params]</code> - These are the basic parameter settings available
+<ul>
+<li><code>header_image</code> - the background image to use as the default in the headers of all pages. It is the only image that will be used for the home and about pages</li>
+<li><code>title</code> - This is the text used in the title, or banner, displayed at the top of every web page.</li>
+<li><code>slogan</code> - This is a subtitle displayed just below the title in the header of all web pages</li>
+<li><code>SEOTitle</code> &amp; <code>keyword</code> - These have something to do with search engine optimization. I included them in the hope that this would make my site more visible. More <a href="https://moonbooth.com/hugo/seo/">information can be found in this tutorial</a>.</li>
+<li><code>sidebar_about_description</code>, <code>sidebar_avatar</code>, &amp; <code>about_me</code> - The sidebar is a concise &ldquo;about me&rdquo; entry. You can use the description to provide a short bio and the avatar to provide an image. <code>about_me</code> controls whether the sidebar is shown.</li>
+<li><code>featured_tags</code> &amp; <code>featured_condition_size</code> - These are used to specify whether you want to display tags used to describe pages to show up in a tag cloud on each page. <code>feature_condition_size</code> specifies the minimum number of articles, that must have a given tag before that tag shows up in the tag cloud. It is important to note that tags will only be displayed when <code>feature_condition_size + 1</code> articles with a given tag exist.</li>
+<li><code>image_404</code> &amp; <code>title_404</code> - These specify how a 404 Not Found page looks. One is the image, the other is the textual title.</li>
+<li><code>omit_categories</code> - Categories are like a higher level tag. For example, New Mexico, Colorado, Utah, Wyoming, Idaho, and Montana might all be tags for articles pertaining to those U.S. states. There might be a category &ldquo;Best Ski Areas in the World&rdquo; that could be used to group those tags into a higher level grouping. Defined Categories may be included in the navigation bar at the top of each page. <code>omit_categories</code> controls whether categories will be displayed in the top navigation bar.</li>
+<li><code>[[params.additional_menus]]</code> - This allows the specification of additional menu items to be put in the top navigation bar, for example an &ldquo;About&rdquo; page.</li>
+<li><code>[params.social]</code> - This entire sub-section is used to put badges associated with different social media sites on the Hugo generated site. There are other social media sites available such as twitter and facebook.</li>
+</ul>
+</li>
+</ul>
+<h3 id="archetypes">Archetypes</h3>
+<p>Archetypes are templates used by Hugo when new web pages are created via the  <code>hugo new &lt;some-post-file&gt;</code> command. They are useful because there is a metadata section at the top of each page describing some basic characteristics like the page title, description, and date. Without archetypes this metadata would have to be manually typed or copied on each new web page. While Hugo installs a default archetype at <code>archetypes/default.md</code>, you&rsquo;ll probably want to create your own. I have a file located at <code>archetypes/post.md</code>. The name <code>post.md</code> is meaningful to Hugo. It is the archetype Hugo will use, if present, when generating posts. There are other archetype file names and locations that are meaningful to Hugo. You can find more detail about archetypes at the <a href="https://gohugo.io/content-management/archetypes/">Hugo Archetypes</a> page.</p>
+<p>My <code>archetypes/post.md</code> file looks like this:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-markdown" data-lang="markdown">---
+title: &#34;{{ replace .Name &#34;-&#34; &#34; &#34; | title }}&#34;
+#description: &lt;descriptive text here&gt;
+date: {{ .Date }}
+draft: true
+image: &#34;&#34;
+tags: []
+categories: []
+---
+
+# Descriptive text here...
+<span style="color:#75715e">&lt;!--more--&gt;</span>
+</code></pre></div><p>Here&rsquo;s what each line means:</p>
+<ul>
+<li><code>---</code> - these lines delineate the metadata section of the page</li>
+<li><code>title: &quot;{{ replace .Name &quot;-&quot; &quot; &quot; | title }}&quot;</code> - specifies that the title will be replaced with the file name given to the new page after replacing dashes ('-') with spaces. This is a quick, handy, way to generate titles automatically. For example, <code>My-New-Post.md</code> becomes &ldquo;My New Post&rdquo; in the page&rsquo;s title.</li>
+<li><code>description</code> - specifies text to be used in an article&rsquo;s summary on the home page. This text will not be displayed in the article. It is related to the <code># Descriptive text here...</code> line a little lower in the file.</li>
+<li><code>date</code> - replaced with the date the post was created. It can be changed if you want to modify it, for example after updating the page. There are more sophisticated things you can do with dates, such as published date, last modified date, expiration date, etc. Those all have special meanings. See the <a href="https://gohugo.io/getting-started/configuration/#configure-dates">Hugo documentation</a> for more details.</li>
+<li><code>draft</code> - specifies whether a page is in draft or publish state. Pages in draft state can be seen when viewing the site running on the Hugo web server, but they will not be visible from a published web site such as Github Pages.</li>
+<li><code>image</code> - specifies the image to display at the top of the page. If not specified, the <code>header_image</code> in <code>config.toml</code> will be used.</li>
+<li><code>tags</code> - specifies a low level subject grouping. Taking my example from above, U.S. states might be an appropriate subject grouping for pages pertaining to U.S. states.</li>
+<li><code>categories</code> - specifies a high level subject grouping. Again, taking my example from above, some U.S. states can be put in the category of &ldquo;Best Ski Areas in the World&rdquo;.</li>
+<li><code># Descriptive text here...</code> &amp; <code>&lt;!--more--&gt;</code> - These are used as an alternative to the <code>description</code> line in the metadata section. This can be used if the amount of descriptive text desired is more than can be comfortably put in the <code>description</code> line. <code>&lt;~--more..&gt;</code> is used to indicate the end of this form of descriptive text. Unlike <code>description</code> above, this text does appear in the article. An alternative to both the <code>description</code> line and these lines is to not specify either. In this case the first 70 words of the article will be used in the article summary.</li>
+</ul>
+<h3 id="writing">Writing</h3>
+<p>Now that we have our respositories setup, Hugo installed, our initialized Hugo development repository, and a basic understanding of Hugo website and page configuration, we can start authoring content. All content is written using Markup syntax. See the <a href="https://www.markdownguide.org/tools/hugo/">Hugo Markdown Guide</a> for more information and syntax details. As noted in the Configuration section above, using the Goldmark <code>unsafe</code> option allows you to use standard HTML tags in the content if desired.</p>
+<h2 id="publishing-content-to-github-pages">Publishing content to Github Pages</h2>
+<p>At some point you&rsquo;re going to be ready to make your site live. To do this you&rsquo;ll want to generate the static content to be published from the development content. This development content is generally found in the <code>content</code> and <code>static</code> directories that were created when the site was initialized. The output of the generation process is generally placed in the <code>public</code> directory, but this can be modified. For our purposes we&rsquo;re just going to let Hugo take this default behavior.</p>
+<h3 id="linking-the-development-respository-to-the-github-pages-respository">Linking the development respository to the Github Pages respository</h3>
+<p>Before you can publish to your Github Pages site, you need to link your development respository to your Github Pages respository, <code>&lt;your-github-account-name&gt;.github.io</code>. You only need to do this once. To do the linking we&rsquo;ll use Git Submodules as discussed previously. The command to use is:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git submodule add -b master git@&lt;your-github-account-name&gt;.github.io.git public
+</code></pre></div><p>In my case I used:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git submodule add -b master git@youngkin.github.io.git public
+</code></pre></div><p>The important parts of the command are:</p>
+<ul>
+<li><code>-b master</code> - This links to the hosted repository&rsquo;s <code>master</code> branch</li>
+<li><code>public</code> - This links the hosting, i.e., this, repository&rsquo;s <code>public</code> directory with the hosted respository. So any changes in the <code>public</code> directory, when committed, will be pushed to the Github Pages respository, <code>&lt;your-github-account-name&gt;.github.io.git</code>.</li>
+</ul>
+<p>To illustrate the linking of the development respository to the Github Pages respository do the following:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git remote -v
+</code></pre></div><p>The output should look something like this:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">origin	https://github.com/&lt;your-github-account-name&gt;/&lt;your-github-account-name&gt;.github.io.git <span style="color:#f92672">(</span>fetch<span style="color:#f92672">)</span>
+origin	https://github.com/&lt;your-github-account-name&gt;/&lt;your-github-account-name&gt;.github.io.git <span style="color:#f92672">(</span>push<span style="color:#f92672">)</span>
+</code></pre></div><p>In my environment it looks like this:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">origin	https://github.com/youngkin/youngkin.github.io.git <span style="color:#f92672">(</span>fetch<span style="color:#f92672">)</span>
+origin	https://github.com/youngkin/youngkin.github.io.git <span style="color:#f92672">(</span>push<span style="color:#f92672">)</span>
+</code></pre></div><h3 id="publishing-the-site">Publishing the site</h3>
+<p>When you&rsquo;re ready to publish the site you&rsquo;ll need to generate the static content. This is done by running:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">hugo -D
+</code></pre></div><p>As mentioned above, the default behavior is to generate the content into the <code>public</code> directory, the directory we linked to the Github Pages respository. At this point there&rsquo;s only one more thing left to do, we need to go through the usual <code>git add ...</code>, <code>git commit ...</code>, and <code>git push origin master</code> steps to publish to Github Pages.</p>
+<h2 id="the-finished-product">The finished product</h2>
+<p>This web site! The source code is available on Github for:</p>
+<ul>
+<li><a href="https://github.com/youngkin/hugoblog">The blog source code</a></li>
+<li><a href="https://github.com/youngkin/hugo-theme-cleanwhite-rsy.">The modified Clean White theme</a></li>
+<li><a href="https://github.com/youngkin/youngkin.github.io">The published Github Pages repo</a></li>
+</ul>
+<h2 id="references">References</h2>
+<ul>
+<li><a href="https://www.markdownguide.org/tools/hugo/">https://www.markdownguide.org/tools/hugo/</a></li>
+<li><a href="https://gohugo.io/hosting-and-deployment/hosting-on-github/">https://gohugo.io/hosting-and-deployment/hosting-on-github/</a></li>
+<li><a href="https://gohugo.io/getting-started/">https://gohugo.io/getting-started/</a></li>
+<li><a href="https://guides.github.com/features/pages/">https://guides.github.com/features/pages/</a></li>
+<li><a href="https://themes.gohugo.io/">https://themes.gohugo.io/</a> ## Customizations</li>
+</ul>
+<p>I used the <a href="https://themes.gohugo.io/hugo-theme-cleanwhite/">Clean White theme</a>. I wanted a different look for:</p>
+<ul>
+<li>Title and Description (looking for &ldquo;green screen&rdquo; feel)</li>
+<li>Tags - too dim, wanted to darken</li>
+<li>Wanted to change some fonts</li>
+</ul>
+<p>Here&rsquo;s what I changed:</p>
+<ul>
+<li>I created my own &ldquo;fork&rdquo; of the <a href="https://github.com/youngkin/hugo-theme-cleanwhite-rsy">Clean White theme</a>
+<ul>
+<li>I modified <code>themes/hugo-theme-cleanwhite-rsy/static/css/hux-blog.min.css</code>
+<ul>
+<li><strong>Note:</strong> I &ldquo;pretty printed&rdquo; this file with the Atom <code>css-clean</code> package to make it easier to visualize in this article, but it needs to be unchanged in the blog source in order for the web site to render properly</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="change-the-blog-header">Change the Blog Header:</h3>
+<p>
+  <img src="/images/BlogHeader.png" alt="Blog Header">
+
+</p>
+<p>&ldquo;Green screen&rdquo; look for blog title, change <code>color: #00FA9A</code></p>
+<ul>
+<li>Snippet:</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-css" data-lang="css">.<span style="color:#a6e22e">intro-header</span> .<span style="color:#a6e22e">page-heading</span><span style="color:#f92672">,</span>
+.<span style="color:#a6e22e">intro-header</span> .<span style="color:#a6e22e">post-heading</span><span style="color:#f92672">,</span>
+.<span style="color:#a6e22e">intro-header</span> .<span style="color:#a6e22e">site-heading</span> {
+  <span style="color:#66d9ef">padding</span> : <span style="color:#ae81ff">85</span><span style="color:#66d9ef">px</span> <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">55</span><span style="color:#66d9ef">px</span>;
+  <span style="color:#66d9ef">color</span>   : <span style="color:#ae81ff">#00FA9A</span>;
+}
+</code></pre></div><p>&ldquo;Green screen&rdquo; for Navigation bar at top of page, change <code>color: #00FA9A</code></p>
+<ul>
+<li>Snippet:</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-css" data-lang="css">  .<span style="color:#a6e22e">navbar-custom</span> .<span style="color:#a6e22e">navbar-brand</span> {
+    <span style="color:#66d9ef">padding</span>     : <span style="color:#ae81ff">20</span><span style="color:#66d9ef">px</span>;
+    <span style="color:#66d9ef">color</span>       : <span style="color:#ae81ff">#00FA9A</span>;
+    <span style="color:#66d9ef">line-height</span> : <span style="color:#ae81ff">20</span><span style="color:#66d9ef">px</span>;
+  }
+
+  <span style="color:#f92672">...</span>
+
+    .<span style="color:#a6e22e">navbar-custom</span> .<span style="color:#a6e22e">nav</span> <span style="color:#f92672">li</span> <span style="color:#f92672">a</span> {
+    <span style="color:#66d9ef">padding</span> : <span style="color:#ae81ff">20</span><span style="color:#66d9ef">px</span>;
+    <span style="color:#66d9ef">color</span>   : <span style="color:#ae81ff">#00FA9A</span>;
+  }
+</code></pre></div><p>Terminal font and yellow color for blog subheading (slogan), change <code>color: #FFD700</code> and <code>font-size: 25px</code>, Add <code>font-family: Courier New, monospace;</code></p>
+<ul>
+<li>Snippet:</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-css" data-lang="css">.<span style="color:#a6e22e">intro-header</span> .<span style="color:#a6e22e">page-heading</span> .<span style="color:#a6e22e">subheading</span><span style="color:#f92672">,</span>
+.<span style="color:#a6e22e">intro-header</span> .<span style="color:#a6e22e">site-heading</span> .<span style="color:#a6e22e">subheading</span> {
+  <span style="color:#66d9ef">display</span>     : <span style="color:#66d9ef">block</span>;
+  <span style="color:#66d9ef">margin</span>      : <span style="color:#ae81ff">10</span><span style="color:#66d9ef">px</span> <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">0</span>;
+  <span style="color:#66d9ef">color</span>       : <span style="color:#ae81ff">#FFD700</span>;
+  <span style="color:#66d9ef">font-family</span> : <span style="color:#f92672">-</span>apple-system,
+                <span style="color:#e6db74">&#34;Helvetica Neue&#34;</span>,
+                Arial,
+                <span style="color:#e6db74">&#34;PingFang SC&#34;</span>,
+                <span style="color:#e6db74">&#34;Hiragino Sans GB&#34;</span>,
+                STHeiti,
+                <span style="color:#e6db74">&#34;Microsoft YaHei&#34;</span>,
+                <span style="color:#e6db74">&#34;Microsoft JhengHei&#34;</span>,
+                <span style="color:#e6db74">&#34;Source Han Sans SC&#34;</span>,
+                <span style="color:#e6db74">&#34;Noto Sans CJK SC&#34;</span>,
+                <span style="color:#e6db74">&#34;Source Han Sans CN&#34;</span>,
+                <span style="color:#e6db74">&#34;Noto Sans SC&#34;</span>,
+                <span style="color:#e6db74">&#34;Source Han Sans TC&#34;</span>,
+                <span style="color:#e6db74">&#34;Noto Sans CJK TC&#34;</span>,
+                <span style="color:#e6db74">&#34;WenQuanYi Micro Hei&#34;</span>,
+                SimSun,
+                <span style="color:#66d9ef">sans-serif</span>;
+  <span style="color:#66d9ef">font-family</span> : Courier New,
+                <span style="color:#66d9ef">monospace</span>;
+  <span style="color:#66d9ef">font-size</span>   : <span style="color:#ae81ff">25</span><span style="color:#66d9ef">px</span>;
+  <span style="color:#66d9ef">font-weight</span> : <span style="color:#ae81ff">300</span>;
+  <span style="color:#66d9ef">line-height</span> : <span style="color:#ae81ff">1.7</span>;
+  <span style="color:#66d9ef">line-height</span> : <span style="color:#ae81ff">1.1</span>;
+}
+</code></pre></div><h3 id="change-the-sidebar">Change the Sidebar</h3>
+<p><img style="border:2px solid black" src="/images/BlogSideBar.png" align="left"><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br></p>
+<p>Get a darker gray for the &ldquo;About Me&rdquo; description and the &ldquo;social&rdquo; badges background color, change  <code>.sidebar-container {...}</code>, and <code>.sidebar-container a {...}</code> <code>color</code> element to <code>#555555</code></p>
+<ul>
+<li>Snippet:</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-css" data-lang="css">.<span style="color:#a6e22e">sidebar-container</span> {
+  <span style="color:#66d9ef">color</span>     : <span style="color:#ae81ff">#555555</span>;
+  <span style="color:#66d9ef">font-size</span> : <span style="color:#ae81ff">14</span><span style="color:#66d9ef">px</span>;
+}
+
+.<span style="color:#a6e22e">sidebar-container</span> <span style="color:#f92672">h5</span> {
+  <span style="color:#66d9ef">padding-bottom</span> : <span style="color:#ae81ff">1</span><span style="color:#66d9ef">em</span>;
+  <span style="color:#66d9ef">color</span>          : <span style="color:#66d9ef">gray</span>;
+}
+
+.<span style="color:#a6e22e">sidebar-container</span> <span style="color:#f92672">h5</span> <span style="color:#f92672">a</span> {
+  <span style="color:#66d9ef">color</span>           : <span style="color:#66d9ef">gray</span><span style="color:#75715e">!important</span>;
+  <span style="color:#66d9ef">text-decoration</span> : <span style="color:#66d9ef">none</span>;
+}
+
+.<span style="color:#a6e22e">sidebar-container</span> <span style="color:#f92672">a</span> {
+  <span style="color:#66d9ef">color</span> : <span style="color:#ae81ff">#555555</span><span style="color:#75715e">!important</span>;
+}
+</code></pre></div><p>Get a darker gray for &ldquo;Featured Tags&rdquo; in the sidebar to improve readability <code>.sidebar-container .tags a {...}</code> <code>color</code> element to <code>#555555</code>, <code>.tags a {... color: ... border:...}</code></p>
+<ul>
+<li>Snippet:</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-css" data-lang="css">.<span style="color:#a6e22e">sidebar-container</span> .<span style="color:#a6e22e">tags</span> <span style="color:#f92672">a</span> {
+  <span style="color:#66d9ef">border-color</span> : <span style="color:#ae81ff">#555555</span>;
+}
+
+<span style="color:#f92672">...</span>
+
+.<span style="color:#a6e22e">tags</span> <span style="color:#f92672">a</span> {
+  <span style="color:#66d9ef">display</span>         : <span style="color:#66d9ef">inline</span><span style="color:#f92672">-</span><span style="color:#66d9ef">block</span>;
+  <span style="color:#66d9ef">margin</span>          : <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">1</span><span style="color:#66d9ef">px</span>;
+  <span style="color:#66d9ef">margin-bottom</span>   : <span style="color:#ae81ff">6</span><span style="color:#66d9ef">px</span>;
+  <span style="color:#66d9ef">padding</span>         : <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">10</span><span style="color:#66d9ef">px</span>;
+  <span style="color:#66d9ef">color</span>           : <span style="color:#ae81ff">#FFD700</span>;
+  <span style="color:#66d9ef">border</span>          : <span style="color:#ae81ff">1</span><span style="color:#66d9ef">px</span> <span style="color:#66d9ef">solid</span> rgba(<span style="color:#ae81ff">255</span>,<span style="color:#ae81ff">215</span>,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0.8</span>);
+  <span style="color:#66d9ef">border-radius</span>   : <span style="color:#ae81ff">999</span><span style="color:#66d9ef">em</span>;
+  <span style="color:#66d9ef">text-decoration</span> : <span style="color:#66d9ef">none</span>;
+  <span style="color:#66d9ef">font-size</span>       : <span style="color:#ae81ff">12</span><span style="color:#66d9ef">px</span>;
+  <span style="color:#66d9ef">line-height</span>     : <span style="color:#ae81ff">24</span><span style="color:#66d9ef">px</span>;
+}
+
+</code></pre></div><h2 id="gimp">GIMP</h2>
+<p>I used <a href="https://www.gimp.org/">GIMP</a> to manipulate the blog images to:</p>
+<ul>
+<li>Resize the images to fit within the page</li>
+<li>Add a dark layer over the top of the images to increase contrast with the blog header elements (i.e., navigation bar, title, subtitle)
+<ul>
+<li>Layer colors to darken images - 4d4d4d and 373737 and generally an opacity of 80%</li>
+</ul>
+</li>
+</ul>
+
+                
+
+                <hr>
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/post/how-to-install-mariadb-an-a-raspberry-pi/" data-toggle="tooltip" data-placement="top" title="How to Install MariaDB on a Raspberry Pi">&larr;
+                            Previous Post</a>
+                    </li>
+                    
+                    
+                </ul>
+
+                
+<div id="disqus-comment"></div>
+
+
+
+            </div>
+            
+            <div class="
+                col-lg-11 col-lg-offset-1
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/kubernetes" title="kubernetes">
+                            kubernetes
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/raspberry-pi" title="raspberry-pi">
+                            raspberry-pi
+                        </a>
+                        
+                        
+                        
+                        
+                    </div>
+                </section>
+                
+
+                
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                   
+                   <li>
+                       <a href='' rel="alternate" type="application/rss+xml" title="Rich Youngkin" >
+                           <span class="fa-stack fa-lg">
+                               <i class="fa fa-circle fa-stack-2x"></i>
+                               <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                           </span>
+                       </a>
+                   </li>
+                   
+                    
+                    <li>
+                        <a href="mailto:rich.youngkin@gmail.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    
+                    
+                    
+
+                    
+
+		    
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/youngkin">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://www.linkedin.com/in/richard-youngkin-0749763">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    <li>
+                        <a target="_blank" href="https://medium.com/@RichYoungkin">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-medium fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+            
+                    
+                    <li>
+                        <a target="_blank" href="https://stackoverflow.com/users/2646870/rich">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-stack-overflow fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+            
+                    
+                    <li>
+                        <a target="_blank" href="https://www.reddit.com/user/elevation5280">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-reddit fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+            
+                    
+                    
+            
+            
+            
+                </ul>
+		<p class="copyright text-muted">
+                    Copyright &copy; Rich Youngkin 2020
+                    <br>
+                    <a href="https://themes.gohugo.io/hugo-theme-cleanwhite">CleanWhite Hugo Theme</a> by <a href="https://zhaohuabing.com">Huabing</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="100px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=zhaohuabing&repo=hugo-theme-cleanwhite&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+
+
+
+
+
+<script>
+    
+    if($('#tag_cloud').length !== 0){
+        async("/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+
+<script>
+    async("https://cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+
+
+
+
+</body>
+</html>
