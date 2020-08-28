@@ -15,9 +15,9 @@
     
 
     
-    <meta name="title" content="Create a Free Blog Site Using Github Pages and Hugo" />
-    <meta property="og:title" content="Create a Free Blog Site Using Github Pages and Hugo" />
-    <meta property="twitter:title" content="Create a Free Blog Site Using Github Pages and Hugo" />
+    <meta name="title" content="Create a Free Blog Site Using GitHub Pages and Hugo" />
+    <meta property="og:title" content="Create a Free Blog Site Using GitHub Pages and Hugo" />
+    <meta property="twitter:title" content="Create a Free Blog Site Using GitHub Pages and Hugo" />
     
 
     
@@ -34,7 +34,7 @@
     <meta name="keyword"  content="Rich, Youngkin, Raspberry, Pi, Docker, Kubernetes, Go, Golang, Microservice">
     <link rel="shortcut icon" href="/img/favicon.ico">
 
-    <title>Create a Free Blog Site Using Github Pages and Hugo-Rich Youngkin Blog</title>
+    <title>Create a Free Blog Site Using GitHub Pages and Hugo-Rich Youngkin Blog</title>
 
     <link rel="canonical" href="/post/createafreeblogsite/">
 
@@ -169,8 +169,8 @@
                             blog
                         </a>
                         
-                        <a class="tag" href="/tags/github-pages" title="Github Pages">
-                            Github Pages
+                        <a class="tag" href="/tags/github-pages" title="GitHub Pages">
+                            GitHub Pages
                         </a>
                         
                         <a class="tag" href="/tags/hugo" title="Hugo">
@@ -178,7 +178,7 @@
                         </a>
                         
                     </div>
-                    <h1>Create a Free Blog Site Using Github Pages and Hugo</h1>
+                    <h1>Create a Free Blog Site Using GitHub Pages and Hugo</h1>
                     <h2 class="subheading"></h2>
                     <span class="meta">
                         Posted by 
@@ -211,12 +211,12 @@
                 post-container">
 
                 
-                <p>Want to create your own blog, but don&rsquo;t want to get tied into any of the big hosted solutions or subscription publishing sites? This article describes how to use Github Pages with Hugo to create, maintain, and host your own blog site.</p>
+                <p>Want to create your own blog, but don&rsquo;t want to get tied into any of the big hosted solutions or subscription publishing sites? This article describes how to use GitHub Pages with Hugo to create, maintain, and host your own blog site.</p>
 <h2 id="overview">Overview</h2>
 <blockquote>
 <p>Prerequisites:</p>
 <ol>
-<li>A basic knowledge of git and Github. For significant customizations beyond what&rsquo;s available natively in Hugo and the chosen Hugo theme, a basic understanding of HTML and CSS will be required.</li>
+<li>A basic knowledge of git and GitHub. For significant customizations beyond what&rsquo;s available natively in Hugo and the chosen Hugo theme, a basic understanding of HTML and CSS will be required.</li>
 <li>Git version 2.24.3 or higher</li>
 <li>Mac development machine
 <ol>
@@ -225,29 +225,29 @@
 </li>
 </ol>
 </blockquote>
-<p>This article is a fairly detailed tutorial on how to create a full featured website/blog using Hugo and Github Pages. If you just want a quick overview of how to use Hugo I recommend going to the <a href="https://gohugo.io/getting-started/quick-start/">Hugo Quickstart page</a>. If you want a quickstart on setting up a Hugo/Github Pages site I recommend going to the <a href="https://gohugo.io/hosting-and-deployment/hosting-on-github/">Hugo Github Pages quickstart page</a>.</p>
-<p>At its core Github Pages is a combination of a Github repository and a published web site. One consequence of this is that any commit to the master branch of the repository is immediately published. One way to create a Github Pages website is to also create an associated &ldquo;workspace&rdquo; Github repository. This is what is described here.</p>
-<p>Hugo is an Open Source static website generator. It is quite powerful and the websites that can be created with Hugo can be quite sophisticated. Hugo is the base engine used to interpret how to create a website based on a predefined template. Hugo calls these templates themes. &ldquo;Skin&rdquo; is another word for themes. A theme is a combination of HTML and CSS. The HTML is used for site layout. CSS is used to define colors, fonts, font size, and other non-layout related attributes that define how the website looks. This combination is quite powerful. The website&rsquo;s page definitions themselves, i.e., the website&rsquo;s content, are defined using standard Markdown syntax.</p>
+<p>This article is a fairly detailed tutorial on how to create a full featured website/blog using Hugo and GitHub Pages. If you just want a quick overview of how to use Hugo I recommend going to the <a href="https://gohugo.io/getting-started/quick-start/">Hugo Quickstart page</a>. If you want a quickstart on setting up a Hugo/GitHub Pages site I recommend going to the <a href="https://gohugo.io/hosting-and-deployment/hosting-on-github/">Hugo GitHub Pages quickstart page</a>.</p>
+<p>At its core GitHub Pages is a combination of a GitHub repository and a published web site. One consequence of this is that any commit to the master branch of the repository is immediately published. One way to create a GitHub Pages website is to also create an associated &ldquo;development&rdquo; GitHub repository. This is what is described here.</p>
+<p>Hugo is an Open Source static website generator. It is quite powerful and the websites that can be created with Hugo can be quite sophisticated. Hugo is the base engine used to interpret how to create a website based on a predefined template. Hugo calls these templates themes. &ldquo;Skin&rdquo; is another word for theme. A theme is a combination of HTML and CSS. The HTML is used for site layout. CSS is used to define colors, fonts, font size, and other non-layout related attributes that define how the website looks. This combination is quite powerful. The website&rsquo;s page definitions themselves, i.e., the website&rsquo;s content, are defined using standard Markdown syntax.</p>
 <p>Hugo also comes with an HTML server that can be used during development to provide immediate feedback on any changes that are made to web pages. Hugo can be used in 2 ways:</p>
 <ol>
-<li>Development mode - This mode using its HTML server to render pages as they are being modified during development. Running the server during development provides immediate feedback when changes are made to the content.</li>
+<li>Development mode - In this mode Hugo is using its HTML server to render pages as they are being modified during development. Running the server during development provides immediate feedback when changes are made to the content.</li>
 <li>Build mode - Hugo will also generate a complete static website based on a theme&rsquo;s layout, CSS, and the markdown files that define the content. The output of this mode is what will be published.</li>
 </ol>
-<p>The Hugo themes as well as the website&rsquo;s page definitions are stored in what I above called the &ldquo;workspace&rdquo; repository. This is the primary authoring space. The Hugo web server operates against this repository. Through the magic of Git Submodules, the final set of committed changes to the master branch in the workspace repository are immediately made available in the Github Pages repository.</p>
+<p>The Hugo themes as well as the website&rsquo;s page definitions are stored in what I above called the &ldquo;development&rdquo; repository. This is the primary authoring space. The Hugo web server operates against this repository. Through the magic of Git Submodules, the final set of committed changes to the master branch in the development repository are immediately made available in the GitHub Pages repository.</p>
 <blockquote>
 <p>Brief segue on <a href="https://github.blog/2016-02-01-working-with-submodules/">Git Submodules</a>:</p>
-<p>Git Submodules are a way of including one, <strong>hosted</strong>, Github repository in another, <strong>hosting</strong>, repository. The entire content of the hosted repository is available in the hosting repository as if it was just a normal subdirectory in the hosting repository. Changes to the hosted repository can be made in the context of the hosting repository. Committing any such changes are immediately available in the hosted repository.</p>
+<p>Git Submodules are a way of including one, <strong>hosted</strong>, GitHub repository in another, <strong>hosting</strong>, repository. The entire content of the hosted repository is available in the hosting repository as if it was just a normal subdirectory in the hosting repository. Changes to the hosted repository can be made in the context of the hosting repository. Committing any such changes are immediately available in the hosted repository.</p>
 </blockquote>
-<p>In the context of Submodules, the Github Pages repository is the <strong>hosted</strong> repository. It contains the published content of the website. In contrast, the repository containing the Hugo theme(s) and the development versions of the content is the <strong>hosting</strong> repository. When the website content is ready for publishing Hugo is used to generate the static website. Hugo generates the content into the submodule associated with the, <strong>hosted</strong>, Github Pages repository. When ready, the changes are committed in the <strong>hosting</strong> repository and they become immediately available, and thereby published, in the Github Pages repository.</p>
-<h2 id="initial-github-setup">Initial Github setup</h2>
-<p>The two respositories, the Github Pages repository and the hosting development repository, need to be created. There are 2 options for the Github Pages repository:</p>
+<p>In the context of Submodules, the GitHub Pages repository is the <strong>hosted</strong> repository. It contains the published content of the website. In contrast, the repository containing the Hugo theme(s) and the development versions of the content is the <strong>hosting</strong> repository. When the website content is ready for publishing Hugo is used to generate the static website. Hugo generates the content into the submodule associated with the, <strong>hosted</strong>, GitHub Pages repository. When ready, the changes are committed in the <strong>hosting</strong> repository and they become immediately available, and thereby published, in the GitHub Pages repository.</p>
+<h2 id="initial-github-setup">Initial GitHub setup</h2>
+<p>The two repositories, the GitHub Pages repository and the hosting development repository, need to be created. There are 2 options for the GitHub Pages repository:</p>
 <ol>
 <li>Personal or Organizational</li>
 <li>Project</li>
 </ol>
-<p>See the <a href="https://help.github.com/articles/user-organization-and-project-pages/#user--organization-pages">Github Pages help documentation</a> for more details about the differences. This article describes how to create a Personal Github Pages repository.</p>
-<p>Creating the Github Pages repository is fairly straightforward, but there is one very important restriction on its name. The repository&rsquo;s name must be of the form <code>&lt;github_username&gt;.github.io</code>. For example, <code>smith.github.io</code> where <code>smith</code> is the associated user&rsquo;s account name. This will be the URL of the website. So the Github pages repository is just a normal Github repository, just with a very specific name. We&rsquo;ll use this repository name, <code>smith.github.io</code> in the rest of the article when referring to the Github Pages repository. See the <a href="https://pages.github.com/">Github Pages quickstart guide</a> if you need more details on how to create a repository.</p>
-<p>The second step is to create the repository where the website development/authoring will take place. This is just a normal Github repository. For the purposes of this article, we&rsquo;ll use <code>myblog.dev.repo</code> for the name of the development repository. See the <a href="https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/creating-a-new-repository">Github documentation</a> if you need more details about how to create a repository.</p>
+<p>See the <a href="https://help.github.com/articles/user-organization-and-project-pages/#user--organization-pages">GitHub Pages help documentation</a> for more details about the differences. This article describes how to create a Personal GitHub Pages repository.</p>
+<p>Creating the GitHub Pages repository is fairly straightforward, but there is one very important restriction on its name. The repository&rsquo;s name must be of the form <code>&lt;github_username&gt;.github.io</code>. For example, <code>smith.github.io</code> where <code>smith</code> is the associated user&rsquo;s account name. This will be the URL of the website. So the GitHub pages repository is just a normal GitHub repository, just with a very specific name. We&rsquo;ll use this repository name, <code>smith.github.io</code> in the rest of the article when referring to the GitHub Pages repository. See the <a href="https://pages.github.com/">GitHub Pages quickstart guide</a> if you need more details on how to create a repository.</p>
+<p>The second step is to create the repository where the website development/authoring will take place. This is just a normal GitHub repository. For the purposes of this article, we&rsquo;ll use <code>myblog.dev.repo</code> for the name of the development repository. See the <a href="https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/creating-a-new-repository">GitHub documentation</a> if you need more details about how to create a repository.</p>
 <h2 id="install-hugo">Install Hugo</h2>
 <p>There are a number of ways to install Hugo:</p>
 <ul>
@@ -266,7 +266,7 @@
 <h3 id="initialize-the-new-site">Initialize the new site</h3>
 <p>The first thing to do is to clone the development/authoring repository on to your local machine:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git clone git@github.com:smith/myblog.dev.repo.git
-</code></pre></div><p>With the Github respositories setup and Hugo installed it&rsquo;s time to initialze the website. Hugo provides this capability through the <code>hugo</code> command line:</p>
+</code></pre></div><p>With the GitHub repositories setup and Hugo installed it&rsquo;s time to initialize the website. Hugo provides this capability through the <code>hugo</code> command line:</p>
 <ol>
 <li>Change directories into the root of the <code>myblog.dev.repo</code> repository</li>
 <li>Run <code>hugo new site .</code>
@@ -290,10 +290,10 @@
 <li><code>static</code> - content that doesn&rsquo;t change, such as images</li>
 <li><code>themes</code> - Where the site&rsquo;s theme(s) are located</li>
 <li><code>config.toml</code> - The basic configuration for the site, e.g., the site&rsquo;s name</li>
-<li><code>archetypes</code> - Template(s) used by the <code>hugo new &lt;contentdir/contentfile.md&gt;</code> command, used to create new content markdown files</li>
+<li><code>archetypes</code> - Template(s) used by the <code>hugo new &lt;contentdir/contentfile.md&gt;</code> command to create new content markdown files</li>
 </ul>
 <h3 id="pick-and-install-the-sites-theme">Pick and install the site&rsquo;s theme</h3>
-<p>The next step is to choose a theme to use. See the <a href="https://themes.gohugo.io/">Hugo themes page</a> and select the one that looks best to you. The Hugo <a href="https://themes.gohugo.io/gohugo-theme-ananke/">Ananke theme</a> is a popular one. I chose the <a href="https://themes.gohugo.io/hugo-theme-cleanwhite/">Clean White theme</a>. Once you&rsquo;ve picked a theme you need to add it to the development/authoring repo. Like with the Github Pages repo, this is accomplished via a git submodule:</p>
+<p>The next step is to choose a theme to use. See the <a href="https://themes.gohugo.io/">Hugo themes page</a> and select the one that looks best to you. The Hugo <a href="https://themes.gohugo.io/gohugo-theme-ananke/">Ananke theme</a> is a popular one. I chose the <a href="https://themes.gohugo.io/hugo-theme-cleanwhite/">Clean White theme</a>. Once you&rsquo;ve picked a theme you need to add it to the development/authoring repo. Like with the GitHub Pages repo, this is accomplished via a git submodule:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git submodule add &lt;theme-github-url&gt; &lt;target-directory&gt;
 </code></pre></div><p>I chose a customized version of the Clean White theme:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git submodule add git@github.com:youngkin/hugo-theme-cleanwhite-rsy.git themes/hugo-theme-cleanwhite-rsy
@@ -325,7 +325,7 @@ draft: true
 <h2 id="authoring-a-site">Authoring a site</h2>
 <p>Now we&rsquo;re ready to start creating the actual site that we want to publish. The first thing you might want to do is delete the <code>content/post/testpage.md</code> file created previously. This was created just to test the installation and is no longer needed.</p>
 <h3 id="configuration">Configuration</h3>
-<p>As mentioned above, the basic configuration for a Hugo website is specified in the <code>config.toml</code> file. Hugo&rsquo;s <a href="https://gohugo.io/getting-started/configuration/">Getting Started documentation</a> covers configuration in detail. The configuration for this blog is a basic, but functional, configuration. It looks like this (<i style="color:#1E90FF;">remember, <code>smith</code> is our fictional Github account name, you&rsquo;ll need to replace it with your own account name</i>):</p>
+<p>As mentioned above, the basic configuration for a Hugo website is specified in the <code>config.toml</code> file. Hugo&rsquo;s <a href="https://gohugo.io/getting-started/configuration/">Getting Started documentation</a> covers configuration in detail. The configuration for this blog is a basic, but functional, configuration. It looks like this (<i style="color:#1E90FF;">remember, <code>smith</code> is our fictional GitHub account name, you&rsquo;ll need to replace it with your own account name</i>):</p>
 <pre><code>baseurl = &quot;https://smith.github.io&quot;
 title = &quot;Rich Youngkin&quot;
 theme = &quot;hugo-theme-cleanwhite-rsy&quot;
@@ -371,7 +371,7 @@ paginate = 5000 #frontpage pagination
   reddit         = &quot;https://www.reddit.com/user/elevation5280&quot;
 </code></pre><p>Taken line-by-line, here&rsquo;s what each one means:</p>
 <ul>
-<li><code>baseurl</code> - This is the URL of the published web site. For a Github Pages site it must be of the form <code>https://&lt;your-github-id-here&gt;.github.io</code>, e.g., <code>https://smith.github.io</code>.</li>
+<li><code>baseurl</code> - This is the URL of the published web site. For a GitHub Pages site it must be of the form <code>https://&lt;your-github-id-here&gt;.github.io</code>, e.g., <code>https://smith.github.io</code>.</li>
 <li><code>title</code> - This is the text displayed in the top left, header, area of every page on the site. It is a button control that will take you to the home page. Typically it&rsquo;s your name.</li>
 <li><code>theme</code> - The theme used by the site</li>
 <li><code>language</code> - The <a href="https://en.wikipedia.org/wiki/IETF_language_tag">IETF language tag</a> specifying the primary language of the website. The language code, e.g., <code>en</code>, can have a suffix specifying an optional country code or region to subdivide the language into various dialects. <code>en-us</code> means United States English. <code>en-gb</code> means Great Britian English.</li>
@@ -413,26 +413,26 @@ categories: []
 <li><code>title: &quot;{{ replace .Name &quot;-&quot; &quot; &quot; | title }}&quot;</code> - specifies that the page&rsquo;s title will be generated from the file name after replacing dashes ('-') with spaces. This is a quick, handy, way to generate titles automatically. For example, <code>My-New-Post.md</code> becomes &ldquo;My New Post&rdquo; in the page&rsquo;s title.</li>
 <li><code>description</code> - specifies text to be used in an article&rsquo;s summary on the home page. This text will not be displayed in the article. It is related to the <code># Descriptive text here...</code> line a little lower in the file.</li>
 <li><code>date</code> - replaced with the date the post was created. The generated date can be changed if you want to modify it, for example after updating the page. There are more sophisticated things you can do with dates, such as published date, last modified date, expiration date, etc. Those all have special meanings. See the <a href="https://gohugo.io/getting-started/configuration/#configure-dates">Hugo documentation</a> for more details.</li>
-<li><code>draft</code> - specifies whether a page is in draft or publish state. Pages in draft state can be seen when viewing the site running on the Hugo web server, but they will not be visible from a published web site such as Github Pages.</li>
+<li><code>draft</code> - specifies whether a page is in draft or publish state. Pages in draft state can be seen when viewing the site running on the Hugo web server, but they will not be visible from a published web site such as GitHub Pages.</li>
 <li><code>image</code> - specifies the image to display at the top of the page. If not specified, the <code>header_image</code> in <code>config.toml</code> will be used.</li>
 <li><code>tags</code> - specifies a comma separated list of low level subject groupings. Taking my example from above, U.S. states might be an appropriate subject grouping for pages pertaining to U.S. states. For example, <code>tags: [&quot;Colorado&quot;, &quot;Utah&quot;, ...]</code>.</li>
 <li><code>categories</code> - specifies a specifies a comma separated list of high level subject groupings. Again, taking my example from above, some U.S. states can be put in the category of &ldquo;Best Ski Areas in the World&rdquo;.</li>
 <li><code># Descriptive text here...</code> &amp; <code>&lt;!--more--&gt;</code> - These lines are used as an alternative to the <code>description</code> line in the metadata section. This can be used if the amount of descriptive text desired is more than can be comfortably put in the <code>description</code> line. <code>&lt;!--more..&gt;</code> is used to indicate the end of this type of descriptive text. Unlike <code>description</code> above, this text does appear in the article. An alternative to both the <code>description</code> line and these lines is to not specify either. In this case the first 70 words of the article will be used in the article summary.</li>
 </ul>
 <h3 id="writing">Writing</h3>
-<p>Now that we have our respositories setup, Hugo installed, our initialized Hugo development repository, and a basic understanding of Hugo website and page configuration, we can start authoring content. All content is written using Markup syntax. See the <a href="https://www.markdownguide.org/tools/hugo/">Hugo Markdown Guide</a> for more information and syntax details. As noted in the Configuration section above, using the Goldmark <code>unsafe</code> option allows you to use standard HTML tags in the content if desired.</p>
-<h2 id="publishing-content-to-github-pages">Publishing content to Github Pages</h2>
+<p>Now that we have our repositories setup, Hugo installed, our initialized Hugo development repository, and a basic understanding of Hugo website and page configuration, we can start authoring content. All content is written using Markup syntax. See the <a href="https://www.markdownguide.org/tools/hugo/">Hugo Markdown Guide</a> for more information and syntax details. As noted in the Configuration section above, using the Goldmark <code>unsafe</code> option allows you to use standard HTML tags in the content if desired.</p>
+<h2 id="publishing-content-to-github-pages">Publishing content to GitHub Pages</h2>
 <p>At some point you&rsquo;re going to be ready to make your site live. To do this you&rsquo;ll want to generate the static content to be published from the development content. This development content is generally found in the <code>content</code> and <code>static</code> directories that were created when the site was initialized. The output of the generation process is generally placed in the <code>public</code> directory, but this can be modified. For our purposes we&rsquo;re just going to let Hugo take this default behavior.</p>
-<h3 id="linking-the-development-repository-to-the-github-pages-repository">Linking the development repository to the Github Pages repository</h3>
+<h3 id="linking-the-development-repository-to-the-github-pages-repository">Linking the development repository to the GitHub Pages repository</h3>
 <p><strong>This step only needs to be done once.</strong></p>
-<p>Before you can publish to your Github Pages site, you need to link your development repository, <code>myblog.dev.repo</code> in our case, to your Github Pages repository. We&rsquo;re using <code>smith.github.io</code> as the Github Pages repository name. To do the linking we&rsquo;ll use Git Submodules as discussed previously. The command to use is:</p>
+<p>Before you can publish to your GitHub Pages site, you need to link your development repository, <code>myblog.dev.repo</code> in our case, to your GitHub Pages repository. We&rsquo;re using <code>smith.github.io</code> as the GitHub Pages repository name. To do the linking we&rsquo;ll use Git Submodules as discussed previously. The command to use is:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git submodule add -b master git@smith.github.io.git public
 </code></pre></div><p>The important parts of the command are:</p>
 <ul>
 <li><code>-b master</code> - This links to the hosted repository&rsquo;s <code>master</code> branch</li>
-<li><code>public</code> - This links the hosting, i.e., this repository&rsquo;s <code>public</code> directory, with the hosted repository. So any changes in the <code>public</code> directory, when committed, will be pushed to the Github Pages repository, <code>smith.github.io.git</code>.</li>
+<li><code>public</code> - This links the hosting, i.e., this repository&rsquo;s <code>public</code> directory, with the hosted repository. So any changes in the <code>public</code> directory, when committed, will be pushed to the GitHub Pages repository, <code>smith.github.io.git</code>.</li>
 </ul>
-<p>To illustrate the linking of the development repository to the Github Pages repository do the following:</p>
+<p>To illustrate the linking of the development repository to the GitHub Pages repository do the following:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git remote -v
 </code></pre></div><p>The output should look something like this:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">origin	https://github.com/smith/smith.github.io.git <span style="color:#f92672">(</span>fetch<span style="color:#f92672">)</span>
@@ -454,20 +454,20 @@ origin	https://github.com/smith/smith.github.io.git <span style="color:#f92672">
 <p><strong style="color:#ff0000;">CAUTION!!!!!</strong> Everything in <code>public</code> and the <code>project root</code> directories is staged for commit. This means that all additions or changes you made will be committed. This can be an issue if you have new temporary files that you have no intention of committing. If you don&rsquo;t want this behavior you can modify the script to comment out the <code>git add .</code> commands.</p>
 </blockquote>
 <h2 id="the-finished-product">The finished product</h2>
-<p>This web site! The source code is available on Github for:</p>
+<p>This web site! The source code is available on GitHub for:</p>
 <ul>
 <li><a href="https://github.com/youngkin/hugoblog">The blog source code</a></li>
 <li><a href="https://github.com/youngkin/hugo-theme-cleanwhite-rsy">The modified Clean White theme</a></li>
-<li><a href="https://github.com/youngkin/youngkin.github.io">The published Github Pages repo</a></li>
+<li><a href="https://github.com/youngkin/youngkin.github.io">The published GitHub Pages repo</a></li>
 </ul>
 <h2 id="references">References</h2>
 <ul>
 <li><a href="https://gohugo.io/getting-started/quick-start/">Hugo Quickstart page</a></li>
-<li><a href="https://gohugo.io/hosting-and-deployment/hosting-on-github/">Hugo Github Pages quickstart page</a></li>
+<li><a href="https://gohugo.io/hosting-and-deployment/hosting-on-github/">Hugo GitHub Pages quickstart page</a></li>
 <li><a href="https://github.blog/2016-02-01-working-with-submodules/">Git Submodules</a></li>
-<li><a href="https://help.github.com/articles/user-organization-and-project-pages/#user--organization-pages">Github Pages help documentation</a></li>
-<li><a href="https://pages.github.com/">Github Pages quickstart guide</a></li>
-<li><a href="https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/creating-a-new-repository">Github documentation</a></li>
+<li><a href="https://help.github.com/articles/user-organization-and-project-pages/#user--organization-pages">GitHub Pages help documentation</a></li>
+<li><a href="https://pages.github.com/">GitHub Pages quickstart guide</a></li>
+<li><a href="https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/creating-a-new-repository">GitHub documentation</a></li>
 <li><a href="https://github.com/gohugoio/hugo/releases">Hugo downloads page</a></li>
 <li><a href="https://gohugo.io/getting-started/installing/">Hugo installation documentation</a></li>
 <li><a href="https://themes.gohugo.io/">Hugo themes page</a></li>
@@ -491,7 +491,7 @@ origin	https://github.com/smith/smith.github.io.git <span style="color:#f92672">
 </ul>
 <p>Here&rsquo;s what I changed:</p>
 <ul>
-<li>I copied <a href="https://github.com/zhaohuabing/hugo-theme-cleanwhite">Clean White theme Github repository</a> to <a href="https://github.com/youngkin/hugo-theme-cleanwhite-rsy">my own copy</a>
+<li>I copied <a href="https://github.com/zhaohuabing/hugo-theme-cleanwhite">Clean White theme GitHub repository</a> to <a href="https://github.com/youngkin/hugo-theme-cleanwhite-rsy">my own copy</a>
 <ul>
 <li>I modified <code>themes/hugo-theme-cleanwhite-rsy/static/css/hux-blog.min.css</code>
 <ul>
