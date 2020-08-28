@@ -6,10 +6,19 @@
     <description>Recent content in Posts on Rich Youngkin</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 26 Aug 2020 13:07:25 -0600</lastBuildDate>
+    <lastBuildDate>Wed, 26 Aug 2020 13:09:42 -0600</lastBuildDate>
     
 	<atom:link href="https://youngkin.github.io/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Create a Free Web/Blog Site Using Github Pages and Hugo</title>
+      <link>https://youngkin.github.io/post/createafreeblogsite/</link>
+      <pubDate>Wed, 26 Aug 2020 13:09:42 -0600</pubDate>
+      
+      <guid>https://youngkin.github.io/post/createafreeblogsite/</guid>
+      <description>&lt;p&gt;Want to create your own web site, but don&amp;rsquo;t want to get tied into any of the big hosted solutions or subscription publishing sites? This article describes how to use Github Pages with Hugo to create, maintain, and host your own web site.&lt;/p&gt;</description>
+    </item>
     
     <item>
       <title>How to Install MariaDB on a Raspberry Pi</title>
