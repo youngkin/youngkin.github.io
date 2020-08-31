@@ -21,9 +21,9 @@
     
 
     
-    <meta name="description" content="">
-    <meta property="og:description" content="" />
-    <meta property="twitter:description" content="" />
+    <meta name="description" content="This article describes how to use GitHub Pages with Hugo to create, maintain, and host your own blog site.">
+    <meta property="og:description" content="This article describes how to use GitHub Pages with Hugo to create, maintain, and host your own blog site." />
+    <meta property="twitter:description" content="This article describes how to use GitHub Pages with Hugo to create, maintain, and host your own blog site." />
     
 
     
@@ -186,7 +186,7 @@
                                 Rich Youngkin
                          
                         on 
-                        Wednesday, August 26, 2020
+                        Monday, August 31, 2020
                         
                         
                         
@@ -211,18 +211,60 @@
                 post-container">
 
                 
+                <header>
+                    <h2>Contents</h2>
+                </header>
+                <nav id="TableOfContents">
+  <ul>
+    <li><a href="#overview">Overview</a></li>
+    <li><a href="#initial-github-setup">Initial GitHub setup</a></li>
+    <li><a href="#install-hugo">Install Hugo</a></li>
+    <li><a href="#create-a-basic-site">Create a basic site</a>
+      <ul>
+        <li><a href="#initialize-the-new-site">Initialize the new site</a></li>
+        <li><a href="#pick-and-install-the-sites-theme">Pick and install the site&rsquo;s theme</a></li>
+        <li><a href="#test-the-new-site-locally">Test the new site locally</a></li>
+      </ul>
+    </li>
+    <li><a href="#authoring-a-site">Authoring a site</a>
+      <ul>
+        <li><a href="#configuration">Configuration</a></li>
+        <li><a href="#archetypes">Archetypes</a></li>
+        <li><a href="#writing">Writing</a></li>
+      </ul>
+    </li>
+    <li><a href="#publishing-content-to-github-pages">Publishing content to GitHub Pages</a>
+      <ul>
+        <li><a href="#linking-the-development-repository-to-the-github-pages-repository">Linking the development repository to the GitHub Pages repository</a></li>
+        <li><a href="#publishing-the-site">Publishing the site</a></li>
+      </ul>
+    </li>
+    <li><a href="#the-finished-product">The finished product</a></li>
+    <li><a href="#references">References</a></li>
+    <li><a href="#appendix">Appendix</a>
+      <ul>
+        <li><a href="#add-support-for-comments">Add Support for Comments</a></li>
+        <li><a href="#optional-table-of-contents">Optional Table of Contents</a></li>
+        <li><a href="#theme-customizations">Theme Customizations</a></li>
+        <li><a href="#image-manipulation">Image manipulation</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+                
                 <p>Want to create your own blog, but don&rsquo;t want to get tied into any of the big hosted solutions or subscription publishing sites? This article describes how to use GitHub Pages with Hugo to create, maintain, and host your own blog site.</p>
 <h2 id="overview">Overview</h2>
 <blockquote>
 <p>Prerequisites:</p>
 <ol>
-<li>A basic knowledge of git and GitHub. For significant customizations beyond what&rsquo;s available natively in Hugo and the chosen Hugo theme, a basic understanding of HTML and CSS will be required.</li>
+<li>A basic knowledge of git and GitHub.</li>
 <li>Git version 2.24.3 or higher</li>
 <li>Mac development machine
 <ol>
 <li>Windows and Linux are also supported. Much of what&rsquo;s described here is applicable to both of these. But the exact steps I followed were performed on a Mac.</li>
 </ol>
 </li>
+<li>For significant customizations beyond what&rsquo;s available natively in Hugo and the chosen Hugo theme, a basic understanding of HTML and CSS will be required. More information on customizations can be found in the <a href="./#appendix">Appendix</a> below</li>
 </ol>
 </blockquote>
 <p>This article is a fairly detailed tutorial on how to create a full featured website/blog using Hugo and GitHub Pages. If you just want a quick overview of how to use Hugo I recommend going to the <a href="https://gohugo.io/getting-started/quick-start/">Hugo Quickstart page</a>. If you want a quickstart on setting up a Hugo/GitHub Pages site I recommend going to the <a href="https://gohugo.io/hosting-and-deployment/hosting-on-github/">Hugo GitHub Pages quickstart page</a>.</p>
@@ -400,6 +442,7 @@ title: &#34;{{ replace .Name &#34;-&#34; &#34; &#34; | title }}&#34;
 #description: &lt;descriptive text here&gt;
 date: {{ .Date }}
 draft: true
+toc: false
 image: &#34;&#34;
 tags: []
 categories: []
@@ -414,6 +457,7 @@ categories: []
 <li><code>description</code> - specifies text to be used in an article&rsquo;s summary on the home page. This text will not be displayed in the article. It is related to the <code># Descriptive text here...</code> line a little lower in the file.</li>
 <li><code>date</code> - replaced with the date the post was created. The generated date can be changed if you want to modify it, for example after updating the page. There are more sophisticated things you can do with dates, such as published date, last modified date, expiration date, etc. Those all have special meanings. See the <a href="https://gohugo.io/getting-started/configuration/#configure-dates">Hugo documentation</a> for more details.</li>
 <li><code>draft</code> - specifies whether a page is in draft or publish state. Pages in draft state can be seen when viewing the site running on the Hugo web server, but they will not be visible from a published web site such as GitHub Pages.</li>
+<li><code>toc</code> - If <code>true</code>, this will create a table of contents at the top of the article. This is a customization. See the appendix, comments section, below for details.</li>
 <li><code>image</code> - specifies the image to display at the top of the page. If not specified, the <code>header_image</code> in <code>config.toml</code> will be used.</li>
 <li><code>tags</code> - specifies a comma separated list of low level subject groupings. Taking my example from above, U.S. states might be an appropriate subject grouping for pages pertaining to U.S. states. For example, <code>tags: [&quot;Colorado&quot;, &quot;Utah&quot;, ...]</code>.</li>
 <li><code>categories</code> - specifies a specifies a comma separated list of high level subject groupings. Again, taking my example from above, some U.S. states can be put in the category of &ldquo;Best Ski Areas in the World&rdquo;.</li>
@@ -482,11 +526,151 @@ origin	https://github.com/smith/smith.github.io.git <span style="color:#f92672">
 <li><a href="https://www.markdownguide.org/tools/hugo/">Hugo Markdown Guide</a></li>
 </ul>
 <h2 id="appendix">Appendix</h2>
+<p>This appendix describes some additional changes I made that you might also want to consider.</p>
+<h3 id="add-support-for-comments">Add Support for Comments</h3>
+<p>Any good blog needs to support comments. My basic requirements for commenting were:</p>
+<ol>
+<li>Free - Blogs with comments are great, but I&rsquo;m not willing to pay for it.</li>
+<li>Hosted - I didn&rsquo;t want to have to stand-up my own comments server</li>
+</ol>
+<p>Hugo does come with out-of-the-box support for <a href="https://disqus.com/">Disqus</a>. Disqus does have a <a href="https://disqus.com/pricing/">free option</a>, but it&rsquo;s ad supported. I don&rsquo;t like ads. So I did a <a href="https://talk.hyvor.com/blog/disqus-alternatives/"><em>little</em> research on free alternatives</a>. Sharp eyed readers will notice this article is published by <a href="https://talk.hyvor.com/">Hyvor</a>, one of the free alternatives. I also looked at using <a href="https://retifrav.github.io/blog/2019/04/19/github-comments-hugo/">GitHub comments</a>. I chose not to use GitHub comments due to the requirement that commenters have a GitHub account. Using GitHub comments also felt a bit clunky for sevearl reasons:</p>
+<ol>
+<li>The comments section of each article was a link to an associated GitHub issue. This link wasn&rsquo;t always obvious</li>
+<li>Following the link takes the commentor to GitHub, away from the blog. This felt disjointed.</li>
+<li>The blog author has to create an associated GitHub issue for each blog page.</li>
+</ol>
+<p>So despite the potential for bias in the Hyvor article, it seemed to cover the bases so I went with Hyvor as my commenting platform. If you think you&rsquo;d like to use GitHub for comments, <a href="https://retifrav.github.io/blog/2019/04/19/github-comments-hugo/">GitHub comments for a Hugo-based blog</a> describes how to accomplish this.</p>
+<h4 id="hyvor">Hyvor</h4>
+<p>Using Hyvor as a commenting platform is straightforward:</p>
+<ol>
+<li>Get a <a href="https://talk.hyvor.com/docs/account">Hyvor account</a></li>
+<li>Configure your Hyvor account</li>
+<li><a href="https://talk.hyvor.com/docs/install">Add(Install) Hyvor to your blog</a></li>
+<li><a href="https://talk.hyvor.com/docs/appearance">Customizing the appearance</a> and other aspects of how comments will be used</li>
+</ol>
+<p>Completing the first step is simply a matter of registering your account. Just fill in the details on the <a href="https://auth.hyvor.com/signup/">Sign Up For Hyvor</a> page.</p>
+<p>The second step, configuring my Hyvor account, was a little less straightforward, at least for me. Once you&rsquo;re logged into the Hyvor site you&rsquo;ll be placed on your account page. On that page is a Website URL entry. This is where you put the top level URL for your blog (e.g., <a href="https://smith.github.io">https://smith.github.io</a>). However from here, things are a bit more murky. You&rsquo;ll need to go to your console to do more. To do that you click on the text &ldquo;Hyvor Talk&rdquo; at the bottom of the page:</p>
+<p><img style="border:1px solid black" src="/images/hyvoraccount.jpeg" align="center" /></p>
+<figcaption align="left"><center><i style="color:green;">Hyvor account page</i></center></figcaption>
+<p>This will take you to another page containing a &ldquo;Go to Console&rdquo; button.</p>
+<p><img style="border:1px solid black" src="/images/hyvorconsolebutton.jpeg" align="center" /></p>
+<figcaption align="left"><center><i style="color:green;">Navigate to Console</i></center></figcaption>
+<p>Click on the button and your console will look something like this:</p>
+<p><img style="border:1px solid black" src="/images/hyvorconsole.jpeg" align="center" /></p>
+<figcaption align="left"><center><i style="color:green;">Hyvor Console</i></center></figcaption>
+<p>Hyvor assigns the <code>Website ID</code>. You fill in the rest. I added an additional <code>Website domain</code>, <code>localhost</code>, so I could test on my local machine.</p>
+<p>The third step involves adding Hyvor to your blog. To do this click on &ldquo;Install&rdquo; in the left-hand navigation section. Then click on the &ldquo;Manual Install&rdquo; option. After doing this you should see 2 steps described in the resulting page.</p>
+<p><img style="border:1px solid black" src="/images/hyvormanualinstall.jpeg" align="center" /></p>
+<figcaption align="left"><center><i style="color:green;">Hyvor manual install</i></center></figcaption>
+<p>You&rsquo;ll need to &ldquo;cut &amp; paste&rdquo; the code from step one of this page into your theme&rsquo;s <code>layouts/partials/comments.html</code> file <em>(You should be able to ignore step 2)</em>. When done it should look something like this:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html"><span style="color:#75715e">&lt;!-- disqus end --&gt;</span>
+&lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">id</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;disqus-comment&#34;</span>&gt;&lt;/<span style="color:#f92672">div</span>&gt;
+{{ if .Site.Params.disqus_proxy }}
+&lt;<span style="color:#f92672">script</span> <span style="color:#a6e22e">src</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;{{ &#34;</span><span style="color:#a6e22e">js</span><span style="color:#960050;background-color:#1e0010">/</span><span style="color:#a6e22e">iDisqus</span><span style="color:#960050;background-color:#1e0010">.</span><span style="color:#a6e22e">js</span><span style="color:#960050;background-color:#1e0010">&#34;</span> <span style="color:#960050;background-color:#1e0010">|</span> <span style="color:#a6e22e">relURL</span> <span style="color:#960050;background-color:#1e0010">}}&#34;</span>&gt;&lt;/<span style="color:#f92672">script</span>&gt;
+&lt;<span style="color:#f92672">script</span>&gt;
+<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">disq</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">iDisqus</span>(<span style="color:#e6db74">&#39;disqus-comment&#39;</span>, {
+    <span style="color:#a6e22e">forum</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;{{ .Site.DisqusShortname}}&#39;</span>,
+    <span style="color:#a6e22e">api</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;{{ .Site.Params.disqus_proxy }}&#39;</span>,
+	<span style="color:#a6e22e">site</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;{{ .Site.Params.disqus_site }}&#39;</span>,
+    <span style="color:#a6e22e">mode</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">1</span>,
+    <span style="color:#a6e22e">timeout</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">5000</span>,
+    <span style="color:#a6e22e">init</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">true</span>
+});
+&lt;/<span style="color:#f92672">script</span>&gt;
+{{ else if .Site.DisqusShortname }}
+{{ template &#34;_internal/disqus.html&#34; . }}
+{{ else if .Site.Params.hyvor }}
+&lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">id</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;hyvor-talk-view&#34;</span>&gt;&lt;/<span style="color:#f92672">div</span>&gt;
+&lt;<span style="color:#f92672">script</span> <span style="color:#a6e22e">type</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;text/javascript&#34;</span>&gt;
+    <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">HYVOR_TALK_WEBSITE</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">XXXXXXX</span>; <span style="color:#75715e">// DO NOT CHANGE THIS
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">HYVOR_TALK_CONFIG</span> <span style="color:#f92672">=</span> {
+        <span style="color:#a6e22e">url</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">false</span>,
+        <span style="color:#a6e22e">id</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">false</span>
+};
+&lt;/<span style="color:#f92672">script</span>&gt;
+{{ end }}
+</code></pre></div><p>Specifically note the <code>{{ else if .Site.Params.hyvor }}</code> block. Except for the value of <code>HYVOR_TALK_WEBSITE</code>, which should be your specific assigned value, this is the block you pasted into the <code>comments.html</code> file. It&rsquo;s pasted just prior to the <code>{{ end }}</code> line. <code>.Site.Params.hyvor</code> refers to a parameter in your <code>config.toml</code> file in the <code>[params]</code> section, e.g.:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-toml" data-lang="toml">[<span style="color:#a6e22e">params</span>]
+  <span style="color:#75715e">#header_image = &#34;images/MeAtJackson.jpeg&#34;</span>
+  <span style="color:#a6e22e">header_image</span> = <span style="color:#e6db74">&#34;images/main_go_wideandtall_darklayer.jpeg&#34;</span>
+  <span style="color:#a6e22e">title</span> = <span style="color:#e6db74">&#34;Software Engineering&#34;</span>
+  <span style="color:#a6e22e">slogan</span> = <span style="color:#e6db74">&#34;$ grep -rni \&#34;The how&#39;s and why&#39;s\&#34; .&#34;</span>
+  <span style="color:#a6e22e">SEOTitle</span> = <span style="color:#e6db74">&#34;Rich Youngkin Blog&#34;</span>
+  <span style="color:#a6e22e">keyword</span> = <span style="color:#e6db74">&#34;Rich, Youngkin, Raspberry, Pi, Docker, Kubernetes, Go, Golang, Microservice&#34;</span>
+
+  <span style="color:#75715e"># Comments</span>
+  <span style="color:#a6e22e">hyvor</span> = <span style="color:#66d9ef">true</span>
+ 
+  <span style="color:#75715e"># Sidebar settings</span>
+</code></pre></div><p>The pertinent change is the block starting with <code># Comments</code>. <code>hyvor = true</code> enables Hyvor commenting.</p>
+<p>The bottom of each blog post will now look something like this:</p>
+<p><img style="border:1px solid black" src="/images/hyvorcomments.jpeg" align="center" /></p>
+<figcaption align="left"><center><i style="color:green;">Comments section</i></center></figcaption>
+<p>To get exactly this appearance do this from the Hyvor Console:</p>
+<ol>
+<li>To match the blog&rsquo;s theme colors, click on the &ldquo;Appearance&rdquo; entry in the left-hand navigation section. Then click on &ldquo;Accent Color&rdquo; and in the resulting color picker in the bottom left enter the hex color code <code>#555555</code>. Then click &ldquo;Save&rdquo;.</li>
+<li>To remove the emoji reactions, click on the &ldquo;Community&rdquo; entry in the left-hand navigation section. The second item in settings, just under &ldquo;Comments Note&rdquo;, is &ldquo;Reactions&rdquo;. Turn this off and click &ldquo;Save&rdquo;.</li>
+</ol>
+<h3 id="optional-table-of-contents">Optional Table of Contents</h3>
+<p>I wanted to have the option to include a table of contents on selected articles. As mentioned above, I added a <code>toc</code> item in the <code>archetypes/post.md</code> file:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-markdown" data-lang="markdown">---
+title: &#34;{{ replace .Name &#34;-&#34; &#34; &#34; | title }}&#34;
+#description: &lt;descriptive text here&gt;
+date: {{ .Date }}
+draft: true
+toc: false
+image: &#34;&#34;
+tags: []
+categories: []
+---
+
+# Descriptive text here...
+<span style="color:#75715e">&lt;!--more--&gt;</span>
+</code></pre></div><p>If set to true then Hugo will generate a table of contents for the associated article. I changed the original <code>themes/hugo-theme-cleanwhite/layouts/_default/single.html</code> file <strong>FROM</strong>:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html"><span style="color:#75715e">&lt;!-- Post Content --&gt;</span>
+&lt;<span style="color:#f92672">article</span>&gt;
+    &lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;container&#34;</span>&gt;
+        &lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;row&#34;</span>&gt;
+
+            <span style="color:#75715e">&lt;!-- Post Container --&gt;</span>
+            &lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;
+</span><span style="color:#e6db74">                col-lg-11 col-lg-offset-1
+</span><span style="color:#e6db74">                col-md-10 col-md-offset-1
+</span><span style="color:#e6db74">                post-container&#34;</span>&gt;
+
+                {{ if not (eq (.Param &#34;showtoc&#34;) false) }}
+                &lt;<span style="color:#f92672">header</span>&gt;
+                    &lt;<span style="color:#f92672">h2</span>&gt;TOC&lt;/<span style="color:#f92672">h2</span>&gt;
+                &lt;/<span style="color:#f92672">header</span>&gt;
+                {{.TableOfContents}}
+                {{ end }}
+                {{ .Content }}
+</code></pre></div><p><strong>TO:</strong></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html"><span style="color:#75715e">&lt;!-- Post Content --&gt;</span>
+&lt;<span style="color:#f92672">article</span>&gt;
+    &lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;container&#34;</span>&gt;
+        &lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;row&#34;</span>&gt;
+
+            <span style="color:#75715e">&lt;!-- Post Container --&gt;</span>
+            &lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;
+</span><span style="color:#e6db74">                col-lg-11 col-lg-offset-1
+</span><span style="color:#e6db74">                col-md-10 col-md-offset-1
+</span><span style="color:#e6db74">                post-container&#34;</span>&gt;
+
+                {{ if (.Params.toc) }}
+                &lt;<span style="color:#f92672">header</span>&gt;
+                    &lt;<span style="color:#f92672">h2</span>&gt;Contents&lt;/<span style="color:#f92672">h2</span>&gt;
+                &lt;/<span style="color:#f92672">header</span>&gt;
+                {{.TableOfContents}}
+                {{ end }}
+                {{ .Content }}
+</code></pre></div><p>Specifically the block starting with <code>{{ if not (eq (.Param &quot;showtoc&quot;) false) }} ...</code> was changed to the block starting with <code>{{ if (.Params.toc) }} ...</code>.</p>
 <h3 id="theme-customizations">Theme Customizations</h3>
 <p>I used the <a href="https://themes.gohugo.io/hugo-theme-cleanwhite/">Clean White theme</a>, but I wanted a different look for:</p>
 <ul>
 <li>Title and Description (looking for &ldquo;green screen&rdquo; feel)</li>
-<li>Tags - too dim, wanted to darken</li>
+<li>Sidebar Tags and social networking &ldquo;badges&rdquo; - too dim, wanted to darken</li>
+<li>Post summaries - these appear under each post Title on the home page. They&rsquo;re a brief summary of the post. I wanted these to be slightly darker.</li>
 <li>Wanted to change some fonts</li>
 </ul>
 <p>Here&rsquo;s what I changed:</p>
@@ -555,9 +739,27 @@ origin	https://github.com/smith/smith.github.io.git <span style="color:#f92672">
   <span style="color:#66d9ef">line-height</span> : <span style="color:#ae81ff">1.7</span>;
   <span style="color:#66d9ef">line-height</span> : <span style="color:#ae81ff">1.1</span>;
 }
+</code></pre></div><h4 id="change-the-post-summaries">Change the Post Summaries</h4>
+<p><img style="border:1px solid black" src="/images/blogsummary.jpeg" /></p>
+<figcaption><center><i style="color:green;">Blog summary section</i></center></figcaption>
+<p>The summary text and post date were a light gray. To improve the contrast I changed the <code>.post-meta</code> and <code>.post-content-preview</code> colors to <code>#555555</code>.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-css" data-lang="css">.<span style="color:#a6e22e">post-meta</span>{
+    <span style="color:#66d9ef">font-family</span>:Lora,<span style="color:#e6db74">&#39;Times New Roman&#39;</span>,<span style="color:#66d9ef">serif</span>;
+    <span style="color:#66d9ef">color</span>:<span style="color:#ae81ff">#555555</span>;
+    <span style="color:#66d9ef">font-size</span>:<span style="color:#ae81ff">16</span><span style="color:#66d9ef">px</span>;
+    <span style="color:#66d9ef">font-style</span>:<span style="color:#66d9ef">italic</span>;
+    <span style="color:#66d9ef">margin-top</span>:<span style="color:#ae81ff">0</span>}
+
+<span style="color:#f92672">...</span>
+
+.<span style="color:#a6e22e">post-content-preview</span>{
+    <span style="color:#66d9ef">font-size</span>:<span style="color:#ae81ff">13</span><span style="color:#66d9ef">px</span>;
+    <span style="color:#66d9ef">font-style</span>:<span style="color:#66d9ef">italic</span>;
+    <span style="color:#66d9ef">color</span>:<span style="color:#ae81ff">#555555</span>
+    }
 </code></pre></div><h4 id="change-the-sidebar">Change the Sidebar</h4>
 <p>In the Sidebar I wanted to change the text and border color of the &ldquo;FEATURED TAGS&rdquo;, the text color of the short bio, and the background color of the social networking &lsquo;badges&rsquo;.</p>
-<p><img style="border:2px solid black" src="/images/BlogSideBar.png" align="center" /></p>
+<p><img style="border:1px solid black" src="/images/BlogSideBar.png" align="center" /></p>
 <figcaption align="left"><center><i style="color:green;">My Sidebar</i></center></figcaption>
 <p>The color of the &ldquo;About Me&rdquo; short bio and the social badges was too light for my tastes. I changed these colors to a darker gray by changing <code>.sidebar-container {...}</code> and <code>.sidebar-container a {...}</code> color elements to <code>#555555</code>. Here&rsquo;s the context for these changes:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-css" data-lang="css">.<span style="color:#a6e22e">sidebar-container</span> {
@@ -624,6 +826,17 @@ origin	https://github.com/smith/smith.github.io.git <span style="color:#f92672">
 
                 
 <div id="disqus-comment"></div>
+
+<div id="hyvor-talk-view"></div>
+<script type="text/javascript">
+    var HYVOR_TALK_WEBSITE = 1798; 
+    var HYVOR_TALK_CONFIG = {
+        url: false,
+        id: false
+};
+</script>
+<script async type="text/javascript" src="//talk.hyvor.com/web-api/embed"></script>
+</div>
 
 
 

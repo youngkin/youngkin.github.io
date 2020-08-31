@@ -17,8 +17,8 @@
       <pubDate>Wed, 26 Aug 2020 13:07:25 -0600</pubDate>
       
       <guid>https://youngkin.github.io/post/how-to-install-mariadb-an-a-raspberry-pi/</guid>
-      <description>The full text of this article can be found on Medium  This article covers how to install and configure MariaDB, a feature-equivalent alternative to MySQL, on a Raspberry Pi. Installing is relatively straightforward. Configuring the database is somewhat more involved but still quite manageable.
-This is the sixth and final article in the Develop and Deploy Kubernetes Applications on a Raspberry Pi Cluster series. It marks the transition from a purely Raspberry Pi focus to software development more generally.</description>
+      <description>This article covers how to install and configure MariaDB, a feature-equivalent alternative to MySQL, on a Raspberry Pi. Installing is relatively straightforward. Configuring the database is somewhat more involved but still quite manageable.
+The full text of this article can be found on Medium  This is the sixth and final article in the Develop and Deploy Kubernetes Applications on a Raspberry Pi Cluster series. It marks the transition from a purely Raspberry Pi focus to software development more generally.</description>
     </item>
     
     <item>
