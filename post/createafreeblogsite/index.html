@@ -357,7 +357,10 @@ title: &#34;Testpage&#34;
 date: 2020-08-27T13:43:09-06:00
 draft: true
 ---
-</code></pre></div><p>You can inspect the generated file. The generated content comes from the <code>archetypes/default.md</code> file which is the template used for all new content. The content between the <code>---</code> lines is metadata for the page. Text after the 2nd <code>---</code> line is the body of the web page.</p>
+</code></pre></div><p>You can inspect the generated file. The generated content comes from the <code>archetypes/default.md</code> file which is the template used for all new content. The content between the <code>---</code> lines is &ldquo;front matter&rdquo; for the page. Text after the 2nd <code>---</code> line is the body of the web page.</p>
+<blockquote>
+<p>&ldquo;Front matter&rdquo; is the Hugo term for the information at the top of the page used to create a page&rsquo;s rendered title as well as some other metadata that is placed in the associated HTML file&rsquo;s <code>&lt;meta&gt;</code> tags in the page&rsquo;s <code>head</code> section. Don&rsquo;t worry too much if you don&rsquo;t understand all this.</p>
+</blockquote>
 <p>The next step is to test the installation by starting the Hugo web server and navigating to the development site:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">hugo server -D
 </code></pre></div><p>Near the bottom of the logged output you&rsquo;ll see a line like this:</p>
@@ -435,7 +438,7 @@ paginate = 5000 #frontpage pagination
 </li>
 </ul>
 <h3 id="archetypes">Archetypes</h3>
-<p>Archetypes are templates used by Hugo when new web pages are created via the  <code>hugo new &lt;some-post-file&gt;</code> command. They are useful because there is a metadata section at the top of each page describing some basic characteristics like the page title, description, and date. Without archetypes this metadata would have to be manually typed or copied on each new web page. While Hugo installs a default archetype at <code>archetypes/default.md</code>, you&rsquo;ll probably want to create your own. I have a file located at <code>archetypes/post.md</code>. The name <code>post.md</code> is meaningful to Hugo. It is the archetype Hugo will use, if present, when generating posts. There are other archetype file names and locations that are meaningful to Hugo. You can find more detail about archetypes at the <a href="https://gohugo.io/content-management/archetypes/">Hugo Archetypes</a> page.</p>
+<p>Archetypes are templates used by Hugo when new web pages are created via the  <code>hugo new &lt;some-post-file&gt;</code> command. They are useful because there is a &ldquo;front matter&rdquo; section at the top of each page describing some basic characteristics like the page title, description, and date. Without archetypes this &ldquo;front matter&rdquo; would have to be manually typed or copied on each new web page. While Hugo installs a default archetype at <code>archetypes/default.md</code>, you&rsquo;ll probably want to create your own. I have a file located at <code>archetypes/post.md</code>. The name <code>post.md</code> is meaningful to Hugo. It is the archetype Hugo will use, if present, when generating posts. There are other archetype file names and locations that are meaningful to Hugo. You can find more detail about archetypes at the <a href="https://gohugo.io/content-management/archetypes/">Hugo Archetypes</a> page.</p>
 <p>My <code>archetypes/post.md</code> file looks like this:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-markdown" data-lang="markdown">---
 title: &#34;{{ replace .Name &#34;-&#34; &#34; &#34; | title }}&#34;
@@ -452,7 +455,7 @@ categories: []
 <span style="color:#75715e">&lt;!--more--&gt;</span>
 </code></pre></div><p>Here&rsquo;s what each line means:</p>
 <ul>
-<li><code>---</code> - these lines delineate the metadata section of the page</li>
+<li><code>---</code> - these lines delineate the &ldquo;front matter&rdquo; section of the page</li>
 <li><code>title: &quot;{{ replace .Name &quot;-&quot; &quot; &quot; | title }}&quot;</code> - specifies that the page&rsquo;s title will be generated from the file name after replacing dashes ('-') with spaces. This is a quick, handy, way to generate titles automatically. For example, <code>My-New-Post.md</code> becomes &ldquo;My New Post&rdquo; in the page&rsquo;s title.</li>
 <li><code>description</code> - specifies text to be used in an article&rsquo;s summary on the home page. This text will not be displayed in the article. It is related to the <code># Descriptive text here...</code> line a little lower in the file.</li>
 <li><code>date</code> - replaced with the date the post was created. The generated date can be changed if you want to modify it, for example after updating the page. There are more sophisticated things you can do with dates, such as published date, last modified date, expiration date, etc. Those all have special meanings. See the <a href="https://gohugo.io/getting-started/configuration/#configure-dates">Hugo documentation</a> for more details.</li>
@@ -461,7 +464,7 @@ categories: []
 <li><code>image</code> - specifies the image to display at the top of the page. If not specified, the <code>header_image</code> in <code>config.toml</code> will be used.</li>
 <li><code>tags</code> - specifies a comma separated list of low level subject groupings. Taking my example from above, U.S. states might be an appropriate subject grouping for pages pertaining to U.S. states. For example, <code>tags: [&quot;Colorado&quot;, &quot;Utah&quot;, ...]</code>.</li>
 <li><code>categories</code> - specifies a specifies a comma separated list of high level subject groupings. Again, taking my example from above, some U.S. states can be put in the category of &ldquo;Best Ski Areas in the World&rdquo;.</li>
-<li><code># Descriptive text here...</code> &amp; <code>&lt;!--more--&gt;</code> - These lines are used as an alternative to the <code>description</code> line in the metadata section. This can be used if the amount of descriptive text desired is more than can be comfortably put in the <code>description</code> line. <code>&lt;!--more..&gt;</code> is used to indicate the end of this type of descriptive text. Unlike <code>description</code> above, this text does appear in the article. An alternative to both the <code>description</code> line and these lines is to not specify either. In this case the first 70 words of the article will be used in the article summary.</li>
+<li><code># Descriptive text here...</code> &amp; <code>&lt;!--more--&gt;</code> - These lines are used as an alternative to the <code>description</code> line in the &ldquo;front matter&rdquo; section. This can be used if the amount of descriptive text desired is more than can be comfortably put in the <code>description</code> line. <code>&lt;!--more..&gt;</code> is used to indicate the end of this type of descriptive text. Unlike <code>description</code> above, this text does appear in the article. An alternative to both the <code>description</code> line and these lines is to not specify either. In this case the first 70 words of the article will be used in the article summary.</li>
 </ul>
 <h3 id="writing">Writing</h3>
 <p>Now that we have our repositories setup, Hugo installed, our initialized Hugo development repository, and a basic understanding of Hugo website and page configuration, we can start authoring content. All content is written using Markup syntax. See the <a href="https://www.markdownguide.org/tools/hugo/">Hugo Markdown Guide</a> for more information and syntax details. As noted in the Configuration section above, using the Goldmark <code>unsafe</code> option allows you to use standard HTML tags in the content if desired.</p>
@@ -484,7 +487,46 @@ origin	https://github.com/smith/smith.github.io.git <span style="color:#f92672">
 </code></pre></div><h3 id="publishing-the-site">Publishing the site</h3>
 <p>When you&rsquo;re ready to publish the site you&rsquo;ll need to generate the static content. This is done by running:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">./deploy.sh
-</code></pre></div><p>This command does several things:</p>
+</code></pre></div><p>This file is a slightly modified version of the <code>deploy.sh</code> file described on the Hugo <a href="https://gohugo.io/hosting-and-deployment/hosting-on-github/">Hosting on GitHub</a> tutorial. The <code>deploy.sh</code> script looks like this:</p>
+<pre><code>#!/bin/sh
+
+# If a command fails then the deploy stops
+set -e
+
+printf &quot;\033[0;32mDeploying updates to GitHub...\033[0m\n&quot;
+
+# Create commit message
+msg=&quot;rebuilding site $(date)&quot;
+if [ -n &quot;$*&quot; ]; then
+	msg=&quot;$*&quot;
+fi
+
+# Build the project.
+echo &quot;&quot;
+echo &quot;&quot;
+echo &quot;Committing changes to $(pwd)&quot;
+hugo -D
+
+# Go To Public folder
+cd public
+
+# Add 'public' (Github Pages repo) changes to git and commit/push.
+echo &quot;&quot;
+echo &quot;&quot;
+echo &quot;Committing changes to $(pwd)&quot;
+git add .
+git commit -m &quot;$msg&quot;
+git push origin master
+
+# Add this repos changes to git and commit/push. First 'cd' out of public
+cd ..
+echo &quot;&quot;
+echo &quot;&quot;
+echo &quot;Committing changes to $(pwd)&quot;
+git add .
+git commit -m &quot;$msg&quot;
+git push origin master
+</code></pre><p><code>deploy.sh</code> does several things:</p>
 <ol>
 <li>It builds the static content via <code>hugo -D</code></li>
 <li>It stages everything in the <code>project-root/public</code> directory for commit via <code>git add .</code></li>
@@ -608,8 +650,8 @@ origin	https://github.com/smith/smith.github.io.git <span style="color:#f92672">
 <figcaption align="left"><center><i style="color:green;">Comments section</i></center></figcaption>
 <p>To get exactly this appearance do this from the Hyvor Console:</p>
 <ol>
-<li>To match the blog&rsquo;s theme colors, click on the &ldquo;Appearance&rdquo; entry in the left-hand navigation section. Then click on &ldquo;Accent Color&rdquo; and in the resulting color picker in the bottom left enter the hex color code <code>#555555</code>. Then click &ldquo;Save&rdquo;.</li>
-<li>To remove the emoji reactions, click on the &ldquo;Community&rdquo; entry in the left-hand navigation section. The second item in settings, just under &ldquo;Comments Note&rdquo;, is &ldquo;Reactions&rdquo;. Turn this off and click &ldquo;Save&rdquo;.</li>
+<li>To match the blog&rsquo;s theme colors, click on the &ldquo;Appearance&rdquo; entry in the left-hand navigation section of your Hyvor Console. Then click on &ldquo;Accent Color&rdquo; and in the resulting color picker in the bottom left enter the hex color code <code>#555555</code>. Then click &ldquo;Save&rdquo;.</li>
+<li>To remove the emoji reactions, click on the &ldquo;Community&rdquo; entry in the left-hand navigation section of your Hyvor Console. The second item in settings, just under &ldquo;Comments Note&rdquo;, is &ldquo;Reactions&rdquo;. Turn this off and click &ldquo;Save&rdquo;.</li>
 </ol>
 <h3 id="optional-table-of-contents">Optional Table of Contents</h3>
 <p>I wanted to have the option to include a table of contents on selected articles. As mentioned above, I added a <code>toc</code> item in the <code>archetypes/post.md</code> file:</p>
@@ -626,7 +668,7 @@ categories: []
 
 # Descriptive text here...
 <span style="color:#75715e">&lt;!--more--&gt;</span>
-</code></pre></div><p>If set to true then Hugo will generate a table of contents for the associated article. I changed the original <code>themes/hugo-theme-cleanwhite/layouts/_default/single.html</code> file <strong>FROM</strong>:</p>
+</code></pre></div><p>If <code>toc</code> is set to true then Hugo will generate a table of contents for the associated article. I changed the original <code>themes/hugo-theme-cleanwhite/layouts/_default/single.html</code> file <strong>FROM</strong>:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html"><span style="color:#75715e">&lt;!-- Post Content --&gt;</span>
 &lt;<span style="color:#f92672">article</span>&gt;
     &lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;container&#34;</span>&gt;
@@ -664,7 +706,7 @@ categories: []
                 {{.TableOfContents}}
                 {{ end }}
                 {{ .Content }}
-</code></pre></div><p>Specifically the block starting with <code>{{ if not (eq (.Param &quot;showtoc&quot;) false) }} ...</code> was changed to the block starting with <code>{{ if (.Params.toc) }} ...</code>.</p>
+</code></pre></div><p>Specifically the block starting with <code>{{ if not (eq (.Param &quot;showtoc&quot;) false) }} ...</code> was changed to the block starting with <code>{{ if (.Params.toc) }} ...</code>. So instead of looking for the <code>showtoc</code> parameter in <code>config.toml</code>, <code>.Params.toc</code> directs the HTML template to look in the &ldquo;front matter&rdquo; at the top of an article for a <code>toc</code> entry.</p>
 <h3 id="theme-customizations">Theme Customizations</h3>
 <p>I used the <a href="https://themes.gohugo.io/hugo-theme-cleanwhite/">Clean White theme</a>, but I wanted a different look for:</p>
 <ul>
@@ -780,7 +822,7 @@ categories: []
 .<span style="color:#a6e22e">sidebar-container</span> <span style="color:#f92672">a</span> {
   <span style="color:#66d9ef">color</span> : <span style="color:#ae81ff">#555555</span><span style="color:#75715e">!important</span>;
 }
-</code></pre></div><p>As above, the text and border color of the &ldquo;Featured Tags&rdquo; was too light for me. I changed this to a darker gray by changing the <code>.sidebar-container .tags a {...}</code> <code>color</code> to <code>#555555</code> and the <code>.tags a {... color: ... border:...}</code> color and border elements to <code>#FFD700</code> and <code>1px solid rgba(255,215,0,0.8)</code> respectively. Here&rsquo;s the context for these changes:</p>
+</code></pre></div><p>As above, the text and border color of the &ldquo;Featured Tags&rdquo; was too light for me. I changed this to a darker gray by changing the <code>.sidebar-container .tags a {...}</code> <code>border-color</code> to <code>#555555</code> and the <code>.tags a {... color: ... border:...}</code> color and border elements to <code>#FFD700</code> and <code>1px solid rgba(255,215,0,0.8)</code> respectively. Here&rsquo;s the context for these changes:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-css" data-lang="css">.<span style="color:#a6e22e">sidebar-container</span> .<span style="color:#a6e22e">tags</span> <span style="color:#f92672">a</span> {
   <span style="color:#66d9ef">border-color</span> : <span style="color:#ae81ff">#555555</span>;
 }
