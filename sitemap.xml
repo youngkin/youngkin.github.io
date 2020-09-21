@@ -3,17 +3,62 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://youngkin.github.io/categories/</loc>
+    <lastmod>2020-09-20T13:09:42-06:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://youngkin.github.io/post/gohttpsclientserver/</loc>
+    <lastmod>2020-09-20T13:09:42-06:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://youngkin.github.io/tags/distributed-applications/</loc>
+    <lastmod>2020-09-20T13:09:42-06:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://youngkin.github.io/tags/go/</loc>
+    <lastmod>2020-09-20T13:09:42-06:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://youngkin.github.io/categories/go/</loc>
+    <lastmod>2020-09-20T13:09:42-06:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://youngkin.github.io/tags/https/</loc>
+    <lastmod>2020-09-20T13:09:42-06:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://youngkin.github.io/post/</loc>
+    <lastmod>2020-09-20T13:09:42-06:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://youngkin.github.io/</loc>
+    <lastmod>2020-09-20T13:09:42-06:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://youngkin.github.io/tags/</loc>
+    <lastmod>2020-09-20T13:09:42-06:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://youngkin.github.io/tags/tls/</loc>
+    <lastmod>2020-09-20T13:09:42-06:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://youngkin.github.io/tags/blog/</loc>
     <lastmod>2020-08-31T13:09:42-06:00</lastmod>
   </url>
   
   <url>
     <loc>https://youngkin.github.io/categories/blog/</loc>
-    <lastmod>2020-08-31T13:09:42-06:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://youngkin.github.io/categories/</loc>
     <lastmod>2020-08-31T13:09:42-06:00</lastmod>
   </url>
   
@@ -29,21 +74,6 @@
   
   <url>
     <loc>https://youngkin.github.io/tags/hugo/</loc>
-    <lastmod>2020-08-31T13:09:42-06:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://youngkin.github.io/post/</loc>
-    <lastmod>2020-08-31T13:09:42-06:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://youngkin.github.io/</loc>
-    <lastmod>2020-08-31T13:09:42-06:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://youngkin.github.io/tags/</loc>
     <lastmod>2020-08-31T13:09:42-06:00</lastmod>
   </url>
   

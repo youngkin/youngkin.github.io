@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    
+
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-177198277-1"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-177198277-1');
+    </script>
+
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+    <meta property="og:site_name" content="Rich Youngkin">
+    <meta property="og:type" content="article">
+
+    
+    <meta property="og:image" content="https://youngkin.github.io/images/main_go_wideandtall_darklayer.jpeg">
+    <meta property="twitter:image" content="https://youngkin.github.io/images/main_go_wideandtall_darklayer.jpeg" />
+    
+
+    
+    <meta name="title" content="Create Secure Clients and Servers in Golang Using HTTPS" />
+    <meta property="og:title" content="Create Secure Clients and Servers in Golang Using HTTPS" />
+    <meta property="twitter:title" content="Create Secure Clients and Servers in Golang Using HTTPS" />
+    
+
+    
+    <meta name="description" content="Create secure web clients and services in Golang using HTTPS">
+    <meta property="og:description" content="Create secure web clients and services in Golang using HTTPS" />
+    <meta property="twitter:description" content="Create secure web clients and services in Golang using HTTPS" />
+    
+
+    
+    <meta property="twitter:card" content="summary" />
+    
+    
+
+    <meta name="keyword"  content="Rich, Youngkin, Raspberry, Pi, Docker, Kubernetes, Go, Golang, Microservice">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>Create Secure Clients and Servers in Golang Using HTTPS-Rich Youngkin Blog</title>
+
+    <link rel="canonical" href="/post/gohttpsclientserver/">
+
+    <link rel="stylesheet" href="/css/iDisqus.min.css"/>
+	
+    
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    
+    <link rel="stylesheet" href="/css/zanshang.css">
+    
+    
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    
+    
+
+    
+    
+    <script src="/js/jquery.min.js"></script>
+    
+    
+    <script src="/js/bootstrap.min.js"></script>
+    
+    
+    <script src="/js/hux-blog.min.js"></script>
+
+    
+    
+
+</head>
+
+
+
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Rich Youngkin</a>
+            
+        </div>
+
+        
+        
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    
+                        
+                        <li>
+                            <a href="/categories/blog">blog</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/go">go</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/kubernetes">kubernetes</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/raspberry-pi">raspberry-pi</a>
+                        </li>
+                        
+                    
+                    
+		    
+                        <li><a href="/top/about/">ABOUT</a></li>
+                    
+
+                    
+                </ul>
+            </div>
+        </div>
+        
+    </div>
+    
+</nav>
+<script>
+    
+    
+    
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        
+            $navbar.className = " ";
+            
+            setTimeout(function(){
+                
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+
+
+<style type="text/css">
+    header.intro-header {
+        background-image: url('/images/HTTPSLockDark.png')
+    }
+</style>
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/go" title="Go">
+                            Go
+                        </a>
+                        
+                        <a class="tag" href="/tags/distributed-applications" title="Distributed Applications">
+                            Distributed Applications
+                        </a>
+                        
+                        <a class="tag" href="/tags/https" title="HTTPS">
+                            HTTPS
+                        </a>
+                        
+                        <a class="tag" href="/tags/tls" title="TLS">
+                            TLS
+                        </a>
+                        
+                    </div>
+                    <h1>Create Secure Clients and Servers in Golang Using HTTPS</h1>
+                    <h2 class="subheading"></h2>
+                    <span class="meta">
+                        Posted by 
+                        
+                                Rich Youngkin
+                         
+                        on 
+                        Sunday, September 20, 2020
+                        
+                        
+                        
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+
+
+<article>
+    <div class="container">
+        <div class="row">
+
+            
+            <div class="
+                col-lg-11 col-lg-offset-1
+                col-md-10 col-md-offset-1
+                post-container">
+
+                
+                <header>
+                    <h2>Contents</h2>
+                </header>
+                <nav id="TableOfContents">
+  <ul>
+    <li><a href="#overview">Overview</a></li>
+    <li><a href="#create-certificates-and-keys">Create certificates and keys</a>
+      <ul>
+        <li><a href="#install-software-to-create-the-ca-and-certificates">Install software to create the CA and certificate(s)</a></li>
+        <li><a href="#create-the-ca">Create the CA</a></li>
+        <li><a href="#create-the-certificates-for-the-client-and-servers">Create the certificates for the client and servers</a></li>
+        <li><a href="#sign-the-certificates-for-the-client-and-servers">Sign the certificates for the client and servers</a></li>
+      </ul>
+    </li>
+    <li><a href="#write-the-client-and-server">Write the Client and Server</a>
+      <ul>
+        <li><a href="#a-simple-server">A simple server</a></li>
+        <li><a href="#a-more-advanced-server">A more advanced server</a></li>
+        <li><a href="#create-the-client">Create the client</a></li>
+      </ul>
+    </li>
+    <li><a href="#putting-it-all-together">Putting it all together</a>
+      <ul>
+        <li><a href="#start-server">Start server</a></li>
+        <li><a href="#run-the-client">Run the client</a></li>
+      </ul>
+    </li>
+    <li><a href="#conclusion">Conclusion</a></li>
+    <li><a href="#references">References</a></li>
+  </ul>
+</nav>
+                
+                <h2 id="overview">Overview</h2>
+<p>The purpose of this article is to show how to write secure web services and clients using Go and HTTPS. In researching how to accomplish this I came across numerous articles and gists. However, none of them provided the complete picture I needed to implement a robust client or server. Most of them only provided terse code examples with equally terse examples regarding how to create the certificates needed for the code to work. Others were oriented to gRPC or plain TLS over TCP. I also wanted to understand what I was doing, not just the syntax. The point of this article is to provide not only the <em>how</em>, but also the <em>why&rsquo;s</em> behind the <em>how</em>.</p>
+<p>If you&rsquo;re new to HTTPS, TLS, and public/private keys you might want to read the following <em>aside</em>.</p>
+<blockquote>
+<p><strong>ASIDE:</strong></p>
+<p>Security is paramount to ensure the privacy and well being of customers. They want to be certain that the information they provide, like passwords and credit card numbers, are going to the expected service provider. Likewise, it is sometimes necessary for service providers to ensure that they are communicating with the expected customer.</p>
+<p>There are two characteristics of secure communications:</p>
+<ul>
+<li>Trust</li>
+<li>Encryption</li>
+</ul>
+<p>Trust is the foundation of security. Without trust there can be no assurance that the parties to a conversation are not bad actors. Encryption is required to ensure that bad actors can&rsquo;t listen in on a conversation and gain access to sensitive information or perform harmful actions.
+The following requirements must be met to ensure trust and security:</p>
+<ul>
+<li>Trusted authorities must exist that can vouch for the identify of a client or a server</li>
+<li>Trusted sources of encryption technology that can be used by clients and servers to encrypt their communications must also exist</li>
+<li>Support for the associated techniques and technologies in the code that implements the client and server applications</li>
+</ul>
+<p>The umbrella for all these things is called the <a href="https://en.wikipedia.org/wiki/Public_key_infrastructure">Public Key Infrastructure(PKI)</a>. There are four components to PKI that implement the requirements outlined above:</p>
+<ul>
+<li><strong>Public Key Encrytion</strong> - A public key can be safely shared by the owner, with another party, that provides the other party with the ability to encrypt and decrypt a conversation. The owner of a public key has a corresponding private key that is not shared. A public key can only decrypt information that was encrypted with the corresponding private key. Likewise, the private key is required to decrypt information that was encrypted with a public key. This asymmetric characteristic of the encryption guarantees that information can be securely shared between known parties to a conversation.</li>
+<li><strong>Certificates</strong> - contain the identity of the holder as well as the certificate owner&rsquo;s public key. A certificate also includes information about the trusted authority that issued the certificate.</li>
+<li><strong>Certificate Authorities(CA)</strong> - are the trusted source of identity information. They can also issue certificates or delegate that authority to a Registration Authority.</li>
+<li><strong>Registration Authority (RA)</strong> - are a trusted source of certificates. Any certificates issued by an RA will also contain the certificate of the CA that authorized them to issue certificates. This is required to ensure the trust requirement can be met. In other words, RAs themselves are only trusted because they can prove that they&rsquo;re trusted by a CA.</li>
+</ul>
+</blockquote>
+<h2 id="create-certificates-and-keys">Create certificates and keys</h2>
+<p>The basis for proving identity and encrypting information is a certificate and a corresponding Certificate Authority (CA). For the purposes of this article we&rsquo;ll need both. There are two ways to go about obtaining these, the hard way and the easy way. The hard way is appropriate for real world applications. It involves registering a domain (e.g., <code>youngkin.com</code>), obtaining DNS services for that domain, and obtaining a certificate for that domain. While not difficult it will require a fair amount of work and you&rsquo;ll probably have to spend some money to register the domain.</p>
+<p>An easier way to provide a realistic experience is to create your own CA and obtain a certificate from this CA. This article uses CA signed certificates vs. self-signed certificates in order to create that more realistic experience. It&rsquo;s more realistic in that servers typically don&rsquo;t have access to client certificates ahead of time. The do have access to CA certificates however. Usually servers access CA certificates installed on the machine. This article will demonstrate how to register a CA certificate programmatically.</p>
+<p>There are at least a couple of tools available help us with the easy way, <a href="https://github.com/square/certstrap">certstrap</a> and <a href="https://github.com/OpenVPN/easy-rsa">easy-rsa</a>.</p>
+<blockquote>
+<p>The definitive command line tool for working with certificates is called <code>openssl</code>. It can be used to create CAs, RAs, and certificates, as well as do many other useful things (see the references section for more details). It can also be used to create what are called self-signed certificates. <a href="https://linuxize.com/post/creating-a-self-signed-ssl-certificate/">Creating a Self-Signed SSL Certificate</a> is a good resource for how to do this. While it is oriented towards Linux, there are versions of <code>openssl</code> available on Windows and Mac machines. I recommend installing the Libre fork of <code>openssl</code>. The reasoning behind this is well described in a <a href="https://security.stackexchange.com/questions/112545/what-are-the-main-advantages-of-using-libressl-in-favor-of-openssl">StackExchange question/answer</a>. To verify whether you have Libre <code>openssl</code> run the following:</p>
+<pre><code>$ openssl version
+LibreSSL 2.8.3
+</code></pre><p>Output like the above indicates Libre <code>openssl</code> is being used.</p>
+</blockquote>
+<p>Several files will be created during the certificate generation process, some with <code>.crt</code> and <code>.key</code> suffices. You may also see the suffix <code>.pem</code> when reading about certificates. It&rsquo;s worth noting that <code>.pem</code> files are equivalent to <code>.crt</code> and <code>.key</code> files.</p>
+<h3 id="install-software-to-create-the-ca-and-certificates">Install software to create the CA and certificate(s)</h3>
+<p>As mentioned above there are at least 2 options available to easily create a CA and a CA&rsquo;s registered certificates. This article will use <code>certstrap</code> for no other reason than it was written in Go. However, <code>easy-rsa</code> is a good alternative.</p>
+<p>Before starting, download the appropriate executable from the <a href="https://github.com/square/certstrap/releases">certstrap releases</a> page on GitHub. I placed mine in my <code>~/bin</code> directory which is in my PATH. You&rsquo;ll also need to make it executable (<code>chmod +x &lt;downloadedfilename&gt;</code>).</p>
+<p>We&rsquo;ll follow the <a href="https://github.com/square/certstrap">usage instructions</a> from the project&rsquo;s README. At the end of this section we will have created a CA, a certificate for our server, and a certificate for our client. I keep all my certificates in a directory called <code>~/certs</code>. All the following commands will be run from that directory. When prompted for the <code>passphrase</code> just hit enter (i.e., no passphrase).</p>
+<h3 id="create-the-ca">Create the CA</h3>
+<pre><code>~/certs certstrap init --common-name &quot;ExampleCA&quot;         
+Enter passphrase (empty for no passphrase):
+Enter same passphrase again:
+Created out/ExampleCA.key
+Created out/ExampleCA.crt
+Created out/ExampleCA.crl
+</code></pre><p><code>init</code> directs <code>certstrap</code> to create a new CA. <code>--common-name</code> (CN) specifies the name for the our CA, which is named <em>ExampleCA</em>. Three files are created:</p>
+<ul>
+<li><code>ExampleCA.key</code> is the private key for <em>ExampleCA</em></li>
+<li><code>ExampleCA.crt</code> is the certificate for <em>ExampleCA</em></li>
+<li><code>ExampleCA.crl</code> is the certificate revocation list (CRL) for that CA. It contains a list of revoked certificates issued by the associated CA.</li>
+</ul>
+<blockquote>
+<p>A <em><strong>Common Name</strong></em> or CN is typically the fully qualified domain name (FQDN) of the host associated with a certificate (<a href="https://jamielinux.com/docs/openssl-certificate-authority/sign-server-and-client-certificates.html">not strictly true for client certificates</a>).</p>
+<p>See <a href="https://jamielinux.com/docs/openssl-certificate-authority/certificate-revocation-lists.html">this source</a> for information on certificate revocation lists.</p>
+</blockquote>
+<h3 id="create-the-certificates-for-the-client-and-servers">Create the certificates for the client and servers</h3>
+<pre><code>~/certs certstrap request-cert --domain  &quot;localhost&quot;       
+Enter passphrase (empty for no passphrase):
+Enter same passphrase again:
+Created out/localhost.key
+Created out/localhost.csr
+
+~/certs certstrap request-cert --domain  &quot;client&quot;
+Enter passphrase (empty for no passphrase):
+Enter same passphrase again:
+Created out/client.key
+Created out/client.csr
+</code></pre><blockquote>
+<p><code>localhost</code> is used as the domain for the server since, as noted above, a valid FQDN of the host is required for servers. <code>localhost</code> suffices for this purpose. Using the <code>--domain</code> flag will create a Subject Alternative Name (SAN) in addition to the CN in the certificate signing request (csr) and in the certificate itself. SANs are the current standard for specifying a number of methods for addressing a service, including by FQDN or domain name. There&rsquo;s an alternative to <code>--domain</code>, <code>--common-name</code>. This argument will only generate a CN. Starting in Go 1.15 certificates must contain a SAN entry or the https request will fail. Certificates with only a CN will not be accepted. If Go 1.15 or higher is used, and <code>--common-name</code> is used to generate the CSR, you will likely see the following error from the client:</p>
+<pre><code>Get &quot;https://localhost&quot;: x509: certificate relies on legacy Common Name field, use SANs or temporarily enable Common Name matching with GODEBUG=x509ignoreCN=0
+</code></pre><p>As noted in the error message, this problem can be overcome by prefixing the client command with <code>GODEBUG=x509ignoreCN=0</code>.</p>
+</blockquote>
+<h3 id="sign-the-certificates-for-the-client-and-servers">Sign the certificates for the client and servers</h3>
+<pre><code>~/certs certstrap sign localhost --CA ExampleCA  
+Created out/localhost.crt from out/localhost.csr signed by out/ExampleCA.key
+
+~/certs certstrap sign client --CA ExampleCA   
+Created out/client.crt from out/client.csr signed by out/ExampleCA.key
+</code></pre><blockquote>
+<p>Please note that all certificates and associated keys were placed in the <code>./out</code> directory.</p>
+</blockquote>
+<p>At this point we have certificates for the CA, the client, and the server.</p>
+<h2 id="write-the-client-and-server">Write the Client and Server</h2>
+<p>All code in this article is available at GitHub in my <a href="https://github.com/youngkin/gohttps">gohttps</a> repository.</p>
+<p>We&rsquo;ll write both a simple server that does no validation against a client&rsquo;s certificate as well as a more advanced server that is capable of a variety of options when validating a client&rsquo;s certificate. Finally, we&rsquo;ll develop a client that can talk to both servers.</p>
+<p>Before moving on we need to briefly discuss how HTTPS is implemented. HTTPS traffic is encrypted by the TLS layer. TLS is the successor to SSL and works on top of TCP/IP. It does a number of things including:</p>
+<ul>
+<li>Negotiates the TLS session. This involves negotiating the version of TLS and the encryption suite to be used.</li>
+<li>Validate the server&rsquo;s identity</li>
+<li>If required, validate the client&rsquo;s identity</li>
+<li>Handles all traffic encryption</li>
+</ul>
+<p>Go&rsquo;s HTTP package includes a TLS configuration struct that is used to implement a client&rsquo;s and server&rsquo;s HTTPS communication expectations. This will be a focus in the following sub-sections.</p>
+<blockquote>
+<p>TLS requires a reliable transport mechanism. TCP and UDP are the 2 choices, but UDP is not reliable. See <a href="https://security.stackexchange.com/questions/170833/why-does-tls-require-tcp">Why does TLS require TCP</a> for more discussion on this topic.</p>
+</blockquote>
+<h3 id="a-simple-server">A simple server</h3>
+<p>See <a href="https://github.com/youngkin/gohttps/blob/master/simpleserver/server.go">GitHub</a> for the complete implementation of the simple server.</p>
+<p>The simplest HTTPS interaction between a client and a server is one where the client validates the servers credentials and where all traffic is encrypted. The client only requires access to the certificate for the CA that signed the server&rsquo;s certificate. The server neither knows nor cares about the client&rsquo;s identity. This is a pretty common use case.</p>
+<p>Here&rsquo;s a breakdown of the implementation of a very simple HTTPS server. The first thing to do is create and configure the <code>http.Server</code> struct:</p>
+<pre><code>server := &amp;http.Server{
+    Addr:         &quot;:&quot; + *port,
+    ReadTimeout:  5 * time.Minute, // 5 min to allow for delays when 'curl' on OSx prompts for username/password
+    WriteTimeout: 10 * time.Second,
+    TLSConfig:    &amp;tls.Config{ServerName: *host},
+}
+</code></pre><p><code>Addr</code> simply specifies the listening address for the server. <code>ReadTimeout</code> and <code>WriteTimeout</code> set the timeouts for reads and writes respectively. As the comment indicates, <code>ReadTimeout</code> is set to 5 minutes to allow time for the entry of the machine&rsquo;s user&rsquo;s password. OSx sometimes prompts for this when <code>curl</code> is used and the certificate is password protected. In this article none of the certificates are password protected.</p>
+<blockquote>
+<p>Strictly speaking the timeout fields aren&rsquo;t needed in a simple server such as this. That said, robust servers will include them. See <a href="https://blog.cloudflare.com/the-complete-guide-to-golang-net-http-timeouts/">The complete guide to Go net/http timeouts</a> for more details.</p>
+</blockquote>
+<p>In the context of this article, <code>TLSConfig</code> is the most interesting field in the <code>Server</code> struct. This is where all the TLS options are configured. In this case only <code>ServerName</code> is required. <code>ServerName</code> must match the hostname in the server&rsquo;s certificate.</p>
+<p>The server needs a handler function:</p>
+<pre><code>http.HandleFunc(&quot;/&quot;, func(w http.ResponseWriter, r *http.Request) {
+    body, err := ioutil.ReadAll(r.Body)
+    if err != nil {
+        body = []byte(fmt.Sprintf(&quot;error reading request body: %s&quot;, err))
+    }
+    resp := fmt.Sprintf(&quot;Hello, %s from Simple Server!&quot;, body)
+    w.Write([]byte(resp))
+})
+</code></pre><p>There isn&rsquo;t much to this handler function, it provides just the common &ldquo;Hello, World!&rdquo; response.</p>
+<p>The final step is for the server to begin listening for requests:</p>
+<pre><code>if err := server.ListenAndServeTLS(*serverCert, *srvKey); err != nil {
+    log.Fatal(err)
+}
+</code></pre><p>Instead of the <code>ListenAndServe</code> call in an HTTP server, an HTTPS server uses <code>ListenAndServeTLS</code>. <code>*serverCert</code> and <code>*srvKey</code> are the server&rsquo;s certificate and private key files respectively. The filenames containing these are passed in on the command line (more on that below). <code>localhost.crt</code> and <code>localhost.key</code> are the files we created above.</p>
+<h3 id="a-more-advanced-server">A more advanced server</h3>
+<p>See <a href="https://github.com/youngkin/gohttps/blob/master/advserver/server.go">GitHub</a> for the complete implementation of this more advanced server.</p>
+<p>The primary difference between the simple server above and a more secure server is the addition of the capability to require, or, require and validate, a client&rsquo;s certificate.</p>
+<p>As before, an <code>http.Server</code> struct is required:</p>
+<pre><code>server := &amp;http.Server{
+    Addr:         &quot;:&quot; + *port,
+    ReadTimeout:  5 * time.Minute, // 5 min to allow for delays when 'curl' on OSx prompts for username/password
+    WriteTimeout: 10 * time.Second,
+    TLSConfig:    getTLSConfig(*host, *caCert, tls.ClientAuthType(*certOpt)),
+}
+</code></pre><p>Notice in this version the <code>TLSConfig</code> field is being configured by a function, <code>getTLSConfig()</code>. There&rsquo;s a bit more to this <code>TLSConfig</code> than in the simple server case. Here&rsquo;s the code for the function:</p>
+<pre><code>func getTLSConfig(host, caCertFile string, certOpt tls.ClientAuthType) *tls.Config {
+	var caCert []byte
+	var err error
+	var caCertPool *x509.CertPool
+	if certOpt &gt; tls.RequestClientCert {
+		caCert, err = ioutil.ReadFile(caCertFile)
+		if err != nil {
+			log.Fatal(&quot;Error opening cert file&quot;, caCertFile, &quot;, error &quot;, err)
+		}
+		caCertPool = x509.NewCertPool()
+		caCertPool.AppendCertsFromPEM(caCert)
+	}
+
+	return &amp;tls.Config{
+		ServerName: host,
+		ClientAuth: certOpt,
+		ClientCAs:  caCertPool,
+		MinVersion: tls.VersionTLS12, // TLS versions below 1.2 are considered insecure - see https://www.rfc-editor.org/rfc/rfc7525.txt for details
+	}
+}
+</code></pre><p>Let&rsquo;s break this down by sections. First let&rsquo;s take a look at the function signature.</p>
+<pre><code>func getTLSConfig(host, caCertFile string, certOpt tls.ClientAuthType) *tls.Config
+</code></pre><p>The arguments are as follows:</p>
+<ul>
+<li>
+<p><code>host</code> - this is the server&rsquo;s hostname. It must match the name provided in the certificate. In our case this is the SAN.</p>
+</li>
+<li>
+<p><code>caCertFile</code> - this is the certificate file name for the CA that signed the client&rsquo;s certificate, in this case <code>ExampleCA.crt</code>. It&rsquo;s required in this server because we essentially created an untrusted CA, i.e., not a CA that&rsquo;s normally configured in the OS (e.g., the KeyChain in OSx). So we need to add it here.</p>
+</li>
+<li>
+<p><code>certopt</code> - as can be seen this is of type <code>tls.ClientAuthType</code> There are 5 authorization types for authorizing/validating a client&rsquo;s certificate:</p>
+<ul>
+<li><code>tls.NoClientCert</code> - A client certificate will not be requested and it is not required</li>
+<li><code>tls.RequestClientCert</code> - A client certificate will be requested, but it is not required and it won&rsquo;t be validated</li>
+<li><code>tls.RequireAnyClientCert</code> - A client certificate is required, but any valid client certificate is acceptable. It will not be validated against the CA&rsquo;s certificate.</li>
+<li><code>tls.VerifyClientCertIfGiven</code> - A client certificate will not be requested, but if present it will be validated against the CA&rsquo;s certificate</li>
+<li><code>tls.RequireAndVerifyClientCert</code> - A client certificate will be required and will be validated against the CA&rsquo;s certificate</li>
+</ul>
+</li>
+</ul>
+<p>Now that we know what the function&rsquo;s arguments are let&rsquo;s take a look at the function body:</p>
+<pre><code>1   var caCert []byte
+2   var err error
+3   var caCertPool *x509.CertPool
+4   if certOpt &gt; tls.RequestClientCert {
+5       caCert, err = ioutil.ReadFile(caCertFile)
+6       if err != nil {
+7           log.Fatal(&quot;Error opening cert file&quot;, caCertFile, &quot;, error &quot;, err)
+8       }
+9       caCertPool = x509.NewCertPool()
+10      caCertPool.AppendCertsFromPEM(caCert)
+11  }
+12  
+13  return &amp;tls.Config{
+14      ServerName: host,
+15      ClientAuth: certOpt,
+16      ClientCAs:  caCertPool,
+17      MinVersion: tls.VersionTLS12,
+</code></pre><ul>
+<li>
+<p>Line 3 - we define an <code>x509.CertPool</code>. This is a pool of certificates that will be used below. It will contain the certifcate of the CA that signed the client&rsquo;s certificate.</p>
+</li>
+<li>
+<p>Line 4 - we check the value of the <code>certOp</code>. Any value above <code>tls.RequestClientCert</code> will require clients to provide a certificate.</p>
+</li>
+<li>
+<p>Lines 5 - 8 - In order to validate client certificates a CA certificate needs to be loaded into the <code>caCertPool</code>. These lines read the CA certificate file and handle any errors</p>
+</li>
+<li>
+<p>Lines 9 -10 - We create a new <code>x509.CertPool</code> and add the CA&rsquo;s certificate to the pool.</p>
+</li>
+<li>
+<p>Line 15 - The <code>ClientAuth</code> field is used to specify the level of client certificate authorization and validation that&rsquo;s required. The values and definitions were given above in the discussion about <code>certOpt</code>.</p>
+</li>
+<li>
+<p>Line 16 - The <code>ClientCAs</code> field is used to specify the CAs that will be used to validate client certificates. It&rsquo;s value is set from the <code>caCertPool</code> that was created on lines 9 &amp; 10. The GoDoc for this field contains the following:</p>
+<ul>
+<li><em>ClientCAs defines the set of root certificate authorities that servers use if required to verify a client certificate by the policy in ClientAuth.</em></li>
+</ul>
+</li>
+<li>
+<p>Line 17 - <code>MinVersion</code> sets the minimum TLS version to accept when negotiating versions with the client. TLS versions below 1.2 are considered insecure. See <a href="https://www.rfc-editor.org/rfc/rfc7525.txt">RFC 7525</a> for details.</p>
+</li>
+</ul>
+<h3 id="create-the-client">Create the client</h3>
+<p>See <a href="https://github.com/youngkin/gohttps/blob/master/client/client.go">GitHub</a> for the complete implementation of this client.</p>
+<p>As stated earlier, this client can successfully communicate with either the simple or advanced servers. Let&rsquo;s take a look at the significant code.</p>
+<p>The first thing to do is to configure the client&rsquo;s certificate and key if present.</p>
+<pre><code>if *clientCertFile != &quot;&quot; &amp;&amp; *clientKeyFile != &quot;&quot; {
+    cert, err = tls.LoadX509KeyPair(*clientCertFile, *clientKeyFile)
+    if err != nil {
+        log.Fatalf(&quot;Error creating x509 keypair from client cert file %s and client key file %s&quot;, *clientCertFile, *clientKeyFile)
+    }
+}
+</code></pre><p>If provided, the code will create an <code>x509</code> keypair from the client&rsquo;s certificate and private key. This keypair will be used when negotiating the TLS connection and for encrypting and decrypting communications between the client and server.</p>
+<p>Next, as with the advanced server, we&rsquo;ll create the certificate pool that will contain the certificate of the CA that signed, in this case, the server&rsquo;s certificate.</p>
+<pre><code>caCert, err := ioutil.ReadFile(*caCertFile)
+if err != nil {
+    log.Fatalf(&quot;Error opening cert file %s, Error: %s&quot;, *caCertFile, err)
+}
+caCertPool := x509.NewCertPool()
+caCertPool.AppendCertsFromPEM(caCert)
+</code></pre><p>Then we create an <code>http.Transport</code> with the client&rsquo;s certificate/keypair and the certificate pool containing the CA. This <code>http.Transport</code> will be used to configure the <code>http.Client</code>.</p>
+<pre><code>t := &amp;http.Transport{
+    TLSClientConfig: &amp;tls.Config{
+        Certificates: []tls.Certificate{cert},
+        RootCAs:      caCertPool,
+    },
+}
+
+client := http.Client{Transport: t, Timeout: 15 * time.Second}
+</code></pre><p><code>http.Transport</code> contains a <code>tls.Config</code>. As with the servers, the <code>Certificates</code> field is populated with the client&rsquo;s certificate. There is a new field here, the <code>RootCAs</code> field. The GoDoc describes this field as follows:</p>
+<blockquote>
+<p>RootCAs defines the set of root certificate authorities that clients use when verifying server certificates. If RootCAs is nil, TLS uses the host&rsquo;s root CA set.</p>
+</blockquote>
+<p>This is everything that needs to be done to prepare the client to interact with an HTTPS server. The remaining code prepares and sends the request and processes the response.</p>
+<h2 id="putting-it-all-together">Putting it all together</h2>
+<p>If you&rsquo;ve cloned or forked the <a href="https://github.com/youngkin/gohttps">gohttps</a> repository you&rsquo;ll notice that it has the following directory structure:</p>
+<pre><code>gohttps
+      |
+      +- advserver
+      +- client
+      +- simpleserver
+</code></pre><p>The source files for the client and each of the servers are in their respective directories. The programs can be built and run from these directories.</p>
+<p>The certificates and keys referenced in the command lines below match the names of the ones generated in the &ldquo;Create Certificates and Keys&rdquo; section above.</p>
+<h3 id="start-server">Start server</h3>
+<h4 id="simple-server-command-line-no-client-validation">Simple server command line (no client validation)</h4>
+<pre><code>./simpleserver -host &quot;localhost&quot; -srvcert &quot;/path/to/localhost.crt&quot; -srvkey &quot;/path/to/localhost.key&quot;
+</code></pre><h4 id="advanced-server-command-line-will-full-client-certificate-validation--certopt-4">Advanced server command line will full client certificate validation (<code>-certopt 4</code>).</h4>
+<pre><code>./advserver -host &quot;localhost&quot; -srvcert &quot;/path/to/localhost.crt&quot; -cacert &quot;/path/to/ExampleCA.crt&quot; \
+-srvkey &quot;/path/to/localhost.key&quot; -port 443 -certopt 4
+</code></pre><h3 id="run-the-client">Run the client</h3>
+<h4 id="using-curl">Using <code>curl</code></h4>
+<p><code>curl</code> request with no client certificate validation.</p>
+<pre><code>curl -vi -d &quot;World&quot; --cacert /path/to/ExampleCA.crt https://localhost
+</code></pre><p><code>curl</code> request with full client certificate validation.</p>
+<pre><code>curl -d &quot;World&quot; -vi --cert /path/to/client.crt  --key /path/to/client.key --cacert ./out/ExampleCA.crt https://localhost
+</code></pre><h4 id="using-the-client-program">Using the client program</h4>
+<h5 id="command-line-for-full-client-certificate-validation-by-the-server">Command line for full client certificate validation by the server.</h5>
+<pre><code>./client -clientcert &quot;/path/to/client.crt&quot; -clientkey &quot;/path/to/client.key&quot; -cacert &quot;/path/to/ExampleCA.crt&quot;
+</code></pre><h5 id="command-line-for-no-client-certificate-validation-by-the-server">Command line for no client certificate validation by the server.</h5>
+<pre><code>./client -cacert &quot;/path/to/ExampleCA.crt&quot;
+</code></pre><blockquote>
+<p>As noted in the section on creating certificates above, if the client and server certificates aren&rsquo;t created with the <code>--domain</code> flag you may see the following error:</p>
+<pre><code>Get &quot;https://localhost&quot;: x509: certificate relies on legacy Common Name field, use SANs or temporarily enable Common Name matching with GODEBUG=x509ignoreCN=0
+</code></pre><p>Prefixing the previous commands with <code>GODEBUG=x509ignoreCN=0</code> will resolve the error. See the section on creating certificates for more details on how to avoid this problem.</p>
+</blockquote>
+<h2 id="conclusion">Conclusion</h2>
+<p>Thanks for following along. We covered a lot in this article including:</p>
+<ul>
+<li>If you had no background in PKI and certificates hopefully you learned enough to get you started on a journey to learn more about the subject</li>
+<li>A brief description of the different software tools available to work with certificates and keys. For this article we used <code>certstrap</code>.</li>
+<li>How to use <code>certstrap</code> to create a CA as well as client and server certificate signing requests, certificates, and keys.</li>
+<li>How to write a simple and a more advanced HTTPS server in Go, covering the specifics in detail</li>
+<li>How to write an HTTPS client in Go, again covering the specifics in detail</li>
+<li>Running the server programs and accessing the running processes using both <code>curl</code> and the client program</li>
+</ul>
+<p>Feel free to use the code in the <a href="https://github.com/youngkin/gohttps">gohttps repository</a> for your own learning, experimentation, or as the basis to create your own clients and servers.</p>
+<h2 id="references">References</h2>
+<ul>
+<li>Cover Photo by <a href="https://unsplash.com/@yogesh_7?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Yogesh Pedamkar</a> on <a href="https://unsplash.com/s/photos/lock?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Unsplash</a></li>
+<li><a href="https://github.com/jcbsmpsn/golang-https-example">The TLS Connection Options</a> GitHub project is a good resource to quickly create working HTTPS clients and servers. It was my primary source for information about this topic when I was first getting started in creating HTTPS clients and servers. It also covers solutions to some common problems.</li>
+<li><a href="https://bbengfort.github.io/programmer/2017/03/03/secure-grpc.html">Secure gRPC with TLS/SSL</a> - although geared towards gRPC, the basic TLS underpinnings are the same as with HTTPS. This article filled in some gaps about how to configure TLS in Go.</li>
+<li><a href="https://www.smashingmagazine.com/2017/06/guide-switching-http-https/">The Complete Guide To Switching From HTTP To HTTPS</a> provides a detailed, practical, discussion about almost all aspects about the technology behind HTTPS, how to request certificates, and how to configure various web servers to support HTTPS. It&rsquo;s worth at least a quick perusal to see if there&rsquo;s anything of interest.</li>
+<li><a href="https://en.wikipedia.org/wiki/Public_key_infrastructure">Public Key Infrastructure(PKI)</a> is a mix of technology and trusted organizations that provide the underpinnings of secure communication</li>
+<li><a href="https://en.wikipedia.org/wiki/Transport_Layer_Security">TLS</a> is an encryption protocol used to secure communications over the Internet</li>
+<li><a href="https://en.wikipedia.org/wiki/HTTPS">HTTPS</a> is a secure implementation of the HTTP protocol</li>
+<li><a href="https://jamielinux.com/docs/openssl-certificate-authority/index.html">OpenSSL Certificate Authority</a> is a good resource about creating CAs and certificates using <code>openssl</code>.</li>
+<li><a href="https://linuxize.com/post/creating-a-self-signed-ssl-certificate/">Creating a Self-Signed SSL Certificate</a> is a good resource about creating self-signed certificates. These weren&rsquo;t used in this article but it&rsquo;s good to know that it&rsquo;s possible to do this.</li>
+<li><a href="https://github.com/square/certstrap">Certstrap GitHub repo</a></li>
+<li><a href="https://github.com/OpenVPN/easy-rsa">easy-rsa GitHub repo</a></li>
+<li><a href="https://www.ssllabs.com/ssltest/index.html">QualSys SSL Server Test</a> is a web page you can use to test HTTPS access to an HTTPS server and receive an evaluation of how well it implements best practices.</li>
+<li><a href="https://prod.idrix.eu/secure/">Idrix</a> has a nice service to test SSL certificates. For example:
+<ul>
+<li>curl -vi &ndash;cert ./ClientCert.crt &ndash;key ./ClientCert.key <a href="https://prod.idrix.eu/secure/">https://prod.idrix.eu/secure/</a></li>
+</ul>
+</li>
+<li><a href="https://geekflare.com/openssl-commands-certificates/">21 OpenSSL Examples to Help You in Real-World</a> is a good reference containing commonly used <code>openssl</code> commands</li>
+</ul>
+
+
+                
+
+                <hr>
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/post/createafreeblogsite/" data-toggle="tooltip" data-placement="top" title="Create a Free Blog Site Using GitHub Pages and Hugo">&larr;
+                            Previous Post</a>
+                    </li>
+                    
+                    
+                </ul>
+
+                
+<div id="disqus-comment"></div>
+
+<div id="hyvor-talk-view"></div>
+<script type="text/javascript">
+    var HYVOR_TALK_WEBSITE = 1798; 
+    var HYVOR_TALK_CONFIG = {
+        url: false,
+        id: false
+};
+</script>
+<script async type="text/javascript" src="//talk.hyvor.com/web-api/embed"></script>
+</div>
+
+
+
+            </div>
+            
+            <div class="
+                col-lg-11 col-lg-offset-1
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/kubernetes" title="kubernetes">
+                            kubernetes
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/raspberry-pi" title="raspberry-pi">
+                            raspberry-pi
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                    </div>
+                </section>
+                
+
+                
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                   
+                   <li>
+                       <a href='' rel="alternate" type="application/rss+xml" title="Rich Youngkin" >
+                           <span class="fa-stack fa-lg">
+                               <i class="fa fa-circle fa-stack-2x"></i>
+                               <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                           </span>
+                       </a>
+                   </li>
+                   
+                    
+                    <li>
+                        <a href="mailto:rich.youngkin@gmail.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    
+                    
+                    
+
+                    
+
+		    
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/youngkin">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://www.linkedin.com/in/richard-youngkin-0749763">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    <li>
+                        <a target="_blank" href="https://medium.com/@RichYoungkin">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-medium fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+            
+                    
+                    <li>
+                        <a target="_blank" href="https://stackoverflow.com/users/2646870/rich">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-stack-overflow fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+            
+                    
+                    <li>
+                        <a target="_blank" href="https://www.reddit.com/user/elevation5280">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-reddit fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+            
+                    
+                    
+            
+            
+            
+                </ul>
+		<p class="copyright text-muted">
+                    Copyright &copy; Rich Youngkin 2020
+                    <br>
+                    <a href="https://themes.gohugo.io/hugo-theme-cleanwhite">CleanWhite Hugo Theme</a> by <a href="https://zhaohuabing.com">Huabing</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="100px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=zhaohuabing&repo=hugo-theme-cleanwhite&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+
+
+
+
+
+<script>
+    
+    if($('#tag_cloud').length !== 0){
+        async("/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+
+<script>
+    async("https://cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+
+
+
+
+</body>
+</html>
