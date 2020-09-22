@@ -281,11 +281,11 @@ The following requirements must be met to ensure trust and security:</p>
 <ul>
 <li>Trusted authorities must exist that can vouch for the identify of a client or a server</li>
 <li>Trusted sources of encryption technology that can be used by clients and servers to encrypt their communications must also exist</li>
-<li>Support for the associated techniques and technologies in the code that implements the client and server applications</li>
+<li>Support in the code for the associated techniques and technologies that are used to implement client and server applications</li>
 </ul>
 <p>The umbrella for all these things is called the <a href="https://en.wikipedia.org/wiki/Public_key_infrastructure">Public Key Infrastructure(PKI)</a>. There are four components to PKI that implement the requirements outlined above:</p>
 <ul>
-<li><strong>Public Key Encrytion</strong> - A public key can be safely shared by the owner, with another party, that provides the other party with the ability to encrypt and decrypt a conversation. The owner of a public key has a corresponding private key that is not shared. A public key can only decrypt information that was encrypted with the corresponding private key. Likewise, the private key is required to decrypt information that was encrypted with a public key. This asymmetric characteristic of the encryption guarantees that information can be securely shared between known parties to a conversation.</li>
+<li><strong>Public Key Encryption</strong> - A public key can be safely shared by the owner, with another party, that provides the other party with the ability to encrypt and decrypt a conversation. The owner of a public key has a corresponding private key that is not shared. A public key can only decrypt information that was encrypted with the corresponding private key. Likewise, the private key is required to decrypt information that was encrypted with a public key. This asymmetric characteristic of the encryption guarantees that information can be securely shared between known parties to a conversation.</li>
 <li><strong>Certificates</strong> - contain the identity of the holder as well as the certificate owner&rsquo;s public key. A certificate also includes information about the trusted authority that issued the certificate.</li>
 <li><strong>Certificate Authorities(CA)</strong> - are the trusted source of identity information. They can also issue certificates or delegate that authority to a Registration Authority.</li>
 <li><strong>Registration Authority (RA)</strong> - are a trusted source of certificates. Any certificates issued by an RA will also contain the certificate of the CA that authorized them to issue certificates. This is required to ensure the trust requirement can be met. In other words, RAs themselves are only trusted because they can prove that they&rsquo;re trusted by a CA.</li>
@@ -293,7 +293,8 @@ The following requirements must be met to ensure trust and security:</p>
 </blockquote>
 <h2 id="create-certificates-and-keys">Create certificates and keys</h2>
 <p>The basis for proving identity and encrypting information is a certificate and a corresponding Certificate Authority (CA). For the purposes of this article we&rsquo;ll need both. There are two ways to go about obtaining these, the hard way and the easy way. The hard way is appropriate for real world applications. It involves registering a domain (e.g., <code>youngkin.com</code>), obtaining DNS services for that domain, and obtaining a certificate for that domain. While not difficult it will require a fair amount of work and you&rsquo;ll probably have to spend some money to register the domain.</p>
-<p>An easier way to provide a realistic experience is to create your own CA and obtain a certificate from this CA. This article uses CA signed certificates vs. self-signed certificates in order to create that more realistic experience. It&rsquo;s more realistic in that servers typically don&rsquo;t have access to client certificates ahead of time. The do have access to CA certificates however. Usually servers access CA certificates installed on the machine. This article will demonstrate how to register a CA certificate programmatically.</p>
+<p>An easier way to provide a realistic experience is to create your own CA and obtain a certificate from this CA. This article uses CA signed certificates vs. self-signed certificates in order to create that more realistic experience. I found creating a CA, requesting certificates, and having the CA sign those certificates helpful in understanding the entire process.
+Usually servers access CA certificates installed on the machine. This article will demonstrate how to register a CA certificate programmatically.</p>
 <p>There are at least a couple of tools available help us with the easy way, <a href="https://github.com/square/certstrap">certstrap</a> and <a href="https://github.com/OpenVPN/easy-rsa">easy-rsa</a>.</p>
 <blockquote>
 <p>The definitive command line tool for working with certificates is called <code>openssl</code>. It can be used to create CAs, RAs, and certificates, as well as do many other useful things (see the references section for more details). It can also be used to create what are called self-signed certificates. <a href="https://linuxize.com/post/creating-a-self-signed-ssl-certificate/">Creating a Self-Signed SSL Certificate</a> is a good resource for how to do this. While it is oriented towards Linux, there are versions of <code>openssl</code> available on Windows and Mac machines. I recommend installing the Libre fork of <code>openssl</code>. The reasoning behind this is well described in a <a href="https://security.stackexchange.com/questions/112545/what-are-the-main-advantages-of-using-libressl-in-favor-of-openssl">StackExchange question/answer</a>. To verify whether you have Libre <code>openssl</code> run the following:</p>
@@ -301,11 +302,11 @@ The following requirements must be met to ensure trust and security:</p>
 LibreSSL 2.8.3
 </code></pre><p>Output like the above indicates Libre <code>openssl</code> is being used.</p>
 </blockquote>
-<p>Several files will be created during the certificate generation process, some with <code>.crt</code> and <code>.key</code> suffices. You may also see the suffix <code>.pem</code> when reading about certificates. It&rsquo;s worth noting that <code>.pem</code> files are equivalent to <code>.crt</code> and <code>.key</code> files.</p>
+<p>Several files will be created during the certificate generation process, some with <code>.crt</code> and <code>.key</code> suffices. You may also see the suffix <code>.pem</code> when reading about certificates. It&rsquo;s worth noting that <code>.pem</code> files are equivalent to <code>.crt</code> and <code>.key</code> files. <strong>PEM</strong> is a file format. <code>.crt</code> and <code>.key</code> are hints as to what the file contains (certificates and keys), but these files all use the PEM format. See <a href="https://stackoverflow.com/questions/62823792/how-to-get-crt-and-key-from-cert-pem-and-key-pem">this StackOverflow discussion</a> for more details about this.</p>
 <h3 id="install-software-to-create-the-ca-and-certificates">Install software to create the CA and certificate(s)</h3>
 <p>As mentioned above there are at least 2 options available to easily create a CA and a CA&rsquo;s registered certificates. This article will use <code>certstrap</code> for no other reason than it was written in Go. However, <code>easy-rsa</code> is a good alternative.</p>
 <p>Before starting, download the appropriate executable from the <a href="https://github.com/square/certstrap/releases">certstrap releases</a> page on GitHub. I placed mine in my <code>~/bin</code> directory which is in my PATH. You&rsquo;ll also need to make it executable (<code>chmod +x &lt;downloadedfilename&gt;</code>).</p>
-<p>We&rsquo;ll follow the <a href="https://github.com/square/certstrap">usage instructions</a> from the project&rsquo;s README. At the end of this section we will have created a CA, a certificate for our server, and a certificate for our client. I keep all my certificates in a directory called <code>~/certs</code>. All the following commands will be run from that directory. When prompted for the <code>passphrase</code> just hit enter (i.e., no passphrase).</p>
+<p>We&rsquo;ll follow the <a href="https://github.com/square/certstrap">usage instructions</a> from the project&rsquo;s README. At the end of this section we will have created a CA, a certificate and key for our server, and a certificate and key for our client. I keep all my certificates in a directory called <code>~/certs</code>. All the following commands will be run from that directory. When prompted for the <code>passphrase</code> just hit enter (i.e., no passphrase).</p>
 <h3 id="create-the-ca">Create the CA</h3>
 <pre><code>~/certs certstrap init --common-name &quot;ExampleCA&quot;         
 Enter passphrase (empty for no passphrase):
@@ -336,7 +337,8 @@ Enter same passphrase again:
 Created out/client.key
 Created out/client.csr
 </code></pre><blockquote>
-<p><code>localhost</code> is used as the domain for the server since, as noted above, a valid FQDN of the host is required for servers. <code>localhost</code> suffices for this purpose. Using the <code>--domain</code> flag will create a Subject Alternative Name (SAN) in addition to the CN in the certificate signing request (csr) and in the certificate itself. SANs are the current standard for specifying a number of methods for addressing a service, including by FQDN or domain name. There&rsquo;s an alternative to <code>--domain</code>, <code>--common-name</code>. This argument will only generate a CN. Starting in Go 1.15 certificates must contain a SAN entry or the https request will fail. Certificates with only a CN will not be accepted. If Go 1.15 or higher is used, and <code>--common-name</code> is used to generate the CSR, you will likely see the following error from the client:</p>
+<p><code>localhost</code> is used as the domain for the server since, as noted above, a valid FQDN of the host is required for servers. <code>localhost</code> suffices for this purpose. Using the <code>--domain</code> flag will create a Subject Alternative Name (SAN) in addition to the CN in the certificate signing request (csr) and in the certificate itself. SANs are the current standard for specifying a number of methods for addressing a service, including by FQDN or domain name.</p>
+<p>There&rsquo;s an  alternative to <code>--domain</code>, <code>--common-name</code>. We used <code>--common-name</code> to create the CA above. <code>--common-name</code> will only generate a CN. Starting in Go 1.15 certificates must contain a SAN entry or the https request will fail. Certificates with only a CN will not be accepted. If Go 1.15 or higher is used, and <code>--common-name</code> is used to generate the CSR, you will likely see the following error from the client:</p>
 <pre><code>Get &quot;https://localhost&quot;: x509: certificate relies on legacy Common Name field, use SANs or temporarily enable Common Name matching with GODEBUG=x509ignoreCN=0
 </code></pre><p>As noted in the error message, this problem can be overcome by prefixing the client command with <code>GODEBUG=x509ignoreCN=0</code>.</p>
 </blockquote>
@@ -349,15 +351,16 @@ Created out/client.crt from out/client.csr signed by out/ExampleCA.key
 </code></pre><blockquote>
 <p>Please note that all certificates and associated keys were placed in the <code>./out</code> directory.</p>
 </blockquote>
-<p>At this point we have certificates for the CA, the client, and the server.</p>
+<p>Certificates must be signed by a trusted authority, in this case the CA, in order to be valid. Signing is a guarantee by the CA that the owner of the certificate is who they say they are. The <code>--CA</code> flag above directs <code>certstrap</code> to have the certificates signed by our Exa,mpleCA.</p>
+<p>At this point we have certificates and keys for the CA, the client, and the server.</p>
 <h2 id="write-the-client-and-server">Write the Client and Server</h2>
 <p>All code in this article is available at GitHub in my <a href="https://github.com/youngkin/gohttps">gohttps</a> repository.</p>
-<p>We&rsquo;ll write both a simple server that does no validation against a client&rsquo;s certificate as well as a more advanced server that is capable of a variety of options when validating a client&rsquo;s certificate. Finally, we&rsquo;ll develop a client that can talk to both servers.</p>
+<p>We&rsquo;ll write both a simple server that does no validation against a client&rsquo;s certificate, as well as a more advanced server that is capable of a variety of options when validating a client&rsquo;s certificate. Finally, we&rsquo;ll develop a client that can talk to both servers.</p>
 <p>Before moving on we need to briefly discuss how HTTPS is implemented. HTTPS traffic is encrypted by the TLS layer. TLS is the successor to SSL and works on top of TCP/IP. It does a number of things including:</p>
 <ul>
 <li>Negotiates the TLS session. This involves negotiating the version of TLS and the encryption suite to be used.</li>
-<li>Validate the server&rsquo;s identity</li>
-<li>If required, validate the client&rsquo;s identity</li>
+<li>Validates the server&rsquo;s identity</li>
+<li>If required, it validates the client&rsquo;s identity</li>
 <li>Handles all traffic encryption</li>
 </ul>
 <p>Go&rsquo;s HTTP package includes a TLS configuration struct that is used to implement a client&rsquo;s and server&rsquo;s HTTPS communication expectations. This will be a focus in the following sub-sections.</p>
@@ -366,7 +369,7 @@ Created out/client.crt from out/client.csr signed by out/ExampleCA.key
 </blockquote>
 <h3 id="a-simple-server">A simple server</h3>
 <p>See <a href="https://github.com/youngkin/gohttps/blob/master/simpleserver/server.go">GitHub</a> for the complete implementation of the simple server.</p>
-<p>The simplest HTTPS interaction between a client and a server is one where the client validates the servers credentials and where all traffic is encrypted. The client only requires access to the certificate for the CA that signed the server&rsquo;s certificate. The server neither knows nor cares about the client&rsquo;s identity. This is a pretty common use case.</p>
+<p>The simplest HTTPS interaction between a client and a server is one where the client validates the server&rsquo;s credentials and where all traffic is encrypted. The client only requires access to the certificate for the CA that signed the server&rsquo;s certificate. The server neither knows nor cares about the client&rsquo;s identity. This is a pretty common use case.</p>
 <p>Here&rsquo;s a breakdown of the implementation of a very simple HTTPS server. The first thing to do is create and configure the <code>http.Server</code> struct:</p>
 <pre><code>server := &amp;http.Server{
     Addr:         &quot;:&quot; + *port,
@@ -393,7 +396,7 @@ Created out/client.crt from out/client.csr signed by out/ExampleCA.key
 <pre><code>if err := server.ListenAndServeTLS(*serverCert, *srvKey); err != nil {
     log.Fatal(err)
 }
-</code></pre><p>Instead of the <code>ListenAndServe</code> call in an HTTP server, an HTTPS server uses <code>ListenAndServeTLS</code>. <code>*serverCert</code> and <code>*srvKey</code> are the server&rsquo;s certificate and private key files respectively. The filenames containing these are passed in on the command line (more on that below). <code>localhost.crt</code> and <code>localhost.key</code> are the files we created above.</p>
+</code></pre><p>Instead of the <code>ListenAndServe</code> call in an HTTP server, an HTTPS server uses <code>ListenAndServeTLS</code>. <code>*serverCert</code> and <code>*srvKey</code> are the server&rsquo;s certificate and private key files respectively. The filenames containing these are passed in on the command line (more on that below). As you may recall, in this article <code>localhost.crt</code> and <code>localhost.key</code> are the certificate and key files we created for the servers.</p>
 <h3 id="a-more-advanced-server">A more advanced server</h3>
 <p>See <a href="https://github.com/youngkin/gohttps/blob/master/advserver/server.go">GitHub</a> for the complete implementation of this more advanced server.</p>
 <p>The primary difference between the simple server above and a more secure server is the addition of the capability to require, or, require and validate, a client&rsquo;s certificate.</p>
@@ -430,15 +433,15 @@ Created out/client.crt from out/client.csr signed by out/ExampleCA.key
 </code></pre><p>The arguments are as follows:</p>
 <ul>
 <li>
-<p><code>host</code> - this is the server&rsquo;s hostname. It must match the name provided in the certificate. In our case this is the SAN.</p>
+<p><code>host</code> - this is the server&rsquo;s hostname. It must match the name provided in the host&rsquo;s certificate. In our case this is the SAN.</p>
 </li>
 <li>
-<p><code>caCertFile</code> - this is the certificate file name for the CA that signed the client&rsquo;s certificate, in this case <code>ExampleCA.crt</code>. It&rsquo;s required in this server because we essentially created an untrusted CA, i.e., not a CA that&rsquo;s normally configured in the OS (e.g., the KeyChain in OSx). So we need to add it here.</p>
+<p><code>caCertFile</code> - this is the certificate file name for the CA that signed the <em><strong>client&rsquo;s</strong></em> certificate, in this case <code>ExampleCA.crt</code>. The CA&rsquo;s certificate is required in this server because we created an unknown CA, i.e., not a CA that&rsquo;s normally configured in the OS (e.g.,  the KeyChain in OSx). So we need to add it here.</p>
 </li>
 <li>
 <p><code>certopt</code> - as can be seen this is of type <code>tls.ClientAuthType</code> There are 5 authorization types for authorizing/validating a client&rsquo;s certificate:</p>
 <ul>
-<li><code>tls.NoClientCert</code> - A client certificate will not be requested and it is not required</li>
+<li><code>tls.NoClientCert</code> - A client certificate will not be requested and it is not required. This is the default value.</li>
 <li><code>tls.RequestClientCert</code> - A client certificate will be requested, but it is not required and it won&rsquo;t be validated</li>
 <li><code>tls.RequireAnyClientCert</code> - A client certificate is required, but any valid client certificate is acceptable. It will not be validated against the CA&rsquo;s certificate.</li>
 <li><code>tls.VerifyClientCertIfGiven</code> - A client certificate will not be requested, but if present it will be validated against the CA&rsquo;s certificate</li>
@@ -466,7 +469,7 @@ Created out/client.crt from out/client.csr signed by out/ExampleCA.key
 17      MinVersion: tls.VersionTLS12,
 </code></pre><ul>
 <li>
-<p>Line 3 - we define an <code>x509.CertPool</code>. This is a pool of certificates that will be used below. It will contain the certifcate of the CA that signed the client&rsquo;s certificate.</p>
+<p>Line 3 - we define an <code>x509.CertPool</code>. This is a pool of certificates that will be used below. It will contain the certificate of the CA that signed the client&rsquo;s certificate.</p>
 </li>
 <li>
 <p>Line 4 - we check the value of the <code>certOp</code>. Any value above <code>tls.RequestClientCert</code> will require clients to provide a certificate.</p>
@@ -569,7 +572,7 @@ client := http.Client{Transport: t, Timeout: 15 * time.Second}
 <li>Cover Photo by <a href="https://unsplash.com/@yogesh_7?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Yogesh Pedamkar</a> on <a href="https://unsplash.com/s/photos/lock?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Unsplash</a></li>
 <li><a href="https://github.com/jcbsmpsn/golang-https-example">The TLS Connection Options</a> GitHub project is a good resource to quickly create working HTTPS clients and servers. It was my primary source for information about this topic when I was first getting started in creating HTTPS clients and servers. It also covers solutions to some common problems.</li>
 <li><a href="https://bbengfort.github.io/programmer/2017/03/03/secure-grpc.html">Secure gRPC with TLS/SSL</a> - although geared towards gRPC, the basic TLS underpinnings are the same as with HTTPS. This article filled in some gaps about how to configure TLS in Go.</li>
-<li><a href="https://www.smashingmagazine.com/2017/06/guide-switching-http-https/">The Complete Guide To Switching From HTTP To HTTPS</a> provides a detailed, practical, discussion about almost all aspects about the technology behind HTTPS, how to request certificates, and how to configure various web servers to support HTTPS. It&rsquo;s worth at least a quick perusal to see if there&rsquo;s anything of interest.</li>
+<li><a href="https://www.smashingmagazine.com/2017/06/guide-switching-http-https/">The Complete Guide To Switching From HTTP To HTTPS</a> provides a detailed, practical, discussion about almost all aspects of the technology behind HTTPS, how to request certificates, and how to configure various web servers to support HTTPS. It&rsquo;s worth at least a quick perusal to see if there&rsquo;s anything of interest.</li>
 <li><a href="https://en.wikipedia.org/wiki/Public_key_infrastructure">Public Key Infrastructure(PKI)</a> is a mix of technology and trusted organizations that provide the underpinnings of secure communication</li>
 <li><a href="https://en.wikipedia.org/wiki/Transport_Layer_Security">TLS</a> is an encryption protocol used to secure communications over the Internet</li>
 <li><a href="https://en.wikipedia.org/wiki/HTTPS">HTTPS</a> is a secure implementation of the HTTP protocol</li>
