@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    
+
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-177198277-1"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-177198277-1');
+    </script>
+
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+    <meta property="og:site_name" content="Rich Youngkin">
+    <meta property="og:type" content="article">
+
+    
+    <meta property="og:image" content="https://youngkin.github.io/images/main_go_wideandtall_darklayer.jpeg">
+    <meta property="twitter:image" content="https://youngkin.github.io/images/main_go_wideandtall_darklayer.jpeg" />
+    
+
+    
+    <meta name="title" content="Sunfounder Raspberry Pi Kit Notes for Go and C - Blinking LED" />
+    <meta property="og:title" content="Sunfounder Raspberry Pi Kit Notes for Go and C - Blinking LED" />
+    <meta property="twitter:title" content="Sunfounder Raspberry Pi Kit Notes for Go and C - Blinking LED" />
+    
+
+    
+    <meta name="description" content="Questions about Sunfounder RPi kits? Look no further!">
+    <meta property="og:description" content="Questions about Sunfounder RPi kits? Look no further!" />
+    <meta property="twitter:description" content="Questions about Sunfounder RPi kits? Look no further!" />
+    
+
+    
+    <meta property="twitter:card" content="summary" />
+    
+    
+
+    <meta name="keyword"  content="Rich, Youngkin, Raspberry, Pi, Docker, Kubernetes, Go, Golang, Microservice">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>Sunfounder Raspberry Pi Kit Notes for Go and C - Blinking LED-Rich Youngkin Blog</title>
+
+    <link rel="canonical" href="/post/sunfoundergpionotesled/">
+
+    <link rel="stylesheet" href="/css/iDisqus.min.css"/>
+	
+    
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    
+    <link rel="stylesheet" href="/css/zanshang.css">
+    
+    
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    
+    
+
+    
+    
+    <script src="/js/jquery.min.js"></script>
+    
+    
+    <script src="/js/bootstrap.min.js"></script>
+    
+    
+    <script src="/js/hux-blog.min.js"></script>
+
+    
+    
+
+</head>
+
+
+
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Rich Youngkin</a>
+            
+        </div>
+
+        
+        
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    
+                        
+                        <li>
+                            <a href="/categories/barbeque">barbeque</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/blog">blog</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/go">go</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/gpio">gpio</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/kubernetes">kubernetes</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/raspberry-pi">raspberry-pi</a>
+                        </li>
+                        
+                    
+                    
+		    
+                        <li><a href="/top/about/">ABOUT</a></li>
+                    
+
+                    
+                </ul>
+            </div>
+        </div>
+        
+    </div>
+    
+</nav>
+<script>
+    
+    
+    
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        
+            $navbar.className = " ";
+            
+            setTimeout(function(){
+                
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+
+
+<style type="text/css">
+    header.intro-header {
+        background-image: url('/images/sunfounderLED.jpeg')
+    }
+</style>
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/raspberry-pi" title="raspberry-pi">
+                            raspberry-pi
+                        </a>
+                        
+                        <a class="tag" href="/tags/go" title="Go">
+                            Go
+                        </a>
+                        
+                        <a class="tag" href="/tags/c" title="C">
+                            C
+                        </a>
+                        
+                        <a class="tag" href="/tags/gpio" title="GPIO">
+                            GPIO
+                        </a>
+                        
+                    </div>
+                    <h1>Sunfounder Raspberry Pi Kit Notes for Go and C - Blinking LED</h1>
+                    <h2 class="subheading"></h2>
+                    <span class="meta">
+                        Posted by 
+                        
+                                Rich Youngkin
+                         
+                        on 
+                        Saturday, September 11, 2021
+                        
+                        
+                        
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+
+
+<article>
+    <div class="container">
+        <div class="row">
+
+            
+            <div class="
+                col-lg-11 col-lg-offset-1
+                col-md-10 col-md-offset-1
+                post-container">
+
+                
+                <header>
+                    <h2>Contents</h2>
+                </header>
+                <nav id="TableOfContents">
+  <ul>
+    <li><a href="#overview">Overview</a></li>
+    <li><a href="#prerequisites">Prerequisites</a></li>
+    <li><a href="#blinking-led-in-c">Blinking LED in C</a>
+      <ul>
+        <li><a href="#information-that-would-have-been-helpful">Information that would have been helpful</a></li>
+      </ul>
+    </li>
+    <li><a href="#blinking-led-in-go">Blinking LED in Go</a></li>
+    <li><a href="#summary">Summary</a></li>
+  </ul>
+</nav>
+                
+                <p>This is the first article in a series that explores GPIO programming on a Raspberry Pi 3B+. It is a supplement to the <a href="https://docs.sunfounder.com/projects/raphael-kit/en/latest/play_with_c.html">Sunfounder Blinking LED project</a>. The code samples will be in Go and C.</p>
+<h2 id="overview">Overview</h2>
+<p>I recently became interested in GPIO programming on a Raspberry Pi. It&rsquo;s a nice way to see something concrete controlled by software. It&rsquo;s also a nice way to learn a little bit about electronics. This is the first article in a series I intend to write to document my journey in GPIO programming.</p>
+<p>To lower the bar to getting started I decided to purchase a GPIO/electronics kit and repurpose one of my Raspberry Pis. I chose <a href="https://www.sunfounder.com/">Sunfounder</a>, mostly because they seem to be well regarded and their kits get good reviews. I ended up choosing the <a href="https://www.amazon.com/gp/product/B09BMVT4CB/ref=ppx_yo_dt_b_asin_title_o02_s00?ie=UTF8&amp;psc=1">Sunfounder Raspberry Pi Ultimate Starter Kit</a> (AKA Raphael)  because it has a good number of interesting electronic components and associated projects.</p>
+<p>One thing I noticed right away is that most GPIO articles assume Python for the programming language. Sunfounder&rsquo;s kits and associated documentation support a number of languages including Python and C, but they lean towards Python and more projects are available in Python and not so many in C. I&rsquo;m primarily a Go developer so I&rsquo;m also interested in implementing GPIO projects in Go.</p>
+<p>Some of the Sunfounder kit reviews mention that the project documentation is a little sparse and short on explaining how things work. I&rsquo;m just getting started and I&rsquo;ve seen a little of this, but the first project, <a href="https://docs.sunfounder.com/projects/raphael-kit/en/latest/play_with_c.html">Sunfounder Blinking LED project</a>, is pretty well documented. I only got hung up in a couple of spots and it didn&rsquo;t take long for me to figure out what I did wrong. The second project, <a href="https://docs.sunfounder.com/projects/raphael-kit/en/latest/1.1.2_rgb_led_c.html">RGB LED</a> was a bit different. It&rsquo;s more complicated and much less detailed regarding explaining how and why things work. If all you want to do is follow a cookbook to implement the project it works well enough. But it&rsquo;s lacking if you want to understand how and why it works in more detail. I spent quite a while working on this one trying to fill in the information missing from the project documentation. The point of this series is to fill that gap, from both coding and electronic perspectives.</p>
+<p>The focus of this article is the <a href="https://docs.sunfounder.com/projects/raphael-kit/en/latest/play_with_c.html">Sunfounder Blinking LED project</a>. It&rsquo;s the first project in a <a href="https://docs.sunfounder.com/projects/raphael-kit/en/latest/introduction.html">set of projects targeting the Ultimate Starter/Raphael kit</a>.</p>
+<h2 id="prerequisites">Prerequisites</h2>
+<p>If you don&rsquo;t have one, you&rsquo;ll need a Raspberry Pi. I used a Raspberry Pi 3B+ with the &lsquo;stretch&rsquo; version of the Raspbian OS. Given that the Sunfounder Ultimate Starter Kit is advertised to work with a Raspberry Pi 4, I would expect the 4 series to work as well. I&rsquo;m less sure about other Raspberry Pi versions, especially versions with 26 vs. 40 GPIO pins.</p>
+<p>Next you&rsquo;ll need is a <a href="https://www.amazon.com/dp/B082KBF7MM/ref=sspa_dk_detail_4?psc=1&amp;pd_rd_i=B082KBF7MM&amp;pd_rd_w=1tGTV&amp;pf_rd_p=887084a2-5c34-4113-a4f8-b7947847c308&amp;pd_rd_wg=fX8JB&amp;pf_rd_r=44DE0RS1E9FD42RBYC7R&amp;pd_rd_r=47cbdc7f-7834-455f-9429-ef74a438bd45&amp;spLa=ZW5jcnlwdGVkUXVhbGlmaWVyPUFVVkdZVUZRNUw3ODkmZW5jcnlwdGVkSWQ9QTA4MzI4MzYyU0VLNzBJM0cxRUVMJmVuY3J5cHRlZEFkSWQ9QTA0Mjk1NTMzSzNSWlNFUjU0NURBJndpZGdldE5hbWU9c3BfZGV0YWlsJmFjdGlvbj1jbGlja1JlZGlyZWN0JmRvTm90TG9nQ2xpY2s9dHJ1ZQ==">breadboard</a>, some <a href="https://www.amazon.com/dp/B08HZ26ZLF/ref=syn_sd_onsite_desktop_19?psc=1&amp;spLa=ZW5jcnlwdGVkUXVhbGlmaWVyPUExRFpLWElCRjg1MUNMJmVuY3J5cHRlZElkPUEwMjMyMTE1M01aOFE3U1BQS09YSiZlbmNyeXB0ZWRBZElkPUEwODE5NTMxMktEMTlZRjEyQjBJNiZ3aWRnZXROYW1lPXNkX29uc2l0ZV9kZXNrdG9wJmFjdGlvbj1jbGlja1JlZGlyZWN0JmRvTm90TG9nQ2xpY2s9dHJ1ZQ==">jumper wires</a>, <a href="https://www.amazon.com/ELEGOO-Electronics-Component-resistors-Potentiometer/dp/B01ERPXFZK/ref=sr_1_7_sspa?crid=3EJQNCOWP00IF&amp;dchild=1&amp;keywords=resistors&amp;qid=1631478270&amp;s=industrial&amp;sprefix=resis%2Cindustrial%2C219&amp;sr=1-7-spons&amp;psc=1&amp;spLa=ZW5jcnlwdGVkUXVhbGlmaWVyPUEzTktVSzNYMkxMSDlKJmVuY3J5cHRlZElkPUEwMjAzMDY0NVRERkFLVjVRTUFWJmVuY3J5cHRlZEFkSWQ9QTA5MjM2NjUxUFZYQUlETVAzRDA3JndpZGdldE5hbWU9c3BfbXRmJmFjdGlvbj1jbGlja1JlZGlyZWN0JmRvTm90TG9nQ2xpY2s9dHJ1ZQ==">a 220 Ohm resistor, and an LED</a>. You should also consider getting a <a href="https://www.amazon.com/dp/B082PRVRYR/ref=sspa_dk_detail_2?psc=1&amp;pd_rd_i=B082PRVRYR&amp;pd_rd_w=8mKhr&amp;pf_rd_p=887084a2-5c34-4113-a4f8-b7947847c308&amp;pd_rd_wg=e9psa&amp;pf_rd_r=S09F37DF2G5FW8B8GX4B&amp;pd_rd_r=c065c120-e60b-45e9-b93b-f581f048cf46&amp;spLa=ZW5jcnlwdGVkUXVhbGlmaWVyPUFCMzhUQ09COFI2VlMmZW5jcnlwdGVkSWQ9QTA5NjU2ODUxRDkxNEYwSTYwV09KJmVuY3J5cHRlZEFkSWQ9QTAxOTg1MTUyRUhEUlc2VzQ2VDQ4JndpZGdldE5hbWU9c3BfZGV0YWlsJmFjdGlvbj1jbGlja1JlZGlyZWN0JmRvTm90TG9nQ2xpY2s9dHJ1ZQ==">40 pin female to female with a T-Type adapter</a> to attach the GPIO outputs to the breadboard. You can use only jumper wires, but the cable will make things easier and will help prevent damage to the GPIO pins on the Raspberry Pi. If you elect not to buy the 40 pin cable with T-Type adapter you&rsquo;ll need to buy <a href="https://www.amazon.com/SinLoon-Breadboard-Arduino-Circuit-40-Pack/dp/B08M3QLL3Q/ref=pd_sbs_7/143-0445142-7950409?pd_rd_w=sVLrc&amp;pf_rd_p=8b76d7a7-ab83-4ddc-a92d-e3e33bfdbf03&amp;pf_rd_r=CDM5TGJT03VKF0ZFB577&amp;pd_rd_r=8e58fd82-8503-41cf-b8f2-c78eaeb78d25&amp;pd_rd_wg=tT1U0&amp;pd_rd_i=B08M3QLL3Q&amp;psc=1">male-to-female jumper wires</a>. Buying all these things separately will cost more than a kit however. <a href="https://www.amazon.com/dp/B06WP7169Y/ref=sspa_dk_detail_5?psc=1&amp;pd_rd_i=B06WP7169Y&amp;pd_rd_w=OZVyf&amp;pf_rd_p=887084a2-5c34-4113-a4f8-b7947847c308&amp;pd_rd_wg=0V0IH&amp;pf_rd_r=623YJTBQ2CN2B2GYXQG5&amp;pd_rd_r=faa61f0f-3aec-4cf0-8e7e-d44eb1b3b92f&amp;spLa=ZW5jcnlwdGVkUXVhbGlmaWVyPUEyUVlDQzMzVVZBMFYxJmVuY3J5cHRlZElkPUEwMzExNzk4MUhGSjFSS0VKTlBROCZlbmNyeXB0ZWRBZElkPUEwMzYwNjg2UUdMRU44N0YzNzIwJndpZGdldE5hbWU9c3BfZGV0YWlsJmFjdGlvbj1jbGlja1JlZGlyZWN0JmRvTm90TG9nQ2xpY2s9dHJ1ZQ==">Here&rsquo;s a simple kit that has all of the above</a>. If you expect to follow this series I recommend buying the <a href="https://www.amazon.com/gp/product/B09BMVT4CB/ref=ppx_yo_dt_b_asin_title_o02_s00?ie=UTF8&amp;psc=1">Sunfounder Raspberry Pi Ultimate Starter Kit</a>.</p>
+<p>You will also need some basic Go programming knowledge as well as familiarity with logging on to a Raspberry Pi terminal, or into the desktop GUI that comes with some OS versions. Depending on the approach you take, you may need to connect a keyboard and monitor to the Raspberry Pi. I simply SSH into the Pi. You&rsquo;ll also need familiarity with how to use an editor like Vi or nano.</p>
+<p>I chose not to download the code from the Sunfounder site, preferring to write my own instead, even if all I did was copy directly from the project documentation. Due to this I created my own location to create the code. In fact, <a href="https://github.com/youngkin/gpio">my code is in Github</a>. If you do like downloading code you have the option of downloading, cloning, or forking it from my Github repository. As an added bonus, the project code written in Go is also located there.</p>
+<p>If you&rsquo;re interested in Go development on a Raspberry Pi you&rsquo;ll need to install the development environment onto the Raspberry Pi. <a href="https://www.jeremymorgan.com/tutorials/raspberry-pi/install-go-raspberry-pi/">Here&rsquo;s a simple source</a> that explains how to accomplish this. This source is a little dated, but the only significant issue is with the version of Go to install. The source shows installing Go <strong>1.14.4.linux-arm64.tar.gz</strong> and <strong>1.14.4.linuxarmv6l.tar.gz</strong>. The current versions are <strong>1.17.1.linux-arm64.tar.gz</strong> and <strong>1.17.1.linuxarmv6l.tar.gz</strong>. For the Raspberry Pi 3B+ the correct choice will be <strong>1.17.1.linuxarmv6l.tar.gz</strong>. The other is intended for 64 bit systems like the Raspberry Pi 4 series.</p>
+<p>Finally, I&rsquo;m assuming a basic knowledge of Linux if you want to veer away from the cookbook style of the Sunfounder docs. For example, I won&rsquo;t be explaining what <strong>root privileges</strong> are.</p>
+<h2 id="blinking-led-in-c">Blinking LED in C</h2>
+<p>As mentioned above, this article is about the <a href="https://docs.sunfounder.com/projects/raphael-kit/en/latest/1.1.1_blinking_led_c.html">Blinking LED project</a>. The Sunfounder documentation for this project is quite good. You should start with the <a href="https://docs.sunfounder.com/projects/raphael-kit/en/latest/introduction.html">Introduction</a> and work your way through the following sections up to and including the <a href="https://docs.sunfounder.com/projects/raphael-kit/en/latest/play_with_c.html">Play with C</a> section.</p>
+<p>Since the Sunfounder project documentation is so good, I only have a couple of comments.</p>
+<h3 id="information-that-would-have-been-helpful">Information that would have been helpful</h3>
+<p>The documentation for the project states &ldquo;<em>Therefore, to turn on an LED, we need to make GPIO17 low (0V) level.</em>&rdquo;. What it doesn&rsquo;t explain is why. The reason is that the 220 Ohm resistor is connected on one side to a 3.3 volt power source and the LED anode (positive terminal) on the other. And GPIO17 is connected to the LED&rsquo;s cathode (negative terminal). LEDs only illuminate when current flows from the anode to the cathode. GPIO pins on the Raspberry Pi, e.g., GPIO17, generally have a default state of HIGH (3.3 volts). With the connection of the 3.3 volt power source to the anode and the 3.3 volt GPIO17 pin on the cathode side, no current will flow through the circuit. So the LED will not turn on. Setting GPIO17 to LOW, 0 volts, allows the current to flow, lighting the LED.</p>
+<p>This is a minor point, but the program does not need to be run with root (sudo) privileges. Simply running <code>./BlinkingLed</code>, vs. <code>sudo ./BlinkingLed</code>, will work. This is not always true for GPIO programs. I&rsquo;ll point that out when running a program that does require root privileges.</p>
+<h2 id="blinking-led-in-go">Blinking LED in Go</h2>
+<p>This version of Blinking LED will work with the same breadboard setup as the C version.</p>
+<p>First things first, we need a Go library to drive the GPIO interface. I&rsquo;m using <a href="https://github.com/stianeikeland/go-rpio">go-rpio</a> for several reasons:</p>
+<ol>
+<li>It seems to be in fairly wide use</li>
+<li>It seems to be fairly complete</li>
+<li>It&rsquo;s relatively active</li>
+<li>It comes with example code and good documentation</li>
+</ol>
+<p>You can just use the <a href="https://github.com/stianeikeland/go-rpio/blob/master/examples/blinker/blinker.go">rpio-go blinker.go example</a>. It uses <code>rpio.Pin.Toggle()</code>. I created a <a href="https://github.com/youngkin/gpio">Github respository</a> that contains examples in both C and Go. My Go version of <code>blinker</code> uses direct writes instead of <code>rpio.Pin.Toggle</code>. I thought showing an optional way to do this would be helpful, especially since later projects will use direct writes. My <a href="https://github.com/youngkin/gpio">gpio respository</a> uses Go&rsquo;s module system which will automatically download the <code>rpio-go</code> library when built. Here&rsquo;s my version of <code>blinker</code>. I won&rsquo;t be explaining Go sytax as I&rsquo;m assuming familiarity with Go.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go">  <span style="color:#ae81ff">1</span> <span style="color:#f92672">package</span> <span style="color:#a6e22e">main</span>
+  <span style="color:#ae81ff">2</span>
+  <span style="color:#ae81ff">3</span> <span style="color:#75715e">// Run using &#39;go run blinkingled.go&#39;
+</span><span style="color:#75715e"></span>  <span style="color:#ae81ff">4</span>
+  <span style="color:#ae81ff">5</span> <span style="color:#75715e">// The Go version of this project uses the go-rpio library to
+</span><span style="color:#75715e"></span>  <span style="color:#ae81ff">6</span> <span style="color:#75715e">// control the GPIO pins.
+</span><span style="color:#75715e"></span>  <span style="color:#ae81ff">7</span> <span style="color:#75715e">//
+</span><span style="color:#75715e"></span>  <span style="color:#ae81ff">8</span> <span style="color:#75715e">// The Go module system is used to choose the correct version of
+</span><span style="color:#75715e"></span>  <span style="color:#ae81ff">9</span> <span style="color:#75715e">// this library. See the file &#39;../go.mod&#39; for details.
+</span><span style="color:#75715e"></span> <span style="color:#ae81ff">10</span>
+ <span style="color:#ae81ff">11</span> <span style="color:#f92672">import</span> (
+ <span style="color:#ae81ff">12</span>     <span style="color:#e6db74">&#34;fmt&#34;</span>
+ <span style="color:#ae81ff">13</span>     <span style="color:#e6db74">&#34;os&#34;</span>
+ <span style="color:#ae81ff">14</span>     <span style="color:#e6db74">&#34;time&#34;</span>
+ <span style="color:#ae81ff">15</span>
+ <span style="color:#ae81ff">16</span>     <span style="color:#e6db74">&#34;github.com/stianeikeland/go-rpio/v4&#34;</span>
+ <span style="color:#ae81ff">17</span> )
+ <span style="color:#ae81ff">18</span>
+ <span style="color:#ae81ff">19</span> <span style="color:#66d9ef">func</span> <span style="color:#a6e22e">main</span>() {
+ <span style="color:#ae81ff">20</span>     <span style="color:#75715e">// Initialize the go-rpio library. By default it uses BCM pin numbering.
+</span><span style="color:#75715e"></span> <span style="color:#ae81ff">21</span>     <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">rpio</span>.<span style="color:#a6e22e">Open</span>(); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+ <span style="color:#ae81ff">22</span>         <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#a6e22e">err</span>)
+ <span style="color:#ae81ff">23</span>         <span style="color:#a6e22e">os</span>.<span style="color:#a6e22e">Exit</span>(<span style="color:#ae81ff">1</span>)
+ <span style="color:#ae81ff">24</span>     }
+ <span style="color:#ae81ff">25</span>
+ <span style="color:#ae81ff">26</span>     <span style="color:#75715e">// Release resources held by the go-rpio library obtained above after
+</span><span style="color:#75715e"></span> <span style="color:#ae81ff">27</span>     <span style="color:#75715e">// &#39;main()&#39; exits.
+</span><span style="color:#75715e"></span> <span style="color:#ae81ff">28</span>     <span style="color:#66d9ef">defer</span> <span style="color:#a6e22e">rpio</span>.<span style="color:#a6e22e">Close</span>()
+ <span style="color:#ae81ff">29</span>
+ <span style="color:#ae81ff">30</span>     <span style="color:#75715e">// Select the GPIO pin to use, BCM pin 17
+</span><span style="color:#75715e"></span> <span style="color:#ae81ff">31</span>     <span style="color:#a6e22e">pin</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">rpio</span>.<span style="color:#a6e22e">Pin</span>(<span style="color:#ae81ff">17</span>)
+ <span style="color:#ae81ff">32</span>
+ <span style="color:#ae81ff">33</span>     <span style="color:#75715e">// Set the pin (BCM pin 17) to OUTPUT mode to allow writes to the pin,
+</span><span style="color:#75715e"></span> <span style="color:#ae81ff">34</span>     <span style="color:#75715e">// e.g., set the pin to LOW or HIGH
+</span><span style="color:#75715e"></span> <span style="color:#ae81ff">35</span>     <span style="color:#a6e22e">pin</span>.<span style="color:#a6e22e">Output</span>()
+ <span style="color:#ae81ff">36</span>
+ <span style="color:#ae81ff">37</span>     <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">0</span>; <span style="color:#a6e22e">i</span> &lt; <span style="color:#ae81ff">5</span>; <span style="color:#a6e22e">i</span><span style="color:#f92672">++</span> {
+ <span style="color:#ae81ff">38</span>         <span style="color:#75715e">// Setting the GPIO pin to LOW allows current to flow from the power source thru
+</span><span style="color:#75715e"></span> <span style="color:#ae81ff">39</span>         <span style="color:#75715e">// the anode to cathode turning on the LED.
+</span><span style="color:#75715e"></span> <span style="color:#ae81ff">40</span>         <span style="color:#a6e22e">pin</span>.<span style="color:#a6e22e">Low</span>()
+ <span style="color:#ae81ff">41</span>         <span style="color:#75715e">//        pin.Write(rpio.Low)
+</span><span style="color:#75715e"></span> <span style="color:#ae81ff">42</span>         <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Printf</span>(<span style="color:#e6db74">&#34;LED on, Pin value should be 0: %d\n&#34;</span>, <span style="color:#a6e22e">pin</span>.<span style="color:#a6e22e">Read</span>())
+ <span style="color:#ae81ff">43</span>         <span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Sleep</span>(<span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Millisecond</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">500</span>)
+ <span style="color:#ae81ff">44</span>         <span style="color:#a6e22e">pin</span>.<span style="color:#a6e22e">High</span>()
+ <span style="color:#ae81ff">45</span>         <span style="color:#75715e">//        pin.Write(rpio.High)
+</span><span style="color:#75715e"></span> <span style="color:#ae81ff">46</span>         <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Printf</span>(<span style="color:#e6db74">&#34;\tLED off, Pin value should be 1: %d\n&#34;</span>, <span style="color:#a6e22e">pin</span>.<span style="color:#a6e22e">Read</span>())
+ <span style="color:#ae81ff">47</span>         <span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Sleep</span>(<span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Millisecond</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">500</span>)
+ <span style="color:#ae81ff">48</span>     }
+ <span style="color:#ae81ff">49</span>
+ <span style="color:#ae81ff">50</span>     <span style="color:#75715e">// Turn off the LED
+</span><span style="color:#75715e"></span> <span style="color:#ae81ff">51</span>     <span style="color:#a6e22e">pin</span>.<span style="color:#a6e22e">High</span>()
+ <span style="color:#ae81ff">52</span> }
+</code></pre></div><p>Line 16 imports the <code>rpio-go</code> library</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#ae81ff">16</span>     <span style="color:#e6db74">&#34;github.com/stianeikeland/go-rpio/v4&#34;</span>
+</code></pre></div><p>The rest of the program is explained through embedded comments. The program can be run typing <code>go run blinkingled.go</code> at the command prompt and hitting enter.</p>
+<h2 id="summary">Summary</h2>
+<p>This article has shown how to configure a breadboard with an LED that can be controlled by programs written in both C and Go. Feel free to suggest changes or ask questions in the comments section below.</p>
+
+                
+
+                <hr>
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/post/smokedbrisket/" data-toggle="tooltip" data-placement="top" title="Using a Weber Kettle to Cook a Great Smoked Brisket!">&larr;
+                            Previous Post</a>
+                    </li>
+                    
+                    
+                </ul>
+
+                
+<div id="disqus-comment"></div>
+
+<div id="hyvor-talk-view"></div>
+<script type="text/javascript">
+    var HYVOR_TALK_WEBSITE = 1798; 
+    var HYVOR_TALK_CONFIG = {
+        url: false,
+        id: false
+};
+</script>
+<script async type="text/javascript" src="//talk.hyvor.com/web-api/embed"></script>
+</div>
+
+
+
+            </div>
+            
+            <div class="
+                col-lg-11 col-lg-offset-1
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/kubernetes" title="kubernetes">
+                            kubernetes
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/raspberry-pi" title="raspberry-pi">
+                            raspberry-pi
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                    </div>
+                </section>
+                
+
+                
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                   
+                   <li>
+                       <a href='' rel="alternate" type="application/rss+xml" title="Rich Youngkin" >
+                           <span class="fa-stack fa-lg">
+                               <i class="fa fa-circle fa-stack-2x"></i>
+                               <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                           </span>
+                       </a>
+                   </li>
+                   
+                    
+                    <li>
+                        <a href="mailto:rich.youngkin@gmail.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    
+                    
+                    
+
+                    
+
+		    
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/youngkin">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://www.linkedin.com/in/richard-youngkin-0749763">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    <li>
+                        <a target="_blank" href="https://medium.com/@RichYoungkin">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-medium fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+            
+                    
+                    <li>
+                        <a target="_blank" href="https://stackoverflow.com/users/2646870/rich">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-stack-overflow fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+            
+                    
+                    <li>
+                        <a target="_blank" href="https://www.reddit.com/user/elevation5280">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-reddit fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+            
+                    
+                    
+            
+            
+            
+                </ul>
+		<p class="copyright text-muted">
+                    Copyright &copy; Rich Youngkin 2021
+                    <br>
+                    <a href="https://themes.gohugo.io/hugo-theme-cleanwhite">CleanWhite Hugo Theme</a> by <a href="https://zhaohuabing.com">Huabing</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="100px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=zhaohuabing&repo=hugo-theme-cleanwhite&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+
+
+
+
+
+<script>
+    
+    if($('#tag_cloud').length !== 0){
+        async("/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+
+<script>
+    async("https://cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+
+
+
+
+</body>
+</html>

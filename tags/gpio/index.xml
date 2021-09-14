@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>GPIO on Rich Youngkin</title>
+    <link>https://youngkin.github.io/tags/gpio/</link>
+    <description>Recent content in GPIO on Rich Youngkin</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 11 Sep 2021 13:13:42 -0600</lastBuildDate>
+    
+	<atom:link href="https://youngkin.github.io/tags/gpio/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Sunfounder Raspberry Pi Kit Notes for Go and C - Blinking LED</title>
+      <link>https://youngkin.github.io/post/sunfoundergpionotesled/</link>
+      <pubDate>Sat, 11 Sep 2021 13:13:42 -0600</pubDate>
+      
+      <guid>https://youngkin.github.io/post/sunfoundergpionotesled/</guid>
+      <description>&lt;p&gt;This is the first article in a series that explores GPIO programming on a Raspberry Pi 3B+. It is a supplement to the &lt;a href=&#34;https://docs.sunfounder.com/projects/raphael-kit/en/latest/play_with_c.html&#34;&gt;Sunfounder Blinking LED project&lt;/a&gt;. The code samples will be in Go and C.&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

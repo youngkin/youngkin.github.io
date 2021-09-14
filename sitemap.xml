@@ -3,6 +3,66 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://youngkin.github.io/tags/c/</loc>
+    <lastmod>2021-09-11T13:13:42-06:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://youngkin.github.io/categories/</loc>
+    <lastmod>2021-09-11T13:13:42-06:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://youngkin.github.io/tags/go/</loc>
+    <lastmod>2021-09-11T13:13:42-06:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://youngkin.github.io/categories/go/</loc>
+    <lastmod>2021-09-11T13:13:42-06:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://youngkin.github.io/tags/gpio/</loc>
+    <lastmod>2021-09-11T13:13:42-06:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://youngkin.github.io/categories/gpio/</loc>
+    <lastmod>2021-09-11T13:13:42-06:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://youngkin.github.io/post/</loc>
+    <lastmod>2021-09-11T13:13:42-06:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://youngkin.github.io/tags/raspberry-pi/</loc>
+    <lastmod>2021-09-11T13:13:42-06:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://youngkin.github.io/categories/raspberry-pi/</loc>
+    <lastmod>2021-09-11T13:13:42-06:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://youngkin.github.io/</loc>
+    <lastmod>2021-09-11T13:13:42-06:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://youngkin.github.io/post/sunfoundergpionotesled/</loc>
+    <lastmod>2021-09-11T13:13:42-06:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://youngkin.github.io/tags/</loc>
+    <lastmod>2021-09-11T13:13:42-06:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://youngkin.github.io/tags/barbeque/</loc>
     <lastmod>2020-11-12T13:09:42-06:00</lastmod>
   </url>
@@ -18,27 +78,7 @@
   </url>
   
   <url>
-    <loc>https://youngkin.github.io/categories/</loc>
-    <lastmod>2020-11-12T13:09:42-06:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://youngkin.github.io/post/</loc>
-    <lastmod>2020-11-12T13:09:42-06:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://youngkin.github.io/</loc>
-    <lastmod>2020-11-12T13:09:42-06:00</lastmod>
-  </url>
-  
-  <url>
     <loc>https://youngkin.github.io/tags/smoked-meats/</loc>
-    <lastmod>2020-11-12T13:09:42-06:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://youngkin.github.io/tags/</loc>
     <lastmod>2020-11-12T13:09:42-06:00</lastmod>
   </url>
   
@@ -54,16 +94,6 @@
   
   <url>
     <loc>https://youngkin.github.io/tags/distributed-applications/</loc>
-    <lastmod>2020-09-20T13:09:42-06:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://youngkin.github.io/tags/go/</loc>
-    <lastmod>2020-09-20T13:09:42-06:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://youngkin.github.io/categories/go/</loc>
     <lastmod>2020-09-20T13:09:42-06:00</lastmod>
   </url>
   
@@ -114,16 +144,6 @@
   
   <url>
     <loc>https://youngkin.github.io/tags/mysql/</loc>
-    <lastmod>2020-08-26T13:07:25-06:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://youngkin.github.io/tags/raspberry-pi/</loc>
-    <lastmod>2020-08-26T13:07:25-06:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://youngkin.github.io/categories/raspberry-pi/</loc>
     <lastmod>2020-08-26T13:07:25-06:00</lastmod>
   </url>
   
