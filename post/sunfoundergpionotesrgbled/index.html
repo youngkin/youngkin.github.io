@@ -185,7 +185,7 @@
 
 <style type="text/css">
     header.intro-header {
-        background-image: url('/images/sunfounderLED.jpeg')
+        background-image: url('/images/pwmfordummies/sunfounderLED.jpeg')
     }
 </style>
 <header class="intro-header">
@@ -252,36 +252,25 @@
   <ul>
     <li><a href="#overview">Overview</a></li>
     <li><a href="#prerequisites">Prerequisites</a></li>
-    <li><a href="#information-that-would-have-been-helpful">Information that would have been helpful</a>
-      <ul>
-        <li><a href="#what-is-pwm">What is PWM?</a></li>
-        <li><a href="#pwm-using-raspberry-pi-gpio">PWM using Raspberry Pi GPIO</a></li>
-      </ul>
-    </li>
-    <li><a href="#rgb-led-in-c">RGB LED in C</a>
-      <ul>
-        <li><a href="#hardware-pwm-in-c">Hardware PWM in C</a></li>
-      </ul>
-    </li>
-    <li><a href="#rgb-led-in-go">RGB LED in Go</a>
-      <ul>
-        <li><a href="#example-1---rgb-led-with-hardware-pwm">Example 1 - RGB LED with hardware PWM</a></li>
-      </ul>
-    </li>
+    <li><a href="#information-that-would-have-been-helpful">Information that would have been helpful</a></li>
+    <li><a href="#rgb-led-in-c-software-pwm">RGB LED in C (Software PWM)</a></li>
+    <li><a href="#rgb-led-in-c-hardware-pwm">RGB LED in C (Hardware PWM)</a></li>
+    <li><a href="#rgb-led-in-go-hardware-pwm">RGB LED in Go (Hardware PWM)</a></li>
     <li><a href="#summary">Summary</a></li>
+    <li><a href="#references">References</a></li>
   </ul>
 </nav>
                 
-                <p>This is the second article in a series that explores GPIO programming on a Raspberry Pi 3B+. It is a supplement to the <a href="../sunfoundergpionotesled/">Sunfounder RGB LED project</a>. You can find the full series <a href="../../categories/gpio">here</a>. It explores the use of Pulse Width Modulation (PWM) to drive an RGB LED as well as how to control an individual&rsquo;s LED brightness. The code samples will be in Go and C.</p>
+                <p>This is the second article in a series that explores GPIO programming on a Raspberry Pi 3B+. It is a supplement to the <a href="../sunfoundergpionotesled/">Sunfounder RGB LED project</a><sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>. You can find the full series <a href="../../categories/gpio">here</a>. It explores the use of Pulse Width Modulation (PWM) to drive an RGB LED as well as how to control an individual&rsquo;s LED brightness. The code samples will be in Go and C.</p>
 <h2 id="overview">Overview</h2>
-<p>This is the second article in the series of Raspberry Pi GPIO programming. The first is <a href="https://docs.sunfounder.com/projects/raphael-kit/en/latest/1.1.1_blinking_led_c.html">Sunfounder Raspberry Pi Kit Notes for Go and C - Blinking LED</a>.</p>
+<p>This is the second article in the series of Raspberry Pi GPIO programming. The first is <a href="https://youngkin.github.io/post/sunfoundergpionotesled/">Raspberry Pi GPIO in Go and C - Blinking LED</a>.</p>
 <h2 id="prerequisites">Prerequisites</h2>
 <p>If you don&rsquo;t have one, you&rsquo;ll need a Raspberry Pi. I used a Raspberry Pi 3B+ with the &lsquo;stretch&rsquo; version of the Raspbian OS. Given that the Sunfounder Ultimate Starter Kit is advertised to work with a Raspberry Pi 4, I would expect the 4 series to work as well. I&rsquo;m less sure about other Raspberry Pi versions, especially versions with 26 vs. 40 GPIO pins.</p>
 <p>Next you&rsquo;ll need is a <a href="https://www.amazon.com/dp/B082KBF7MM/ref=sspa_dk_detail_4?psc=1&amp;pd_rd_i=B082KBF7MM&amp;pd_rd_w=1tGTV&amp;pf_rd_p=887084a2-5c34-4113-a4f8-b7947847c308&amp;pd_rd_wg=fX8JB&amp;pf_rd_r=44DE0RS1E9FD42RBYC7R&amp;pd_rd_r=47cbdc7f-7834-455f-9429-ef74a438bd45&amp;spLa=ZW5jcnlwdGVkUXVhbGlmaWVyPUFVVkdZVUZRNUw3ODkmZW5jcnlwdGVkSWQ9QTA4MzI4MzYyU0VLNzBJM0cxRUVMJmVuY3J5cHRlZEFkSWQ9QTA0Mjk1NTMzSzNSWlNFUjU0NURBJndpZGdldE5hbWU9c3BfZGV0YWlsJmFjdGlvbj1jbGlja1JlZGlyZWN0JmRvTm90TG9nQ2xpY2s9dHJ1ZQ==">breadboard</a>, some <a href="https://www.amazon.com/dp/B08HZ26ZLF/ref=syn_sd_onsite_desktop_19?psc=1&amp;spLa=ZW5jcnlwdGVkUXVhbGlmaWVyPUExRFpLWElCRjg1MUNMJmVuY3J5cHRlZElkPUEwMjMyMTE1M01aOFE3U1BQS09YSiZlbmNyeXB0ZWRBZElkPUEwODE5NTMxMktEMTlZRjEyQjBJNiZ3aWRnZXROYW1lPXNkX29uc2l0ZV9kZXNrdG9wJmFjdGlvbj1jbGlja1JlZGlyZWN0JmRvTm90TG9nQ2xpY2s9dHJ1ZQ==">jumper wires</a>, <a href="https://www.amazon.com/EDGELEC-Tri-Color-Multicolor-Diffused-Resistors/dp/B077XGF3YR/ref=asc_df_B077XGF3YR/?tag=hyprod-20&amp;linkCode=df0&amp;hvadid=242051162351&amp;hvpos=&amp;hvnetw=g&amp;hvrand=11064062033670066895&amp;hvpone=&amp;hvptwo=&amp;hvqmt=&amp;hvdev=c&amp;hvdvcmdl=&amp;hvlocint=&amp;hvlocphy=9028749&amp;hvtargid=pla-430228081645&amp;psc=1">a 220 Ohm resistor, and a RGB LED</a>. You should also consider getting a <a href="https://www.amazon.com/dp/B082PRVRYR/ref=sspa_dk_detail_2?psc=1&amp;pd_rd_i=B082PRVRYR&amp;pd_rd_w=8mKhr&amp;pf_rd_p=887084a2-5c34-4113-a4f8-b7947847c308&amp;pd_rd_wg=e9psa&amp;pf_rd_r=S09F37DF2G5FW8B8GX4B&amp;pd_rd_r=c065c120-e60b-45e9-b93b-f581f048cf46&amp;spLa=ZW5jcnlwdGVkUXVhbGlmaWVyPUFCMzhUQ09COFI2VlMmZW5jcnlwdGVkSWQ9QTA5NjU2ODUxRDkxNEYwSTYwV09KJmVuY3J5cHRlZEFkSWQ9QTAxOTg1MTUyRUhEUlc2VzQ2VDQ4JndpZGdldE5hbWU9c3BfZGV0YWlsJmFjdGlvbj1jbGlja1JlZGlyZWN0JmRvTm90TG9nQ2xpY2s9dHJ1ZQ==">40 pin female to female with a T-Type adapter</a> to attach the GPIO outputs to the breadboard. You can use only jumper wires, but the cable will make things easier and will help prevent damage to the GPIO pins on the Raspberry Pi. If you elect not to buy the 40 pin cable with T-Type adapter you&rsquo;ll need to buy <a href="https://www.amazon.com/SinLoon-Breadboard-Arduino-Circuit-40-Pack/dp/B08M3QLL3Q/ref=pd_sbs_7/143-0445142-7950409?pd_rd_w=sVLrc&amp;pf_rd_p=8b76d7a7-ab83-4ddc-a92d-e3e33bfdbf03&amp;pf_rd_r=CDM5TGJT03VKF0ZFB577&amp;pd_rd_r=8e58fd82-8503-41cf-b8f2-c78eaeb78d25&amp;pd_rd_wg=tT1U0&amp;pd_rd_i=B08M3QLL3Q&amp;psc=1">male-to-female jumper wires</a>. Buying all these things separately will cost more than a kit however. <a href="https://www.amazon.com/dp/B06WP7169Y/ref=sspa_dk_detail_5?psc=1&amp;pd_rd_i=B06WP7169Y&amp;pd_rd_w=OZVyf&amp;pf_rd_p=887084a2-5c34-4113-a4f8-b7947847c308&amp;pd_rd_wg=0V0IH&amp;pf_rd_r=623YJTBQ2CN2B2GYXQG5&amp;pd_rd_r=faa61f0f-3aec-4cf0-8e7e-d44eb1b3b92f&amp;spLa=ZW5jcnlwdGVkUXVhbGlmaWVyPUEyUVlDQzMzVVZBMFYxJmVuY3J5cHRlZElkPUEwMzExNzk4MUhGSjFSS0VKTlBROCZlbmNyeXB0ZWRBZElkPUEwMzYwNjg2UUdMRU44N0YzNzIwJndpZGdldE5hbWU9c3BfZGV0YWlsJmFjdGlvbj1jbGlja1JlZGlyZWN0JmRvTm90TG9nQ2xpY2s9dHJ1ZQ==">Here&rsquo;s a simple kit that has all of the above</a>. If you expect to follow this series I recommend buying the <a href="https://www.amazon.com/gp/product/B09BMVT4CB/ref=ppx_yo_dt_b_asin_title_o02_s00?ie=UTF8&amp;psc=1">Sunfounder Raspberry Pi Ultimate Starter Kit</a>.</p>
-<img style="border:1px solid black" src="/images/RaphaelKit.png" align="center" width="600" height="300"/>
+<img style="border:1px solid black" src="/images/pwmfordummies/RaphaelKit.png" align="center" width="600" height="300"/>
 <figcaption align="left"><center><i style="color:black;">Sunfounder Ultimate Starter/Raphael kit</i></center></figcaption>
 <p>You will also need some basic C  and Go programming knowledge as well as familiarity with logging on to a Raspberry Pi terminal, or into the desktop GUI that comes with some OS versions. Depending on the approach you take, you may need to connect a keyboard and monitor to the Raspberry Pi. I simply SSH into the Pi. You&rsquo;ll also need familiarity with how to use an editor like Vi or nano.</p>
-<p>To compile and run the C program you&rsquo;ll need the WiringPi libary. It&rsquo;s easy to get:</p>
+<p>To compile and run the C program you&rsquo;ll need the <a href="https://github.com/WiringPi/WiringPi">WiringPi</a><sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup> libary. It&rsquo;s easy to get:</p>
 <pre><code>sudo apt-get install wiringpi
 </code></pre><p>Then test the installation using:</p>
 <pre><code>pi@pi-node1:~/go/src/github.com/youngkin/gpio/rgbled $ gpio -v
@@ -296,22 +285,26 @@ Raspberry Pi Details:
   *--&gt; Raspberry Pi 3 Model B Plus Rev 1.3
   * This Raspberry Pi supports user-level GPIO access.
 </code></pre><p>In the above you&rsquo;ll notice <code>gpio version: 2.50</code>. If you&rsquo;re using a Rasberry Pi 4, use the instructions given in the Sunfounder <a href="https://docs.sunfounder.com/projects/raphael-kit/en/latest/check_the_wiringpi_c.html">Checking the WiringPi</a>.</p>
-<p>I chose not to download the code from the Sunfounder site, preferring to write my own instead, even if all I did was copy directly from the project documentation. Due to this I created my own location to create the code. In fact, <a href="https://github.com/youngkin/gpio">my code is in Github</a>. If you do like downloading code you have the option of downloading, cloning, or forking it from my Github repository. As an added bonus, the project code written in Go is also located there. The code for this project is located at <a href="https://github.com/youngkin/gpio/tree/main/ledblink">gpio/ledblink</a>.</p>
+<p>WiringPi is unique in that it includes a command line tool, <code>gpio</code>, as shown above, that can be used to manage, control, and query the GPIO board. This can be very handy. See the <a href="http://wiringpi.com/the-gpio-utility/">gpio reference</a> for more information on what it can do and how to use it.</p>
+<p>I chose not to download the code from the Sunfounder site, preferring to write my own instead, even if all I did was copy directly from the project documentation. Due to this I created my own location to create the code. In fact, <a href="https://github.com/youngkin/gpio">my code is in Github</a>. If you do like downloading code you have the option of downloading, cloning, or forking it from my Github repository. As an added bonus, the project code written in Go is also located there. The code for this project is located at <a href="https://github.com/youngkin/gpio/tree/main/rgbled">gpio/rgbled</a>.</p>
 <p>If you&rsquo;re interested in Go development on a Raspberry Pi you&rsquo;ll need to install the development environment onto the Raspberry Pi. <a href="https://www.jeremymorgan.com/tutorials/raspberry-pi/install-go-raspberry-pi/">Here&rsquo;s a simple source</a> that explains how to accomplish this. This source is a little dated, but the only significant issue is with the version of Go to install. The source shows installing Go <strong>1.14.4.linux-arm64.tar.gz</strong> and <strong>1.14.4.linuxarmv6l.tar.gz</strong>. The current versions are <strong>1.17.1.linux-arm64.tar.gz</strong> and <strong>1.17.1.linuxarmv6l.tar.gz</strong>. For the Raspberry Pi 3B+ the correct choice will be <strong>1.17.1.linuxarmv6l.tar.gz</strong>. The other is intended for 64 bit systems like the Raspberry Pi 4 series.</p>
+<p>For Go development you&rsquo;ll also need the <a href="https://github.com/stianeikeland/go-rpio">go-rpio</a><sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup> library. I chose it for several reasons:</p>
+<ol>
+<li>It seems to be in fairly wide use</li>
+<li>It seems to be fairly complete</li>
+<li>It&rsquo;s relatively active</li>
+<li>It comes with example code and good documentation</li>
+<li>Its API is similar to WiringPi&rsquo;s</li>
+</ol>
+<p>Another Go option is <a href="https://github.com/periph/host">periph</a> (code) with <a href="https://periph.io/">documentation</a>. It is more active and the documentation is very good, better than go-rpio. But for the LED examples I was able to find, go-rpio better matched what I was looking for, especially with regard to this project. But this is an excellent alternative to go-rpio and vice-versa.</p>
 <p>Finally, I&rsquo;m assuming a basic knowledge of Linux if you want to veer away from the cookbook style of the Sunfounder docs. For example, I won&rsquo;t be explaining what <strong>root privileges</strong> are.</p>
 <h2 id="information-that-would-have-been-helpful">Information that would have been helpful</h2>
-<p>This project uses the PWM (Pulse Width Modulation) pins on the GPIO to achieve the desired effect, namely demonstrating how to create different colors with a simple RGB LED. Unfortunately the Sunfounder documentation leaves out information about PWM, like what is PWM and how is it implemented on a Raspberry Pi?</p>
-<h3 id="what-is-pwm">What is PWM?</h3>
-<p>At it&rsquo;s most basic, PWM is used to simulate an analog signal using a digital source (like a GPIO pin). An LED&rsquo;s brightness can be modified by varying the voltage supplied to the LED. A variety of analog devices, such as a motor&rsquo;s speed, can be controlled in the same way. PWM simulates varying voltages by varying the length of the digital power pulse within a given duration (range). The ratio of the power pulse vs the range is called a duty cycle. For example, a time duration of 10 seconds and a pulse length of 1 second has a duty cycle of 10. This duty cycle of 10 means power is flowing for 10% of the time. A duty cycle of 10 with a 10 volt input would  result in a 1 volt output. This article, <a href="https://www.kompulsa.com/introduction-pwm-pulse-width-modulation-works/">Introduction to PWM: How Pulse Width Modulation works</a>, provides a good overview of PWM.</p>
-<p>For the purposes of this article there are 2 ways to generate a PWM signal, software-based and hardware-based. Hardware-based PWM is generated by a dedicated hardware PWM device that can be configured to generate a PWM signal as described above. It produces a very uniform signal with regard to timing. A uniform signal is required, for example, to produce a flicker-free light source such as an LED. Software-based PWM is directly implemented in the executing program using a <code>while(true)</code> for loop that never ends which controls the amount of time a pin is allowing current to flow (pulse) vs. the amount of time the pin isn&rsquo;t allowing current to flow. In this case the uniformity of the signal is determined by the accuracy of a language&rsquo;s <code>sleep()</code> function and the OS (Linux) scheduler. A less uniform signal, for example, may result in a flickering light source. There is a more complete description of <a href="https://raspberrypi.stackexchange.com/questions/100641/whats-the-difference-between-soft-pwm-and-pwm">the difference between soft PWM and PWM</a> and associated pros and cons on the Raspberry Pi Stack Exchange site.</p>
-<p>The Sunfounder RGB LED project documentation doesn&rsquo;t mention that there are both software and hardware PWM modes. This became apparent when when I wrote a program that used the Go GPIO library which only supports hardware PWM. The project&rsquo;s example C code uses the software PWM functions of the WiringPi library. As will be explained in more detail below, the Go version of RGB LED didn&rsquo;t work as expected while the C version did.</p>
-<h3 id="pwm-using-raspberry-pi-gpio">PWM using Raspberry Pi GPIO</h3>
-<p>Software PWM can be created on any GPIO pin. For hardware PWM the Raspberry Pi 3B+ has 4 PWM pins, BCM GPIO pins 12,13, 18, and 19 <sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>. The Broadcom BC2835 GPIO board that&rsquo;s on the Raspberry Pi 3B+ has 2 PWM channels<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup>. GPIO12 and GPIO18 share one channel and GPIO13 and GPIO19 share the other channel. This means that a signal that&rsquo;s sent to either pin that share a channel will go to both pins. For example, sending a signal on GPIO12 will also be shared with GPIO18 and vice versa<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup> <sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup>.</p>
-<p>So why is it important to know that there are only 2 PWM channels for 4 PWM pins? This project uses an RGB LED that has 4 pins. One pin is for the ground, the other 3 are used to control the red, green, and blue LEDs. So we need 3 PWM pins, one for each RGB color. See the problem? There are only 2 independent pins available for hardware PWM but we need 3 to control the RGB LED. Let&rsquo;s say that GPIO12 is configured as the color red and GPIO18 is configured as blue. If a signal is sent to GPIO12 which represents the color red, the same signal will be sent to GPIO18, blue. So the resulting color will be purple, not red as expected.</p>
-<h2 id="rgb-led-in-c">RGB LED in C</h2>
+<p>This project uses PWM (Pulse Width Modulation) on GPIO pins to achieve the desired effect, namely demonstrating how to create different colors with a simple RGB LED. Unfortunately the Sunfounder documentation leaves out information about PWM, like what is PWM and how is it implemented on a Raspberry Pi? I started to cover all the information I found missing from the <a href="https://docs.sunfounder.com/projects/raphael-kit/en/latest/1.1.2_rgb_led_c.html">Sunfounder project documentation</a> but it quickly became apparent that would better be left to a separate article. So if you don&rsquo;t already have a good understanding of PWM I&rsquo;d recommend reading my <a href="https://youngkin.github.io/post/pulsewidthmodulationraspberrypi/">Pulse Width Modulation for Dummies, with a Slice of Raspberry Pi</a><sup id="fnref:4"><a href="#fn:4" class="footnote-ref" role="doc-noteref">4</a></sup> article before continuing with this article.</p>
+<h2 id="rgb-led-in-c-software-pwm">RGB LED in C (Software PWM)</h2>
 <p>If you haven&rsquo;t done so already, you should start with the <a href="https://docs.sunfounder.com/projects/raphael-kit/en/latest/introduction.html">Introduction</a> to the project&rsquo;s in the Ultimate Starter/Raphael kit&rsquo;s documentation and work your way through the following sections up to and including the <a href="https://docs.sunfounder.com/projects/raphael-kit/en/latest/play_with_c.html">Play with C</a> section, and then to the <a href="https://docs.sunfounder.com/projects/raphael-kit/en/latest/1.1.2_rgb_led_c.html">RGB LED</a> project. You should set up the breadboard as described in the project documentation or in the diagram below:</p>
-<img style="border:1px solid black" src="/images/RgbLed.png" align="center" width="600" height="300"/>
+<img style="border:1px solid black" src="/images/pwmfordummies/RgbLed.png" align="center" width="600" height="300"/>
 <figcaption align="left"><center><i style="color:black;">Sunfounder RGB LED breadboard setup</i></center></figcaption>
+<p>The WiringPi <code>gpio</code> utility can help with debugging if necessary. You already have this utility, you used it to verify the WiringPi installation in the <a href="#prerequisites">Prerequisites</a> section above.</p>
 <p>The C code described in the Sunfounder <a href="https://docs.sunfounder.com/projects/raphael-kit/en/latest/1.1.2_rgb_led_c.html">RGB LED project</a> uses software PWM. When run, the colors of the RGB LED change as expected. Varying voltages to the respective RGB pins using software PWM produces light of varying brightness (off to full bright) which will produce a wide range of colors.</p>
 <p>Here is a slightly modified version of the Sunfounder C program that the controls an RGB LED:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">  <span style="color:#ae81ff">1</span> <span style="color:#75715e">// Copyright (c) 2021 Richard Youngkin. All rights reserved.
@@ -327,9 +320,9 @@ Raspberry Pi Details:
  <span style="color:#ae81ff">11</span> <span style="color:#960050;background-color:#1e0010">#</span>include <span style="color:#f92672">&lt;</span>stdlib.h<span style="color:#f92672">&gt;</span>
  <span style="color:#ae81ff">12</span>
  <span style="color:#ae81ff">13</span> <span style="color:#960050;background-color:#1e0010">#</span>define uchar <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">char</span>
- <span style="color:#ae81ff">14</span> <span style="color:#960050;background-color:#1e0010">#</span>define LedPinRed    <span style="color:#ae81ff">24</span>
+ <span style="color:#ae81ff">14</span> <span style="color:#960050;background-color:#1e0010">#</span>define LedPinRed    <span style="color:#ae81ff">0</span>
  <span style="color:#ae81ff">15</span> <span style="color:#960050;background-color:#1e0010">#</span>define LedPinGreen  <span style="color:#ae81ff">1</span>
- <span style="color:#ae81ff">16</span> <span style="color:#960050;background-color:#1e0010">#</span>define LedPinBlue   <span style="color:#ae81ff">23</span>
+ <span style="color:#ae81ff">16</span> <span style="color:#960050;background-color:#1e0010">#</span>define LedPinBlue   <span style="color:#ae81ff">2</span>
  <span style="color:#ae81ff">17</span>
  <span style="color:#ae81ff">18</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">volatile</span> <span style="color:#66d9ef">int</span> keepRunning <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
  <span style="color:#ae81ff">19</span>
@@ -403,15 +396,18 @@ Raspberry Pi Details:
  <span style="color:#ae81ff">87</span>     printf(<span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">Exiting...</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
  <span style="color:#ae81ff">88</span>
  <span style="color:#ae81ff">89</span>     exit(<span style="color:#ae81ff">0</span>);
- <span style="color:#ae81ff">90</span> }
+ <span style="color:#ae81ff">90</span> }                                                                                                                                      <span style="color:#f92672">~</span> 
 </code></pre></div><p>Line 5 provides the command needed to build the program - <code>gcc -o rgbled rgbled.c  -lwiringPi -lpthread</code>. The <code>-l</code> flags reference the libraries needed to build the program. <code>-lwiringPi</code> refers to the WiringPi library. It should be installed in the correct place along with WiringPi and the build command should just work. Libraries are usually located in <code>/usr/lib</code>.</p>
-<p>Note the pin numbering used in lines 14-16. I&rsquo;m using WiringPi pins 24, 1, and 23 for red, green, and blue, which correspond to BCM pins 19, 18, and 13 respectively. The Sunfounder wiring diagram above using BCM pins 17, 18, and 27 for red, green, and blue, which correspond to WiringPi pins 0, 1, and 2 respectively. The Sunfounder C code uses the pins as shown in the above diagram. Make sure your breadboard is wired to BCM pins 19, 18, and 13 for red, green, and blue; wiringPi pins 24, 1, and 23, or change the above code to to use 0, 1, and 2 for <code>LedPinRed</code>, <code>LedPinGreen</code>, and <code>LedPinBlue</code> respectively. This will be good practice for navigating your way around a breadboard. See the Sunfounder page <a href="https://docs.sunfounder.com/projects/raphael-kit/en/latest/gpio_extension_board.html">GPIO Extension Board</a> for a quick cross reference between BCM, board, and WiringPi pin numbers.</p>
+<p>Lines 14-16 specify, using the WiringPi pin numbering scheme, the GPIO pins 0, 1, and 2 for <code>LedPinRed</code>, <code>LedPinGreen</code>, and <code>LedPinBlue</code> respectively.</p>
 <p>The <code>softPwm*</code> functions called on lines 23-25 and 29-31 indicate that software PWM is being used.</p>
 <p>The calls to <code>ledColorSet(...)</code> within the <code>while(keepRunning)</code> loop use hex numbers to set the colors. These are used to generate the full range of available colors. I did change the values somewhat as the green LED used apparently has less resistance as it&rsquo;s quite a bit brighter than the red and blue LEDs and therefore throws off the generated colors. Similarly, the blue LED seems to have more resistance as it is quite a bit dimmer than the other 2 LEDs. Changing the values, at least for my specific RGB LED, generated truer colors.</p>
 <p>Line 40 registers an interrupt handler to catch the SIGINT interrupt generated when ^-C is entered at the keyboard. Line 20 declares the interrupt handler function. Lines 77 thru 90 implement the interrupt handler function. Within that function the LED is turned off.</p>
 <p>The program can be run, after compiling, using <code>./rgbled</code>.</p>
-<h3 id="hardware-pwm-in-c">Hardware PWM in C</h3>
-<p>Since the Sunfounder documentation doesn&rsquo;t include a hardware PWM solution in C I decided to create one for myself. Partly to assure myself that the hardware PWM behavior I saw using the Go go-rpio library wasn&rsquo;t limited to that library.</p>
+<h2 id="rgb-led-in-c-hardware-pwm">RGB LED in C (Hardware PWM)</h2>
+<p>Since the Sunfounder documentation doesn&rsquo;t include a hardware PWM solution in C I decided to create one for myself. For this program modify the breadboard as shown below:</p>
+<img style="border:1px solid black" src="/images/pwmfordummies/RgbLedHardware.jpg" align="center" width="600" height="300"/>
+<figcaption align="left"><center><i style="color:black;">Sunfounder RGB LED breadboard setup</i></center></figcaption>
+<p>This time I&rsquo;m using WiringPi pins 24, 1, and 23 for red, green, and blue, which correspond to BCM pins 19, 18, and 13 respectively. This is because these are 3 of the 4 hardware PWM pins on the Broadcomm BCM2835 board. Be sure to rewire the board to match these new pin assignments . The WiringPi <code>gpio</code> utility can help with debugging if necessary. You already have this utility, you used it to verify the WiringPi installation in the <a href="#prerequisites">Prerequisites</a> section above.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">  <span style="color:#ae81ff">1</span> <span style="color:#75715e">// Copyright (c) 2021 Richard Youngkin. All rights reserved.
 </span><span style="color:#75715e"></span>  <span style="color:#ae81ff">2</span> <span style="color:#75715e">// Use of this source code is governed by a MIT-style
 </span><span style="color:#75715e"></span>  <span style="color:#ae81ff">3</span> <span style="color:#75715e">// license that can be found in the LICENSE file.
@@ -507,22 +503,13 @@ Raspberry Pi Details:
  <span style="color:#ae81ff">93</span>
  <span style="color:#ae81ff">94</span>         <span style="color:#a6e22e">exit</span>(<span style="color:#ae81ff">0</span>);
  <span style="color:#ae81ff">95</span> }
-</code></pre></div><p>This version of RGB LED is very similar to the software PWM version above. It also uses the same pins as the above example. The primary difference is that the pin mode is set to <code>PWM_OUTPUT</code> vs. the use of <code>softPwmCreate</code>. It also uses <code>pwmWrite</code> instead of <code>softPwmWrite</code>.</p>
+</code></pre></div><p>This version of RGB LED is very similar to the software PWM version above. There are 2 significant differences.</p>
+<p>First, Note the pin numbering used in lines 14-16.</p>
+<p>Second, the <code>ledInit()</code> and <code>ledColorSet()</code> functions (lines 30-47) are quite different. In those functions pin mode is set to <code>PWM_OUTPUT</code> vs. the use of <code>softPwmCreate</code> and <code>pwmWrite</code> is used instead of <code>softPwmWrite</code>.</p>
 <p>The program is run using root privileges with <code>sudo ./rgbledHardware</code>. <code>sudo</code> is needed because direct hardware access is limited to users with root privileges. <code>sudo</code> provides root privileges to commands prefixed with <code>sudo</code>.</p>
 <p>When running the program you&rsquo;ll notice that the RGB LED doesn&rsquo;t produce the expected colors. Sometimes it might show purple when it should be showing blue. Sometimes it might be turned off completely when it&rsquo;s supposed to be showing a color. This behavior occurs because BCM pin 13 (blue) and BCM pin 19 (red) are on the same hardware channel. As explained above, when a signal is sent to one channel it will propagate to both pins that share that channel. Green, on BCM pin 12, is unaffected. One behavior I don&rsquo;t understand is why sometimes the LED is off when it should be showing a color. This only happens for red (BCM19) and blue (BCM 13) pins. Perhaps the pins that share a channel don&rsquo;t produce a signal at exactly the same time. Imagine a case where the blue pin is set to 0xff and the red pin is set to 0x00. If the red pin&rsquo;s signal comes in slightly after the blue signal it would override the blue pin signal turning the LED off. The takeaway from all this is that for all intents and purposes, there are only 2 hardware PWM pins can be in use at the same time, and they can&rsquo;t be on the same channel.</p>
-<h2 id="rgb-led-in-go">RGB LED in Go</h2>
-<p>This version of RGB LED will work with the same breadboard setup as the C version. Unlike the Sunfounder C version, and the first C version in this article, the Go library only supports hardware PWM.</p>
-<p>First things first, we need a Go library to drive the GPIO interface. I&rsquo;m using <a href="https://github.com/stianeikeland/go-rpio">go-rpio</a> for several reasons:</p>
-<ol>
-<li>It seems to be in fairly wide use</li>
-<li>It seems to be fairly complete</li>
-<li>It&rsquo;s relatively active</li>
-<li>It comes with example code and good documentation</li>
-<li>Its API is similar to WiringPi&rsquo;s</li>
-</ol>
-<p>Another option is <a href="https://github.com/periph/host">periph</a> (code) with <a href="https://periph.io/">documentation</a>. It is more active and the documentation is very good, better than go-rpio. But for the LED examples I was able to find, go-rpio better matched what I was looking for, especially with regard to this project. But this is an excellent alternative to go-rpio and vice-versa.</p>
-<h3 id="example-1---rgb-led-with-hardware-pwm">Example 1 - RGB LED with hardware PWM</h3>
-<p>This program can operate in one of 2 ways. First, it can operate as a fully hardware PWM implementation, similar to <a href="#hardware-pwm-in-c">Hardware PWM in C</a>. It can also operate in a mixed-mode, part hardware and part software PWM. See the comments on lines 32-38 and lines 44-52 for details. Switching modes requires commenting/uncommenting code blocks as described in those comments.</p>
+<h2 id="rgb-led-in-go-hardware-pwm">RGB LED in Go (Hardware PWM)</h2>
+<p>This version of RGB LED will work with the same breadboard setup as the C hardware PWM version. That is, it uses the hardware PWM pins on the GPIO board. Unlike the Sunfounder C version, and the first C version in this article, the Go library only supports hardware PWM. In my <a href="https://youngkin.github.io/post/pulsewidthmodulationraspberrypi/">Pulse Width Modulation for Dummies, with a Slice of Raspberry Pi</a> article I do include a software version of PWM in Go. It&rsquo;s implemented in a companion program, <a href="https://github.com/youngkin/gpio/blob/main/pwmdemo/pwmexplorer/apps/freqtest.go">freqtest.go</a> in the <code>runSoftwarePWM()</code> function. Here is the code:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go">  <span style="color:#ae81ff">1</span> <span style="color:#75715e">// Copyright (c) 2021 Richard Youngkin. All rights reserved.
 </span><span style="color:#75715e"></span>  <span style="color:#ae81ff">2</span> <span style="color:#75715e">// Use of this source code is governed by a MIT-style
 </span><span style="color:#75715e"></span>  <span style="color:#ae81ff">3</span> <span style="color:#75715e">// license that can be found in the LICENSE file.
@@ -599,101 +586,117 @@ Raspberry Pi Details:
 </span><span style="color:#75715e"></span> <span style="color:#ae81ff">74</span>     <span style="color:#75715e">//      ledPinBlue.DutyCycle(blueVal, cycle)
 </span><span style="color:#75715e"></span> <span style="color:#ae81ff">75</span>     <span style="color:#75715e">//  }
 </span><span style="color:#75715e"></span> <span style="color:#ae81ff">76</span> }
- <span style="color:#ae81ff">77</span>
- <span style="color:#ae81ff">78</span> <span style="color:#66d9ef">func</span> <span style="color:#a6e22e">ledInit</span>() {
- <span style="color:#ae81ff">79</span>     <span style="color:#a6e22e">ledPinRed</span>.<span style="color:#a6e22e">Mode</span>(<span style="color:#a6e22e">rpio</span>.<span style="color:#a6e22e">Pwm</span>)
- <span style="color:#ae81ff">80</span>     <span style="color:#a6e22e">ledPinRed</span>.<span style="color:#a6e22e">Freq</span>(<span style="color:#a6e22e">freq</span>)
- <span style="color:#ae81ff">81</span>     <span style="color:#a6e22e">ledPinRed</span>.<span style="color:#a6e22e">DutyCycle</span>(<span style="color:#ae81ff">0</span>, uint32(<span style="color:#a6e22e">cycle</span>))
+</code></pre></div><p>Lines 27-29 define the pins to use for the red, green and blue elements of the LED.</p>
+<p>Lines 30-31 define default values to use for settings.</p>
+<p>Lines 35-75 contain comments and code that address the issues with trying to use 2 hardware PWM pins residing on the same channel as noted in the <a href="#hardware-pwm-in-c">Hardware PWM in C</a> section above.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"> <span style="color:#ae81ff">77</span>
+ <span style="color:#ae81ff">78</span> func <span style="color:#a6e22e">ledInit</span>() {
+ <span style="color:#ae81ff">79</span>     ledPinRed.Mode(rpio.Pwm)
+ <span style="color:#ae81ff">80</span>     ledPinRed.Freq(freq)
+ <span style="color:#ae81ff">81</span>     ledPinRed.DutyCycle(<span style="color:#ae81ff">0</span>, uint32(cycle))
  <span style="color:#ae81ff">82</span>
- <span style="color:#ae81ff">83</span>     <span style="color:#a6e22e">ledPinGreen</span>.<span style="color:#a6e22e">Mode</span>(<span style="color:#a6e22e">rpio</span>.<span style="color:#a6e22e">Pwm</span>)
- <span style="color:#ae81ff">84</span>     <span style="color:#a6e22e">ledPinGreen</span>.<span style="color:#a6e22e">Freq</span>(<span style="color:#a6e22e">freq</span>)
- <span style="color:#ae81ff">85</span>     <span style="color:#a6e22e">ledPinGreen</span>.<span style="color:#a6e22e">DutyCycle</span>(<span style="color:#ae81ff">1</span>, uint32(<span style="color:#a6e22e">cycle</span>))
+ <span style="color:#ae81ff">83</span>     ledPinGreen.Mode(rpio.Pwm)
+ <span style="color:#ae81ff">84</span>     ledPinGreen.Freq(freq)
+ <span style="color:#ae81ff">85</span>     ledPinGreen.DutyCycle(<span style="color:#ae81ff">1</span>, uint32(cycle))
  <span style="color:#ae81ff">86</span>
- <span style="color:#ae81ff">87</span>     <span style="color:#a6e22e">ledPinBlue</span>.<span style="color:#a6e22e">Mode</span>(<span style="color:#a6e22e">rpio</span>.<span style="color:#a6e22e">Pwm</span>)
- <span style="color:#ae81ff">88</span>     <span style="color:#a6e22e">ledPinBlue</span>.<span style="color:#a6e22e">Freq</span>(<span style="color:#a6e22e">freq</span>)
- <span style="color:#ae81ff">89</span>     <span style="color:#a6e22e">ledPinBlue</span>.<span style="color:#a6e22e">DutyCycle</span>(<span style="color:#ae81ff">1023</span>, uint32(<span style="color:#a6e22e">cycle</span>))
+ <span style="color:#ae81ff">87</span>     ledPinBlue.Mode(rpio.Pwm)
+ <span style="color:#ae81ff">88</span>     ledPinBlue.Freq(freq)
+ <span style="color:#ae81ff">89</span>     ledPinBlue.DutyCycle(<span style="color:#ae81ff">1023</span>, uint32(cycle))
  <span style="color:#ae81ff">90</span> }
  <span style="color:#ae81ff">91</span>
- <span style="color:#ae81ff">92</span> <span style="color:#66d9ef">func</span> <span style="color:#a6e22e">main</span>() {
- <span style="color:#ae81ff">93</span>     <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">rpio</span>.<span style="color:#a6e22e">Open</span>(); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
- <span style="color:#ae81ff">94</span>         <span style="color:#a6e22e">os</span>.<span style="color:#a6e22e">Exit</span>(<span style="color:#ae81ff">1</span>)
+ <span style="color:#ae81ff">92</span> func <span style="color:#a6e22e">main</span>() {
+ <span style="color:#ae81ff">93</span>     <span style="color:#66d9ef">if</span> err :<span style="color:#f92672">=</span> rpio.Open(); err <span style="color:#f92672">!=</span> nil {
+ <span style="color:#ae81ff">94</span>         os.Exit(<span style="color:#ae81ff">1</span>)
  <span style="color:#ae81ff">95</span>     }
- <span style="color:#ae81ff">96</span>     <span style="color:#66d9ef">defer</span> <span style="color:#a6e22e">rpio</span>.<span style="color:#a6e22e">Close</span>()
+ <span style="color:#ae81ff">96</span>     defer rpio.Close()
  <span style="color:#ae81ff">97</span>
- <span style="color:#ae81ff">98</span>     <span style="color:#a6e22e">ledInit</span>()
+ <span style="color:#ae81ff">98</span>     ledInit()
  <span style="color:#ae81ff">99</span>
-<span style="color:#ae81ff">100</span>     <span style="color:#a6e22e">reader</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">bufio</span>.<span style="color:#a6e22e">NewReader</span>(<span style="color:#a6e22e">os</span>.<span style="color:#a6e22e">Stdin</span>)
+<span style="color:#ae81ff">100</span>     reader :<span style="color:#f92672">=</span> bufio.NewReader(os.Stdin)
 <span style="color:#ae81ff">101</span>
 <span style="color:#ae81ff">102</span>     <span style="color:#66d9ef">for</span> {
 <span style="color:#ae81ff">103</span>         <span style="color:#75715e">//
 </span><span style="color:#75715e"></span><span style="color:#ae81ff">104</span>         <span style="color:#75715e">// Get RGB values
 </span><span style="color:#75715e"></span><span style="color:#ae81ff">105</span>         <span style="color:#75715e">//
-</span><span style="color:#75715e"></span><span style="color:#ae81ff">106</span>         <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#e6db74">&#34;Enter red value (0 to 1023):&#34;</span>)
-<span style="color:#ae81ff">107</span>         <span style="color:#a6e22e">red</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">reader</span>.<span style="color:#a6e22e">ReadString</span>(<span style="color:#e6db74">&#39;\n&#39;</span>)
-<span style="color:#ae81ff">108</span>         <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
-<span style="color:#ae81ff">109</span>             <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Printf</span>(<span style="color:#e6db74">&#34;Error reading from StdIn, %s&#34;</span>, <span style="color:#a6e22e">err</span>)
-<span style="color:#ae81ff">110</span>             <span style="color:#a6e22e">os</span>.<span style="color:#a6e22e">Exit</span>(<span style="color:#ae81ff">1</span>)
+</span><span style="color:#75715e"></span><span style="color:#ae81ff">106</span>         fmt.Println(<span style="color:#e6db74">&#34;Enter red value (0 to 1023):&#34;</span>)
+<span style="color:#ae81ff">107</span>         red, err :<span style="color:#f92672">=</span> reader.ReadString(<span style="color:#e6db74">&#39;\n&#39;</span>)
+<span style="color:#ae81ff">108</span>         <span style="color:#66d9ef">if</span> err <span style="color:#f92672">!=</span> nil {
+<span style="color:#ae81ff">109</span>             fmt.Printf(<span style="color:#e6db74">&#34;Error reading from StdIn, %s&#34;</span>, err)
+<span style="color:#ae81ff">110</span>             os.Exit(<span style="color:#ae81ff">1</span>)
 <span style="color:#ae81ff">111</span>         }
-<span style="color:#ae81ff">112</span>         <span style="color:#a6e22e">red</span> = <span style="color:#a6e22e">strings</span>.<span style="color:#a6e22e">TrimSuffix</span>(<span style="color:#a6e22e">red</span>, <span style="color:#e6db74">&#34;\n&#34;</span>)
+<span style="color:#ae81ff">112</span>         red <span style="color:#f92672">=</span> strings.TrimSuffix(red, <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>)
 <span style="color:#ae81ff">113</span>
-<span style="color:#ae81ff">114</span>         <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#e6db74">&#34;Enter green value (0 to 1023):&#34;</span>)
-<span style="color:#ae81ff">115</span>         <span style="color:#a6e22e">green</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">reader</span>.<span style="color:#a6e22e">ReadString</span>(<span style="color:#e6db74">&#39;\n&#39;</span>)
-<span style="color:#ae81ff">116</span>         <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
-<span style="color:#ae81ff">117</span>             <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Printf</span>(<span style="color:#e6db74">&#34;Error reading from StdIn, %s&#34;</span>, <span style="color:#a6e22e">err</span>)
-<span style="color:#ae81ff">118</span>             <span style="color:#a6e22e">os</span>.<span style="color:#a6e22e">Exit</span>(<span style="color:#ae81ff">1</span>)
+<span style="color:#ae81ff">114</span>         fmt.Println(<span style="color:#e6db74">&#34;Enter green value (0 to 1023):&#34;</span>)
+<span style="color:#ae81ff">115</span>         green, err :<span style="color:#f92672">=</span> reader.ReadString(<span style="color:#e6db74">&#39;\n&#39;</span>)
+<span style="color:#ae81ff">116</span>         <span style="color:#66d9ef">if</span> err <span style="color:#f92672">!=</span> nil {
+<span style="color:#ae81ff">117</span>             fmt.Printf(<span style="color:#e6db74">&#34;Error reading from StdIn, %s&#34;</span>, err)
+<span style="color:#ae81ff">118</span>             os.Exit(<span style="color:#ae81ff">1</span>)
 <span style="color:#ae81ff">119</span>         }
-<span style="color:#ae81ff">120</span>         <span style="color:#a6e22e">green</span> = <span style="color:#a6e22e">strings</span>.<span style="color:#a6e22e">TrimSuffix</span>(<span style="color:#a6e22e">green</span>, <span style="color:#e6db74">&#34;\n&#34;</span>)
+<span style="color:#ae81ff">120</span>         green <span style="color:#f92672">=</span> strings.TrimSuffix(green, <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>)
 <span style="color:#ae81ff">121</span>
-<span style="color:#ae81ff">122</span>         <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#e6db74">&#34;Enter blue value (0 to 1023):&#34;</span>)
-<span style="color:#ae81ff">123</span>         <span style="color:#a6e22e">blue</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">reader</span>.<span style="color:#a6e22e">ReadString</span>(<span style="color:#e6db74">&#39;\n&#39;</span>)
-<span style="color:#ae81ff">124</span>         <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
-<span style="color:#ae81ff">125</span>             <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Printf</span>(<span style="color:#e6db74">&#34;Error reading from StdIn, %s&#34;</span>, <span style="color:#a6e22e">err</span>)
-<span style="color:#ae81ff">126</span>             <span style="color:#a6e22e">os</span>.<span style="color:#a6e22e">Exit</span>(<span style="color:#ae81ff">1</span>)
+<span style="color:#ae81ff">122</span>         fmt.Println(<span style="color:#e6db74">&#34;Enter blue value (0 to 1023):&#34;</span>)
+<span style="color:#ae81ff">123</span>         blue, err :<span style="color:#f92672">=</span> reader.ReadString(<span style="color:#e6db74">&#39;\n&#39;</span>)
+<span style="color:#ae81ff">124</span>         <span style="color:#66d9ef">if</span> err <span style="color:#f92672">!=</span> nil {
+<span style="color:#ae81ff">125</span>             fmt.Printf(<span style="color:#e6db74">&#34;Error reading from StdIn, %s&#34;</span>, err)
+<span style="color:#ae81ff">126</span>             os.Exit(<span style="color:#ae81ff">1</span>)
 <span style="color:#ae81ff">127</span>         }
-<span style="color:#ae81ff">128</span>         <span style="color:#a6e22e">blue</span> = <span style="color:#a6e22e">strings</span>.<span style="color:#a6e22e">TrimSuffix</span>(<span style="color:#a6e22e">blue</span>, <span style="color:#e6db74">&#34;\n&#34;</span>)
+<span style="color:#ae81ff">128</span>         blue <span style="color:#f92672">=</span> strings.TrimSuffix(blue, <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>)
 <span style="color:#ae81ff">129</span>
-<span style="color:#ae81ff">130</span>         <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Printf</span>(<span style="color:#e6db74">&#34;You entered red: %s, green: %s, blue: %s\n&#34;</span>, <span style="color:#a6e22e">red</span>, <span style="color:#a6e22e">green</span>, <span style="color:#a6e22e">blue</span>)
+<span style="color:#ae81ff">130</span>         fmt.Printf(<span style="color:#e6db74">&#34;You entered red: %s, green: %s, blue: %s</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, red, green, blue)
 <span style="color:#ae81ff">131</span>
 <span style="color:#ae81ff">132</span>         <span style="color:#75715e">//
 </span><span style="color:#75715e"></span><span style="color:#ae81ff">133</span>         <span style="color:#75715e">// Convert string RGB values to int
 </span><span style="color:#75715e"></span><span style="color:#ae81ff">134</span>         <span style="color:#75715e">//
-</span><span style="color:#75715e"></span><span style="color:#ae81ff">135</span>         <span style="color:#a6e22e">blueNum</span>, <span style="color:#a6e22e">_</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">strconv</span>.<span style="color:#a6e22e">Atoi</span>(<span style="color:#a6e22e">blue</span>)
-<span style="color:#ae81ff">136</span>         <span style="color:#a6e22e">redNum</span>, <span style="color:#a6e22e">_</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">strconv</span>.<span style="color:#a6e22e">Atoi</span>(<span style="color:#a6e22e">red</span>)
-<span style="color:#ae81ff">137</span>         <span style="color:#a6e22e">greenNum</span>, <span style="color:#a6e22e">_</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">strconv</span>.<span style="color:#a6e22e">Atoi</span>(<span style="color:#a6e22e">green</span>)
-<span style="color:#ae81ff">138</span>         <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Printf</span>(<span style="color:#e6db74">&#34;red: %x, green: %x, blue: %x\n&#34;</span>, <span style="color:#a6e22e">redNum</span>, <span style="color:#a6e22e">greenNum</span>, <span style="color:#a6e22e">blueNum</span>)
+</span><span style="color:#75715e"></span><span style="color:#ae81ff">135</span>         blueNum, _ :<span style="color:#f92672">=</span> strconv.Atoi(blue)
+<span style="color:#ae81ff">136</span>         redNum, _ :<span style="color:#f92672">=</span> strconv.Atoi(red)
+<span style="color:#ae81ff">137</span>         greenNum, _ :<span style="color:#f92672">=</span> strconv.Atoi(green)
+<span style="color:#ae81ff">138</span>         fmt.Printf(<span style="color:#e6db74">&#34;red: %x, green: %x, blue: %x</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, redNum, greenNum, blueNum)
 <span style="color:#ae81ff">139</span>
 <span style="color:#ae81ff">140</span>         <span style="color:#75715e">//
 </span><span style="color:#75715e"></span><span style="color:#ae81ff">141</span>         <span style="color:#75715e">// Set LED color
 </span><span style="color:#75715e"></span><span style="color:#ae81ff">142</span>         <span style="color:#75715e">//
-</span><span style="color:#75715e"></span><span style="color:#ae81ff">143</span>         <span style="color:#a6e22e">ledColorSet</span>(uint32(<span style="color:#a6e22e">redNum</span>), uint32(<span style="color:#a6e22e">greenNum</span>), uint32(<span style="color:#a6e22e">blueNum</span>))
+</span><span style="color:#75715e"></span><span style="color:#ae81ff">143</span>         ledColorSet(uint32(redNum), uint32(greenNum), uint32(blueNum))
 <span style="color:#ae81ff">144</span>
 <span style="color:#ae81ff">145</span>         <span style="color:#75715e">//
 </span><span style="color:#75715e"></span><span style="color:#ae81ff">146</span>         <span style="color:#75715e">// Quit?
 </span><span style="color:#75715e"></span><span style="color:#ae81ff">147</span>         <span style="color:#75715e">//
-</span><span style="color:#75715e"></span><span style="color:#ae81ff">148</span>         <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Printf</span>(<span style="color:#e6db74">&#34;Enter &#39;q&#39; to quit\n&#34;</span>)
-<span style="color:#ae81ff">149</span>         <span style="color:#a6e22e">quit</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">reader</span>.<span style="color:#a6e22e">ReadString</span>(<span style="color:#e6db74">&#39;\n&#39;</span>)
-<span style="color:#ae81ff">150</span>         <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
-<span style="color:#ae81ff">151</span>             <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Printf</span>(<span style="color:#e6db74">&#34;Error reading from StdIn, %s, err&#34;</span>)
-<span style="color:#ae81ff">152</span>             <span style="color:#a6e22e">os</span>.<span style="color:#a6e22e">Exit</span>(<span style="color:#ae81ff">1</span>)
+</span><span style="color:#75715e"></span><span style="color:#ae81ff">148</span>         fmt.Printf(<span style="color:#e6db74">&#34;Enter &#39;q&#39; to quit</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>)
+<span style="color:#ae81ff">149</span>         quit, err :<span style="color:#f92672">=</span> reader.ReadString(<span style="color:#e6db74">&#39;\n&#39;</span>)
+<span style="color:#ae81ff">150</span>         <span style="color:#66d9ef">if</span> err <span style="color:#f92672">!=</span> nil {
+<span style="color:#ae81ff">151</span>             fmt.Printf(<span style="color:#e6db74">&#34;Error reading from StdIn, %s, err&#34;</span>)
+<span style="color:#ae81ff">152</span>             os.Exit(<span style="color:#ae81ff">1</span>)
 <span style="color:#ae81ff">153</span>         }
-<span style="color:#ae81ff">154</span>         <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">quit</span> <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;q\n&#34;</span> {
-<span style="color:#ae81ff">155</span>             <span style="color:#a6e22e">ledColorSet</span>(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>)
+<span style="color:#ae81ff">154</span>         <span style="color:#66d9ef">if</span> quit <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;q</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span> {
+<span style="color:#ae81ff">155</span>             ledColorSet(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>)
 <span style="color:#ae81ff">156</span>             <span style="color:#66d9ef">break</span>
 <span style="color:#ae81ff">157</span>         }
 <span style="color:#ae81ff">158</span>     }
 <span style="color:#ae81ff">159</span> }
-</code></pre></div><h2 id="summary">Summary</h2>
+</code></pre></div><p>Lines 78-90, <code>ledInit()</code>, setup the GPIO pins for use in the program. They set the mode (PWM), frequency, and duty cycle (providing parameters for pulse width and range (aka cycle)).</p>
+<p>Lines 93-96 initialize the go-rpio library. Line 96 makes sure the resources used are released when the program exits.</p>
+<p>The remainder of the program prompts the user for the red, green, and blue values to use and the sets the pins approporiately.</p>
+<h2 id="summary">Summary</h2>
+<p>That&rsquo;s it, I hope you found this article interesting. To quickly review, this article covered the following:</p>
+<ol>
+<li>Setting up the physical environment needed to experiment with an RGB LED on a Raspberry Pi 3B+.</li>
+<li>Provided, via a link to another article<sup id="fnref:4"><a href="#fn:4" class="footnote-ref" role="doc-noteref">4</a></sup>, the detailed knowledge of PWM that&rsquo;s missing from the <a href="https://docs.sunfounder.com/projects/raphael-kit/en/latest/1.1.2_rgb_led_c.html">Sunfounder RGB LED Project</a>.</li>
+<li>Provided and explained the C and Go code needed to set colors in an RGB LED using both hardware and software PWM.</li>
+</ol>
+<h2 id="references">References</h2>
 <section class="footnotes" role="doc-endnotes">
 <hr>
 <ol>
 <li id="fn:1" role="doc-endnote">
-<p>The Raspberry Pi&rsquo;s GPIO PWM pins can also be configured and non-PWM pins. <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<p><a href="https://docs.sunfounder.com/projects/raphael-kit/en/latest/1.1.2_rgb_led_c.html">Sunfounder RGB LED Project</a> <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:2" role="doc-endnote">
-<p>The <a href="https://www.raspberrypi.org/app/uploads/2012/02/BCM2835-ARM-Peripherals.pdf">full Broadcom spec for the BCM2835</a>, starting at page 138, for more details about how PWM is implemented on the BCM2835. <a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<p><a href="https://github.com/WiringPi/WiringPi">WiringPi</a> <a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:3" role="doc-endnote">
-<p>There&rsquo;s a detailed discussion about <a href="https://www.raspberrypi.org/forums/viewtopic.php?t=150254">Which pin(s) on RPi 3B is PWM capable</a>. Specifically regarding the effect of sharing 2 PWM channels for 4 PWM pins. The Broadcom spec<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup> also discusses this in section 9.4 on page 139, but in a less obvious way. <a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<p><a href="https://github.com/stianeikeland/go-rpio">go-rpio</a> <a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:4" role="doc-endnote">
+<p><a href="https://youngkin.github.io/post/pulsewidthmodulationraspberrypi/">Pulse Width Modulation for Dummies, with a Slice of Raspberry Pi</a> contains all you need to know about PWM on a Raspberry Pi, at least until you want to become a PWM expert! <a href="#fnref:4" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 </ol>
 </section>
