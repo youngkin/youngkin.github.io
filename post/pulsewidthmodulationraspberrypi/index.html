@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    
+
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-177198277-1"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-177198277-1');
+    </script>
+
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+    <meta property="og:site_name" content="Rich Youngkin&#39;s software engineering blog">
+    <meta property="og:type" content="article">
+
+    
+    <meta property="og:image" content="https://youngkin.github.io/images/main_go_wideandtall_darklayer.jpeg">
+    <meta property="twitter:image" content="https://youngkin.github.io/images/main_go_wideandtall_darklayer.jpeg" />
+    
+
+    
+    <meta name="title" content="Pulse Width Modulation for Dummies, with a Slice of Raspberry Pi" />
+    <meta property="og:title" content="Pulse Width Modulation for Dummies, with a Slice of Raspberry Pi" />
+    <meta property="twitter:title" content="Pulse Width Modulation for Dummies, with a Slice of Raspberry Pi" />
+    
+
+    
+    <meta name="description" content="An overview of PWM, with code examples, on the Raspberry Pi.">
+    <meta property="og:description" content="An overview of PWM, with code examples, on the Raspberry Pi." />
+    <meta property="twitter:description" content="An overview of PWM, with code examples, on the Raspberry Pi." />
+    
+
+    
+    <meta property="twitter:card" content="summary" />
+    
+    
+
+    <meta name="keyword"  content="Rich, Youngkin, Raspberry, Pi, Docker, Kubernetes, Go, Golang, GPIO, Microservice">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>Pulse Width Modulation for Dummies, with a Slice of Raspberry Pi-Rich Youngkin Blog</title>
+
+    <link rel="canonical" href="/post/pulsewidthmodulationraspberrypi/">
+
+    <link rel="stylesheet" href="/css/iDisqus.min.css"/>
+	
+    
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    
+    <link rel="stylesheet" href="/css/zanshang.css">
+    
+    
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    
+    
+
+    
+    
+    <script src="/js/jquery.min.js"></script>
+    
+    
+    <script src="/js/bootstrap.min.js"></script>
+    
+    
+    <script src="/js/hux-blog.min.js"></script>
+
+    
+    
+
+</head>
+
+
+
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Rich Youngkin&#39;s software engineering blog</a>
+            
+        </div>
+
+        
+        
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    
+                        
+                        <li>
+                            <a href="/categories/barbeque">barbeque</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/blog">blog</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/go">go</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/golang">golang</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/gpio">gpio</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/kubernetes">kubernetes</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/raspberry-pi">raspberry-pi</a>
+                        </li>
+                        
+                    
+                    
+		    
+                        <li><a href="/top/about/">ABOUT</a></li>
+                    
+
+                    
+                </ul>
+            </div>
+        </div>
+        
+    </div>
+    
+</nav>
+<script>
+    
+    
+    
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        
+            $navbar.className = " ";
+            
+            setTimeout(function(){
+                
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+
+
+<style type="text/css">
+    header.intro-header {
+        background-image: url('/images/pwmfordummies/PWMPulsePerioddim.png')
+    }
+</style>
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/raspberry-pi" title="raspberry-pi">
+                            raspberry-pi
+                        </a>
+                        
+                        <a class="tag" href="/tags/golang" title="Golang">
+                            Golang
+                        </a>
+                        
+                        <a class="tag" href="/tags/c" title="C">
+                            C
+                        </a>
+                        
+                        <a class="tag" href="/tags/gpio" title="GPIO">
+                            GPIO
+                        </a>
+                        
+                    </div>
+                    <h1>Pulse Width Modulation for Dummies, with a Slice of Raspberry Pi</h1>
+                    <h2 class="subheading"></h2>
+                    <span class="meta">
+                        Posted by 
+                        
+                                Rich Youngkin&#39;s software engineering blog
+                         
+                        on 
+                        Sunday, September 19, 2021
+                        
+                        
+                        
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+
+
+<article>
+    <div class="container">
+        <div class="row">
+
+            
+            <div class="
+                col-lg-11 col-lg-offset-1
+                col-md-10 col-md-offset-1
+                post-container">
+
+                
+                <header>
+                    <h2>Contents</h2>
+                </header>
+                <nav id="TableOfContents">
+  <ul>
+    <li><a href="#overview">Overview</a></li>
+    <li><a href="#prerequisites">Prerequisites</a></li>
+    <li><a href="#what-is-pwm">What is PWM?</a>
+      <ul>
+        <li><a href="#terminology">Terminology</a></li>
+        <li><a href="#primary-concepts">Primary concepts</a></li>
+      </ul>
+    </li>
+    <li><a href="#overview-of-pwm-on-a-raspberry-pi-3b">Overview of PWM on a Raspberry Pi 3B+</a></li>
+    <li><a href="#exploring-pwm-on-a-raspberry-pi">Exploring PWM on a Raspberry Pi</a>
+      <ul>
+        <li><a href="#driving-pwm-using-pwm-explorer">Driving PWM using PWM Explorer</a></li>
+      </ul>
+    </li>
+    <li><a href="#summary">Summary</a></li>
+    <li><a href="#references">References</a></li>
+  </ul>
+</nav>
+                
+                <p>This article provides some details about hardware and software based PWM on the Raspberry Pi, specifically the 3B+ with the <a href="https://www.raspberrypi.org/app/uploads/2012/02/BCM2835-ARM-Peripherals.pdf">Broadcomm BCM2835 board</a>. This article has an accompanying application, <a href="https://github.com/youngkin/gpio">PWM Explorer</a><sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>, that can be used to experiment with PWM settings and capabilities.</p>
+<h2 id="overview">Overview</h2>
+<p>I was writing an article as a companion to the <a href="https://docs.sunfounder.com/projects/raphael-kit/en/latest/1.1.1_blinking_led_c.html">SunFounder RGB LED project</a> to cover some areas that were missing in that project such as what is PWM, how does it work, and why the code was written as it was. I had no idea what PWM was or what I was doing or why. To fill the gap I started researching PWM and found numerous articles about PWM<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup> <sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup> <sup id="fnref:4"><a href="#fn:4" class="footnote-ref" role="doc-noteref">4</a></sup>, and also software libraries like <a href="https://github.com/WiringPi/WiringPi">WiringPi</a> (C)<sup id="fnref:5"><a href="#fn:5" class="footnote-ref" role="doc-noteref">5</a></sup>, <a href="https://github.com/stianeikeland/go-rpio">go-rpio</a> (Go)<sup id="fnref:6"><a href="#fn:6" class="footnote-ref" role="doc-noteref">6</a></sup>, <a href="https://www.airspayce.com/mikem/bcm2835">BCM2835 by Mike McCalley</a> (C)<sup id="fnref:7"><a href="#fn:7" class="footnote-ref" role="doc-noteref">7</a></sup> and <a href="https://abyz.me.uk/rpi/pigpio/pdif2.html">pigpio</a> (Python &amp; C)<sup id="fnref:8"><a href="#fn:8" class="footnote-ref" role="doc-noteref">8</a></sup>. So with my focus still on controlling an RGB LED via GPIO and PWM I started writing programs in C and Go. I quickly had difficulty in several areas:</p>
+<ol>
+<li>Terminology is used inconsistently across articles and the libraries. For example, some used the terms <em>Cycle</em> and <em>Range</em> for the same thing.</li>
+<li>The libraries were documented to varying degrees. Coupled with a lack of common terminology it was difficult to figure out how to use them.</li>
+<li>Going hand in hand with figuring out how to use the libraries, it was difficult to understand how different parameters affected the behavior of the hardware, in this case an RGB LED.</li>
+</ol>
+<p>My intent in writing this is to:</p>
+<ol>
+<li>Provide an overview of PWM and its main concepts.</li>
+<li>Provide a glossary that links the various PWM terms to a consistent definition.</li>
+<li>Explain how the various PWM settings interact with each other (not just <em>duty cycle</em>).</li>
+<li>Provide the information needed (sometimes via external references) to install a GPIO test bed on a Raspberry Pi 3B+.</li>
+<li>Provide programs, written in Go and C, that demonstrate how to effectively use WiringPi<sup id="fnref:5"><a href="#fn:5" class="footnote-ref" role="doc-noteref">5</a></sup> and go-rpio<sup id="fnref:6"><a href="#fn:6" class="footnote-ref" role="doc-noteref">6</a></sup>.</li>
+<li>Provide an application that can be used to experiment with the various PWM parameters in real time.</li>
+<li>Provide hard to find information on some of the concepts and PWM settings (e.g., minimum/maximum PWM frequencies).</li>
+</ol>
+<p>Lest anyone think I&rsquo;m presenting myself as an expert in GPIO and PWM, I&rsquo;m not. Despite my best attempts to summarize what I&rsquo;ve learned, I&rsquo;m sure I&rsquo;ve made mistakes or made things more confusing. Any mistakes I&rsquo;ve made are my own. If anyone comes across any mistakes topics that could be clarified, I&rsquo;d appreciate comments so I can modify this article.</p>
+<p>I&rsquo;m not writing this to be a definitive source about all things PWM. There are better resources for that. This article lists those <a href="#references">resources</a> that I found particularly helpful.</p>
+<p>Now to the outline of this article. The sections are as follows:</p>
+<ol>
+<li><a href="#prerequisites">Prerequisites</a> covers areas like how to get the software libraries used in this article as well as things like the hardware needed by the <em>PWM Explorer</em> application to illustrate behavior.</li>
+<li><a href="#what-is-pwm">What is PWM?</a> provides a very basic introduction to PWM. It provides definitions of common terms and the aliases used in the articles and software libraries.</li>
+<li><a href="#overview-of-pwm-on-a-raspberry-pi-3b">Overview of PWM on a Raspberry Pi 3B+</a> provides an overview of how GPIO and PWM are implemented on a Raspberry Pi.</li>
+<li><a href="#exploring-pwm-on-a-raspberry-pi">Exploring PWM on a Raspberry Pi</a> provides a description of the various PWM settings, how they interact with each other, some hard to find tidbits about the PWM settings, and an overview of the application, <em>PWM Explorer</em>, that can be used to drive PWM on a Raspberry Pi to see how the settings interact with each other in real time.</li>
+<li>A <a href="#summary">Summary</a> to wrap things up.</li>
+<li>And a set of useful <a href="#references">References</a>.</li>
+</ol>
+<h2 id="prerequisites">Prerequisites</h2>
+<p>If you don&rsquo;t have one, you&rsquo;ll need a Raspberry Pi. I used a Raspberry Pi 3B+ with the &lsquo;Stretch&rsquo; version of the Raspbian OS. The Raspberry Pi website has instructions on how to <a href="https://projects.raspberrypi.org/en/projects/raspberry-pi-setting-up">setup a new Raspberry Pi from scratch</a><sup id="fnref:9"><a href="#fn:9" class="footnote-ref" role="doc-noteref">9</a></sup> if you decide to go that way vs. buying a complete kit.</p>
+<p>Other items you&rsquo;ll need include:</p>
+<ul>
+<li>a <a href="https://www.amazon.com/dp/B082KBF7MM/ref=sspa_dk_detail_4?psc=1&amp;pd_rd_i=B082KBF7MM&amp;pd_rd_w=1tGTV&amp;pf_rd_p=887084a2-5c34-4113-a4f8-b7947847c308&amp;pd_rd_wg=fX8JB&amp;pf_rd_r=44DE0RS1E9FD42RBYC7R&amp;pd_rd_r=47cbdc7f-7834-455f-9429-ef74a438bd45&amp;spLa=ZW5jcnlwdGVkUXVhbGlmaWVyPUFVVkdZVUZRNUw3ODkmZW5jcnlwdGVkSWQ9QTA4MzI4MzYyU0VLNzBJM0cxRUVMJmVuY3J5cHRlZEFkSWQ9QTA0Mjk1NTMzSzNSWlNFUjU0NURBJndpZGdldE5hbWU9c3BfZGV0YWlsJmFjdGlvbj1jbGlja1JlZGlyZWN0JmRvTm90TG9nQ2xpY2s9dHJ1ZQ==">breadboard</a> <em>(You may find <a href="http://wiki.sunfounder.cc/index.php?title=Breadboard_Basics_%E2%80%93_Types">this tutorial on breadboards</a> helpful<sup id="fnref:10"><a href="#fn:10" class="footnote-ref" role="doc-noteref">10</a></sup>)</em>,</li>
+<li>some <a href="https://www.amazon.com/dp/B08HZ26ZLF/ref=syn_sd_onsite_desktop_19?psc=1&amp;spLa=ZW5jcnlwdGVkUXVhbGlmaWVyPUExRFpLWElCRjg1MUNMJmVuY3J5cHRlZElkPUEwMjMyMTE1M01aOFE3U1BQS09YSiZlbmNyeXB0ZWRBZElkPUEwODE5NTMxMktEMTlZRjEyQjBJNiZ3aWRnZXROYW1lPXNkX29uc2l0ZV9kZXNrdG9wJmFjdGlvbj1jbGlja1JlZGlyZWN0JmRvTm90TG9nQ2xpY2s9dHJ1ZQ==">jumper wires</a>,</li>
+<li><a href="https://www.amazon.com/EDGELEC-Tri-Color-Multicolor-Diffused-Resistors/dp/B077XGF3YR/ref=asc_df_B077XGF3YR/?tag=hyprod-20&amp;linkCode=df0&amp;hvadid=242051162351&amp;hvpos=&amp;hvnetw=g&amp;hvrand=11064062033670066895&amp;hvpone=&amp;hvptwo=&amp;hvqmt=&amp;hvdev=c&amp;hvdvcmdl=&amp;hvlocint=&amp;hvlocphy=9028749&amp;hvtargid=pla-430228081645&amp;psc=1">a 220 Ohm resistor, and a RGB LED</a>.</li>
+<li>You should also consider getting a <a href="https://www.amazon.com/dp/B082PRVRYR/ref=sspa_dk_detail_2?psc=1&amp;pd_rd_i=B082PRVRYR&amp;pd_rd_w=8mKhr&amp;pf_rd_p=887084a2-5c34-4113-a4f8-b7947847c308&amp;pd_rd_wg=e9psa&amp;pf_rd_r=S09F37DF2G5FW8B8GX4B&amp;pd_rd_r=c065c120-e60b-45e9-b93b-f581f048cf46&amp;spLa=ZW5jcnlwdGVkUXVhbGlmaWVyPUFCMzhUQ09COFI2VlMmZW5jcnlwdGVkSWQ9QTA5NjU2ODUxRDkxNEYwSTYwV09KJmVuY3J5cHRlZEFkSWQ9QTAxOTg1MTUyRUhEUlc2VzQ2VDQ4JndpZGdldE5hbWU9c3BfZGV0YWlsJmFjdGlvbj1jbGlja1JlZGlyZWN0JmRvTm90TG9nQ2xpY2s9dHJ1ZQ==">40 pin female to female with a T-Type adapter</a> to attach the GPIO outputs to the breadboard. You can use only jumper wires, but the T-Type adapter will make things easier and will help prevent damage to the GPIO pins on the Raspberry Pi. If you elect not to buy the 40 pin cable with T-Type adapter you&rsquo;ll need to buy <a href="https://www.amazon.com/SinLoon-Breadboard-Arduino-Circuit-40-Pack/dp/B08M3QLL3Q/ref=pd_sbs_7/143-0445142-7950409?pd_rd_w=sVLrc&amp;pf_rd_p=8b76d7a7-ab83-4ddc-a92d-e3e33bfdbf03&amp;pf_rd_r=CDM5TGJT03VKF0ZFB577&amp;pd_rd_r=8e58fd82-8503-41cf-b8f2-c78eaeb78d25&amp;pd_rd_wg=tT1U0&amp;pd_rd_i=B08M3QLL3Q&amp;psc=1">male-to-female jumper wires</a>. Buying all these things separately will cost more than a kit however.</li>
+</ul>
+<p><a href="https://www.amazon.com/dp/B06WP7169Y/ref=sspa_dk_detail_5?psc=1&amp;pd_rd_i=B06WP7169Y&amp;pd_rd_w=OZVyf&amp;pf_rd_p=887084a2-5c34-4113-a4f8-b7947847c308&amp;pd_rd_wg=0V0IH&amp;pf_rd_r=623YJTBQ2CN2B2GYXQG5&amp;pd_rd_r=faa61f0f-3aec-4cf0-8e7e-d44eb1b3b92f&amp;spLa=ZW5jcnlwdGVkUXVhbGlmaWVyPUEyUVlDQzMzVVZBMFYxJmVuY3J5cHRlZElkPUEwMzExNzk4MUhGSjFSS0VKTlBROCZlbmNyeXB0ZWRBZElkPUEwMzYwNjg2UUdMRU44N0YzNzIwJndpZGdldE5hbWU9c3BfZGV0YWlsJmFjdGlvbj1jbGlja1JlZGlyZWN0JmRvTm90TG9nQ2xpY2s9dHJ1ZQ==">Here&rsquo;s a simple kit that has all of the above</a>. I&rsquo;m finding the <a href="https://www.amazon.com/gp/product/B09BMVT4CB/ref=ppx_yo_dt_b_asin_title_o02_s00?ie=UTF8&amp;psc=1">Sunfounder Raspberry Pi Ultimate Starter Kit</a> especially useful. NOTE: The Ultimate Starter Kit and the Raphael Kit are the same product.</p>
+<img style="border:1px solid black" src="/images/pwmfordummies/RaphaelKit.png" align="center" width="600" height="300"/>
+<figcaption align="left"><center><i style="color:black;">Sunfounder Ultimate Starter/Raphael kit</i></center></figcaption>
+<p>You will also need some basic C  and Go programming knowledge as well as familiarity with logging on to a Raspberry Pi terminal, or into the desktop GUI that comes with some OS versions. Depending on the approach you take, you may need to connect a keyboard and monitor to the Raspberry Pi. I simply SSH into the Pi. You&rsquo;ll also need familiarity with how to use an editor like vim or nano.</p>
+<p>To compile and run the C program you&rsquo;ll need the WiringPi<sup id="fnref:5"><a href="#fn:5" class="footnote-ref" role="doc-noteref">5</a></sup> <sup id="fnref:11"><a href="#fn:11" class="footnote-ref" role="doc-noteref">11</a></sup> library. It&rsquo;s easy to get:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sudo apt-get install wiringpi
+</code></pre></div><p>Then test the installation using:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">pi@pi-node1:~/go/src/github.com/youngkin/gpio/rgbled $ gpio -v
+gpio version: 2.50
+Copyright <span style="color:#f92672">(</span>c<span style="color:#f92672">)</span> 2012-2018 Gordon Henderson
+This is free software with ABSOLUTELY NO WARRANTY.
+For details type: gpio -warranty
+
+Raspberry Pi Details:
+  Type: Pi 3B+, Revision: 03, Memory: 1024MB, Maker: Sony
+  * Device tree is enabled.
+  *--&gt; Raspberry Pi <span style="color:#ae81ff">3</span> Model B Plus Rev 1.3
+  * This Raspberry Pi supports user-level GPIO access.
+</code></pre></div><p>In the above you&rsquo;ll notice <code>gpio version: 2.50</code>. If you&rsquo;re using a Rasberry Pi 4, use the instructions given in the Sunfounder <a href="https://docs.sunfounder.com/projects/raphael-kit/en/latest/check_the_wiringpi_c.html">Checking the WiringPi</a>.</p>
+<p>WiringPi is unique in that it includes a command line tool, <code>gpio</code>, as shown above, that can be used to manage, control, and query the GPIO board. This can be very handy. See the <a href="http://wiringpi.com/the-gpio-utility/">gpio reference</a> for more information on what it can do and how to use it.</p>
+<p>If you&rsquo;re interested in Go development on a Raspberry Pi you&rsquo;ll need to install the development environment onto the Raspberry Pi. <a href="https://www.jeremymorgan.com/tutorials/raspberry-pi/install-go-raspberry-pi/">Here&rsquo;s a simple source</a> that explains how to accomplish this. This source is a little dated, but the only significant issue is with the version of Go to install. The source shows installing Go <strong>1.14.4.linux-arm64.tar.gz</strong> and <strong>1.14.4.linuxarmv6l.tar.gz</strong>. The current versions are <strong>1.17.1.linux-arm64.tar.gz</strong> and <strong>1.17.1.linuxarmv6l.tar.gz</strong>. For the Raspberry Pi 3B+ the correct choice will be <strong>1.17.1.linuxarmv6l.tar.gz</strong>. The other is intended for 64 bit systems like the Raspberry Pi 4 series. You can find current ARM versions of Go at the <a href="https://golang.org/dl/">Golang download site</a>.</p>
+<p>For Go development you&rsquo;ll also need the <a href="https://github.com/stianeikeland/go-rpio">go-rpio</a><sup id="fnref:6"><a href="#fn:6" class="footnote-ref" role="doc-noteref">6</a></sup> library.</p>
+<p>If you want to veer away from the cookbook style of the Sunfounder docs you&rsquo;ll need some basic knowledge of Linux . For example, I won&rsquo;t be explaining what <strong>root privileges</strong> are.</p>
+<p>Finally, I wrote an application that supports experimenting with the various PWM settings on the Raspberry Pi 3B+. There are 2 options for getting the code. First, you can clone or fork the <a href="https://github.com/youngkin/gpio.git">project</a> from GitHub. If you do that you&rsquo;ll need to have experience with git and have it installed on the Raspberry Pi. See this <a href="https://linuxize.com/post/how-to-install-git-on-raspberry-pi/">article on installing git</a> for more details. After installing <code>git</code> you can download the project by running <code>git clone https://github.com/youngkin/gpio.git</code>. If you would like to contribute the project please fork the respository instead. As an alternative to using git you can also download a <em>zip</em> file of the project by navigating to the <a href="https://github.com/youngkin/gpio.git">project&rsquo;s URL</a>, clicking on the <em>Code</em> button above and to the right of the file listing, and selecting <em>Download ZIP</em>.</p>
+<h2 id="what-is-pwm">What is PWM?</h2>
+<p>At it&rsquo;s most basic, PWM is used to simulate an analog signal using a digital source (like a GPIO pin). As an example, an LED&rsquo;s brightness and/or color can be modified by varying the voltage supplied to the LED. A variety of analog devices, such as a motor&rsquo;s speed, can be controlled in the same way. PWM simulates varying voltages by varying the length of the digital power pulse within a given duration.</p>
+<p>In addition to what&rsquo;s presented here, <a href="https://www.kompulsa.com/introduction-pwm-pulse-width-modulation-works/">Introduction to PWM: How Pulse Width Modulation works</a> describes some of the same concepts described here as well as a few more examples of how PWM can be used. The <a href="#references">References</a> section has links to more sources of PWM information.</p>
+<p>The follow sections cover the main points:</p>
+<ul>
+<li><a href="#Terminology">Terminology</a> defines terms that will be used throughout the document</li>
+<li><a href="#Primary-concepts">Primary concepts</a> describes the major concepts</li>
+</ul>
+<h3 id="terminology">Terminology</h3>
+<p>My research into PWM involved reading several articles<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup> <sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup> <sup id="fnref:4"><a href="#fn:4" class="footnote-ref" role="doc-noteref">4</a></sup> as well as examining the code of several PWM software libraries in various languages <sup id="fnref:5"><a href="#fn:5" class="footnote-ref" role="doc-noteref">5</a></sup> <sup id="fnref:6"><a href="#fn:6" class="footnote-ref" role="doc-noteref">6</a></sup> <sup id="fnref:7"><a href="#fn:7" class="footnote-ref" role="doc-noteref">7</a></sup>. These various sources aren&rsquo;t completely consistent in the terminology they use. Here are some of the common terms, their aliases, and definitions. See the diagram below for a visual representation of the terms.</p>
+<img style="border:1px solid black" src="/images/pwmfordummies/PWMPulsePeriod.png" align="center" width="800" height="400"/>
+<figcaption align="left"><center><i style="color:black;">PWM timing diagram</i></center></figcaption>
+<ul>
+<li><strong>Frequency</strong> - Per Wikipedia <sup id="fnref:12"><a href="#fn:12" class="footnote-ref" role="doc-noteref">12</a></sup>, <em>frequency is the number of occurrences of a repeating event per unit of time</em>. In electronics an event is the peak of a wave to the next peak of the wave (analog). In digital terms an event is from the leading edge of one pulse to the leading edge of the next pulse. Frequency is measured in Hertz, which is the number of repeating events per second.</li>
+<li><strong>Period</strong> - Also from Wikipedia <sup id="fnref:12"><a href="#fn:12" class="footnote-ref" role="doc-noteref">12</a></sup>, period is the duration of time of one cycle in a repeating event. Period is measured in seconds. So period is how long something takes vs. frequency which is how many times an event occurs in a given duration of time. This makes period the reciprocal of the frequency<sup id="fnref:13"><a href="#fn:13" class="footnote-ref" role="doc-noteref">13</a></sup> and vice versa, ie., <em>unit of time per event</em> vs. <em>events per unit of time</em>. In the above diagram the period is 10 milliseconds (ms). So the frequency in the above diagram is <code>1/.01</code> or 100. Since frequency is measured in Hertz, or events/second, the frequency in the above diagram is 100Hz.</li>
+<li><strong>Clock source</strong><sup id="fnref:14"><a href="#fn:14" class="footnote-ref" role="doc-noteref">14</a></sup> - Also called a clock, it sets the rate at which the clock advances.</li>
+<li><strong>PWM clock</strong> - Sometimes also called a clock so this gets a bit confusing. The PWM clock&rsquo;s underlying input is the clock source. Different hardware devices, such as motors and servos, only work within specific period ranges. Often the source clock is too fast for these devices. The PWM clock is created by dividing the clock source&rsquo;s frequency with a number that will result in the PWM clock operating at a frequency that&rsquo;s appropriate for a given device. Different devices will need different PWM clock speeds. The number used as the denominator in this calculation is frequently called the <strong>divisor</strong> in software libraries and the BCM2835 Data Sheet<sup id="fnref:15"><a href="#fn:15" class="footnote-ref" role="doc-noteref">15</a></sup>.</li>
+<li><strong>Pulse</strong> - From the &ldquo;P&rdquo; in PWM. This is the minimum length of time a PWM pin&rsquo;s output is set to high or low. Its minimum length is governed by the speed of the PWM clock. I&rsquo;ll use pulse throughout this document, mostly because it&rsquo;s in the name.</li>
+<li><strong>Range</strong> - Range can be thought of as a counter that counts PWM clock pulses. The ratio of range to PWM clock frequency can be thought of as the frequency of the signal sent to a PWM pin. I&rsquo;ve also seen the term cycle length used as as an alias for range<sup id="fnref:6"><a href="#fn:6" class="footnote-ref" role="doc-noteref">6</a></sup>.</li>
+<li><strong>Pulse width</strong> - Pulse width is the duration of a pulse. In the various software libraries I&rsquo;ve seen it called width<sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup>, value<sup id="fnref:5"><a href="#fn:5" class="footnote-ref" role="doc-noteref">5</a></sup>, data<sup id="fnref:7"><a href="#fn:7" class="footnote-ref" role="doc-noteref">7</a></sup> <sup id="fnref:14"><a href="#fn:14" class="footnote-ref" role="doc-noteref">14</a></sup>, and duty length<sup id="fnref:6"><a href="#fn:6" class="footnote-ref" role="doc-noteref">6</a></sup>.</li>
+</ul>
+<h3 id="primary-concepts">Primary concepts</h3>
+<ul>
+<li><strong>Duty cycle</strong> is the ratio of Pulse Width to Range, i.e., <code>Pulse-Width/Range</code>. For a range of 10 and a pulse of 5, the duty cycle is 5/10 or 50%. Duty cycle regulates the output voltage of a PWM device. For a 50% duty cycle and an input voltage of 5 volts, the output voltage will be 2.5 volts.</li>
+<li><strong>Software vs. Hardware PWM</strong> - For the purposes of this article there are 2 ways to generate a PWM signal, software-based and hardware-based<sup id="fnref:16"><a href="#fn:16" class="footnote-ref" role="doc-noteref">16</a></sup>. Hardware-based PWM is generated by a dedicated hardware PWM device that can be configured to generate a PWM signal as described above<sup id="fnref:16"><a href="#fn:16" class="footnote-ref" role="doc-noteref">16</a></sup>. Hardware-based PWM produces a very uniform signal with regard to timing. A uniform signal is required, for example, to produce a flicker-free light source such as an LED. Software-based PWM is directly implemented in the executing program using a <code>while(true)</code> for loop that never ends which controls the amount of time a pin is allowing current to flow (pulse) vs. the amount of time the pin isn&rsquo;t allowing current to flow. In this case the uniformity of the signal is determined by the accuracy of a language&rsquo;s <code>sleep()</code> function and the OS (Linux) scheduler. A less uniform signal, for example, may result in a flickering light source. There is a more complete description of <a href="https://raspberrypi.stackexchange.com/questions/100641/whats-the-difference-between-soft-pwm-and-pwm">the difference between soft PWM and PWM</a> and associated pros and cons on the Raspberry Pi Stack Exchange site.</li>
+<li><strong>Balanced vs. Mark/Space</strong> refers to the method used to determine how the PWM output signals are to be generated. There are 2 algorithms, balanced and mark/space. Balanced indicates that the duty cycle will be evenly spread across the range. That is to say, the pulse width will be split into a set of shorter pulses that are distributed across the range. In contrast, in mark/space, the pulse is generated as a single signal called a &ldquo;mark&rdquo;. The time remaining in the range, <code>range-pulseWidth</code> , is called the &ldquo;space&rdquo;. No signal is present in the space duration. Mark/Space is often good enough, but as periods get longer so does the absolute time difference between the mark and space durations. For large ratios of <code>range/PWMClockFrequency</code>, e.g., 1 (<em>which equates to 1Hz since the denominator unit is frequency</em>) and a duty-cycle of 50%, the space will be 500 milliseconds and the mark will be 500 milliseconds. This difference is large enough to be discernable in the behavior of the device. For example a motor might surge or a light flicker. In contrast, balanced mode will smooth out these differences. For the same 1Hz range and 50% duty-cycle, balanced mode might produce 500 1 millisecond signals every 2 milliseconds (<code>1/(500 * .002) = 1 = 1Hz</code>). The same 50% duty-cycle is produced, but the output signal is much smoother. Hardware implementations like the BCM2835 support both algorithms. It is possible to support both algorithms in software, but depending on the algorithms are implemented they may consume a significant amout of CPU.</li>
+</ul>
+<h2 id="overview-of-pwm-on-a-raspberry-pi-3b">Overview of PWM on a Raspberry Pi 3B+</h2>
+<p>Physically PWM is implemented via the BCM2835&rsquo;s GPIO pins. The BCM2835 board has 40 pins, a subset of which are GPIO pins. Of the GPIO pins<sup id="fnref:17"><a href="#fn:17" class="footnote-ref" role="doc-noteref">17</a></sup> there are 4 hardware PWM pins, 13, 19, 12, and 18. The remaining GPIO pins, as well as the hardware GPIO pins, can be used for software PWM.</p>
+<p>There are several clock sources available on the BCM2835 board.  The clock source used by the GPIO libraries in this article is called the oscillator. It&rsquo;s frequency as documented in several references<sup id="fnref:5"><a href="#fn:5" class="footnote-ref" role="doc-noteref">5</a></sup> <sup id="fnref:6"><a href="#fn:6" class="footnote-ref" role="doc-noteref">6</a></sup> <sup id="fnref:7"><a href="#fn:7" class="footnote-ref" role="doc-noteref">7</a></sup> is 19.2MHz with a period of about 52 nanoseconds (1 / 19,200,000 = ~0.000000052 seconds).</p>
+<p>The BCM2835 board also implements something called a channel<sup id="fnref:14"><a href="#fn:14" class="footnote-ref" role="doc-noteref">14</a></sup>. A hardware PWM pin is controlled by a channel. The PWM Clock, range, and pulse width are specified for a channel. All hardware pins connected to that channel will share the same range, pulse-width, and duty-cycle. The BCM2835 board has 2 channels. GPIO pins<sup id="fnref:17"><a href="#fn:17" class="footnote-ref" role="doc-noteref">17</a></sup> 18 and 12 on one channel, 13 and 19 on the other. This means that a signal that&rsquo;s sent to either pin that share a channel will go to both pins. For example, sending a signal on GPIO12 will also be shared with GPIO18 and vice versa<sup id="fnref:14"><a href="#fn:14" class="footnote-ref" role="doc-noteref">14</a></sup> <sup id="fnref:15"><a href="#fn:15" class="footnote-ref" role="doc-noteref">15</a></sup> <sup id="fnref:13"><a href="#fn:13" class="footnote-ref" role="doc-noteref">13</a></sup>.</p>
+<h2 id="exploring-pwm-on-a-raspberry-pi">Exploring PWM on a Raspberry Pi</h2>
+<p>The setup for this exercise is identical to a combination of the <a href="https://docs.sunfounder.com/projects/raphael-kit/en/latest/1.1.1_blinking_led_c.html">SunFounder Blinking LED</a> and <a href="https://docs.sunfounder.com/projects/raphael-kit/en/latest/1.1.2_rgb_led_c.html">Sunfounder RGB LED</a> projects. If you&rsquo;re familiar with wiring a breadboard the diagrams below may be all you need to get started. Otherwise it may be worth while looking at the Sunfounder LED projects and an <a href="http://wiki.sunfounder.cc/index.php?title=Breadboard_Basics_%E2%80%93_Types">introduction to breadboards</a><sup id="fnref:10"><a href="#fn:10" class="footnote-ref" role="doc-noteref">10</a></sup>. The resistor used in both diagrams is 220 Ohms.</p>
+<img style="border:1px solid black" src="/images/pwmfordummies/blinkingLED.png" align="center" width="600" height="300"/>
+<figcaption align="left"><center><i style="color:black;">Sunfounder Blinking LED breadboard setup</i></center></figcaption>
+<p>This setup will be used to demonstrate software PWM on a non-PWM pin.</p>
+<img style="border:1px solid black" src="/images/pwmfordummies/RgbLed.png" align="center" width="600" height="300"/>
+<figcaption align="left"><center><i style="color:black;">Sunfounder RGB LED breadboard setup</i></center></figcaption>
+<p>This setup will be used to demonstrate hardware and software PWM on a PWM pin. This setup shows an RGB LED pin (green) connected to the GPIO hardware pin 18. A different hardware PWM pin may be used such as 12, 13, and 19. Also, the use of an RGB LED pin isn&rsquo;t required. Any type of LED will work. It will have to be wired up in a similar manner however, i.e., the LED positive lead should be connected to GPIO 18 (green wire) and the LED&rsquo;s ground lead (the longest lead) to the board&rsquo;s ground. If you do choose to use an RGB LED pin it&rsquo;s important to note that only 2 of the colors can be controlled by hardware PWM. The pins need to be on different PWM channels. In the diagram above the LED colors attached to GPIO pins 17 and 27 (blue and red) can only be used for software PWM.</p>
+<p>It&rsquo;ll be easier to play with the different combinations of PWM settings when both of the above setups are wired up at the same time. It allows for any of the GPIO pins to be used by <em>PWM Explorer</em>, with the exception that for hardware PWM the LED(s) must be installed on hardware PWM pins (GPIO pins 13, 19, 18, and 12). If more than one hardware pin is used they must be on different channels.</p>
+<h3 id="driving-pwm-using-pwm-explorer">Driving PWM using PWM Explorer</h3>
+<p>PWM Explorer supports C and Go. Choosing C you can experiment with both Mark/Space and Balanced PWM Modes. The Go library I used, go-rpio<sup id="fnref:6"><a href="#fn:6" class="footnote-ref" role="doc-noteref">6</a></sup> only supports Mark/Space.</p>
+<p>As described in the <a href="#prerequisites">Prerequisites</a> section above, I wrote an application, called <em>PWM Explorer</em>, to experiment with PWM on a Raspberry Pi. This software can be used to drive PWM on both PWM and non-PWM pins. It also supports changing the various PWM parameters like divisor, range, and pulse width to provide visual feedback on the effect of these parameters on the behavior of the LEDs connected to the pins. This software is available on my <a href="https://github.com/youngkin/gpio">gpio GitHub repository</a><sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>.</p>
+<img style="border:1px solid black" src="/images/pwmfordummies/pwmexplorer.jpg" align="center" width="1000" height="1000"/>
+<figcaption align="left"><center><i style="color:black;">PWM Explorer</i></center></figcaption>
+<p>The diagram above is a screenshot of the main program and has labels with brief descriptions of the various sections of the user interface. It&rsquo;s a text based UI so that it can be run on a Raspberry Pi that doesn&rsquo;t have the desktop capability installed. It can be run at the command line by navigating to the installation directory under the <code>gpio/pwmdemo/pwmexplorer</code> directory and running <code>sudo /usr/local/go/bin/go run main.go</code>. <code>sudo</code> is needed because some of the GPIO access requires <code>root</code> permissions. In addition to the main UI application there are 2 supporting programs in the <code>gpio/pwmdemo/pwmexplorer/apps</code> directory, <code>freqtest.go</code> and <code>freqtest.c</code>. These are the actual implementations of the code required to interact with the PWM capabilities on the Raspberry Pi 3B+ using the go-rpio and WiringPi libraries. They are written in Go and C respectively.</p>
+<p>There are a variety of PWM parameters supported. These are:</p>
+<ol>
+<li><strong>PWM Pin</strong> - this item allows you to choose a PWM hardware pin to use. The pins available in the dropdown are specific to the language chosen. C uses the WiringPi<sup id="fnref:7"><a href="#fn:7" class="footnote-ref" role="doc-noteref">7</a></sup> library which uses its own pin numbering scheme. Go uses the standard GPIO pin numbers</li>
+<li><strong>Non-PWM Pin</strong> - this item allows you to specify a PWM pin to use, even a hardware pin. PWM Pin and Non-PWM Pin are mutually exclusive and the program will prevent you from specifying both. As with PWM Pin above, the numbering scheme is specific to the language, C or Go, chosen. The program offers no protection against using the wrong pin numbering scheme so be careful what you specify. If the pin chosen doesn&rsquo;t behave as expected it may be that you used the wrong pin numbering scheme.</li>
+<li><strong>Clock Frequency/Clock Divisor</strong> - this item is used to set the PWM clock frequency. The go-rpio library supports specifying the PWM clock frequency directly. The C WiringPi library uses the concept of divisor defined above to set the PWM clock frequency. You can calculate the divisor to use by dividing the Raspberry Pi 3B&rsquo;s oscillator clock&rsquo;s frequency of 19,200,000 Hertz by the desired PWM clock frequency. For example. to get a 100kHz PWM clock frequency divide 19,200,000 by 100,000. This calculation gives the Clock Divisor to use, 192 in this case. To avoid confusion, when C is the chosen language the label will be <em>Clock Divisor</em>. When Go is the chosen language this items label will be <em>Clock Frequency</em>.</li>
+<li><strong>PWM Mode</strong> - this item is used to specify whether Mark/Space or Balanced modes will be used. Note: some combinations of language, pin type (PWM vs. non-PWM), and PWM Type (hardware/software) don&rsquo;t support Balanced mode. When this is the case a message will be displayed in the <em>Messages</em> area. The Go go-rpio library doesn&rsquo;t support balanced mode.</li>
+<li><strong>Range</strong> - the desired range as defined in the <a href="#Terminology">Terminology</a> section above.</li>
+<li><strong>Pulse Width</strong> - the desired pulse width as defined in the <a href="#Terminology">Terminology</a> section above.</li>
+<li><strong>PWM Type</strong> - this item is used to specify whether hardware or software PWM is to be used.</li>
+</ol>
+<h4 id="experimenting-with-pwm-parameters">Experimenting with PWM Parameters</h4>
+<p>As was stated earlier, the WiringPi and go-rpio libraries both use the Raspberry Pi 3B&rsquo;s Oscillator clock which has a frequency is 19.2MHz. This is fixed and cannot be changed. But besides the pins chosen, the Clock Frequency/Divisor, PWM Mode, Range, Pulse Width, and PWM Type can all be modified. All of these interact with one another either directly or indirectly. In this section I will explain these relationships and how they interact. You can use the PWM Explorer to follow along and directly see the effects that I&rsquo;ll explain.</p>
+<p>This section uses an LED to demonstrate the effect of the various parameters on a device. There is a property of the human eye that needs to be understood. The human eye perceives linear changes in in brightness in a logarithmic fashion. Specifically, at the lower end of a pulse width setting (lower voltage) changes in a given setting will produce what looks like a more significant result than the same change at the higher end (higher voltage)<sup id="fnref:18"><a href="#fn:18" class="footnote-ref" role="doc-noteref">18</a></sup>. The PWM Explorer doesn&rsquo;t compensate for this.</p>
+<h5 id="pwm-clock-frequency--clock-divisor">PWM Clock Frequency / Clock Divisor</h5>
+<p>The first thing to decide is what frequency you want the PWM clock to run at. It&rsquo;s frequency is specified directly when using Go and via the divisor when using C. Choosing this frequency is impacted by the type of PWM device being used, e.g., an LED or a motor. This article doesn&rsquo;t cover how to calculate this frequency, but there are sources that do<sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup> <sup id="fnref:4"><a href="#fn:4" class="footnote-ref" role="doc-noteref">4</a></sup>. Instead I&rsquo;ll focus on the general impact of clock frequency on LED devices.</p>
+<p>You may or may not be aware that the human eye can detect flickering starting at about 60Hz and below. Flickering is more apparent using peripheral vision. Given this, a PWM clock frequency to Range, <code>PWMClockFrequency / Range</code>, below 60Hz isn&rsquo;t ideal unless you&rsquo;re trying to create a blinking LED. Assuming the range can&rsquo;t be modified, choosing the right Clock Frequency/Divisor will directly impact whether an LED appears to be a steady light source, flickering, or blinking.</p>
+<p>Here are some settings to try this out <em>(these assume the LED is wired up to GPIO pin 18)</em>:</p>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Go</th>
+<th>C</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PWM Pin</td>
+<td>18</td>
+<td>1</td>
+</tr>
+<tr>
+<td>Non-PWM Pin</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>Clock Frequency/Clock Divisor</td>
+<td>5000 (10000)</td>
+<td>3840 (1920)</td>
+</tr>
+<tr>
+<td>PWM Mode</td>
+<td>markspace</td>
+<td>markspace</td>
+</tr>
+<tr>
+<td>Range</td>
+<td>167</td>
+<td>167</td>
+</tr>
+<tr>
+<td>Pulse Width</td>
+<td>2</td>
+<td>2</td>
+</tr>
+<tr>
+<td>PWM Type</td>
+<td>hardware</td>
+<td>hardware</td>
+</tr>
+</tbody>
+</table>
+<p>Using the above settings will result in a 30Hz frequency at the pin. As this is well below 60Hz flickering will be apparent. Changing the PWM Clock Frequency/Clock Divisor will result in a pin frequency of 62.5Hz. The result will be that there is no apparent flickering.</p>
+<p><strong>NOTE:</strong> <em>The &ldquo;General Purpose Clock Divisors&rdquo; on the BCM2835 have a register width of 12 bits (see<sup id="fnref:15"><a href="#fn:15" class="footnote-ref" role="doc-noteref">15</a></sup>, page 108, <code>DIVI</code> field bits 23 thru 12). This means the maximum value of the Clock Divisor is 4095 (0 to 2^12-1). The go-rpio<sup id="fnref:6"><a href="#fn:6" class="footnote-ref" role="doc-noteref">6</a></sup> further states that PWM Clock frequencies below 4688Hz will result in &ldquo;unexpected behavior&rdquo; (rpio.go, see comments for <code>SetFreq()</code> function). Other sources<sup id="fnref:19"><a href="#fn:19" class="footnote-ref" role="doc-noteref">19</a></sup> state that 9.6Mhz is the highest available PWM Clock frequency (19.2Mhz/2). I&rsquo;ve seen unexpected results with both frequencies below 4688Hz and above 9.6Mhz.</em></p>
+<h5 id="range">Range</h5>
+<p>Range effectively determines the frequency of the signal at the GPIO pin. This means that the frequency at the pin is defined by the ratio of <code>PWM Clock Frequency/Range</code>. Another thing range determines is the resolution of the signal going to the device. Recall that Duty Cycle is the ratio of Pulse Width to Range. Starting with a lower value of range, say 4, limits duty cycle to 0%, 25%, 50%, 75%, or 100%. To say it a different way, with a Range of 4 the only values for Pulse Width that make sense are 0, 1, 2, 3, 4. This in turn limits things like the range of LED brightness or blinking that&rsquo;s available.</p>
+<p>Since range impacts frequency at the pin <em>and</em> the resolution, it is important to choose the correct PWM clock frequency, Range, and Pulse Width in combination. Starting with a low PWM Clock frequency limits the choice of range which in turn limits the available duty cycles.</p>
+<p>As an example let&rsquo;s choose 2 extremes. For the first let&rsquo;s choose a PWM Clock frequency of 5kHz and a range of 5. The resolution is 5. This means are only 5 available duty cycles including full on and full off. As described above this limits the available brightness settings for a light like an LED.</p>
+<p>Here are the settings to try this example <em>(the settings for the second example are in parentheses)</em>:</p>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Go</th>
+<th>C</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PWM Pin</td>
+<td>18</td>
+<td>1</td>
+</tr>
+<tr>
+<td>Non-PWM Pin</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>Clock Frequency/Clock Divisor</td>
+<td>5000 (600000)</td>
+<td>3840 (32)</td>
+</tr>
+<tr>
+<td>PWM Mode</td>
+<td>markspace</td>
+<td>markspace</td>
+</tr>
+<tr>
+<td>Range</td>
+<td>5 (10000)</td>
+<td>5 (10000)</td>
+</tr>
+<tr>
+<td>Pulse Width</td>
+<td>1 (5, 2, 100, 1000, 10000)</td>
+<td>1 (5, 2, 100, 1000, 10000)</td>
+</tr>
+<tr>
+<td>PWM Type</td>
+<td>hardware</td>
+<td>hardware</td>
+</tr>
+</tbody>
+</table>
+<p>Then change to Pulse Width to 5. This will be the brightest setting of the LED. While it is noticably brighter than a Pulse Width of 1, due to the narrow range it&rsquo;s not that much brighter.</p>
+<p>At the other extreme let&rsquo;s configure an LED for an extremely smooth transition from off to full brightness. This will require a higher resolution. Let&rsquo;s go crazy and decide that we&rsquo;d like to have 10,000 steps of brightness available. This translates to a range of 10,000. To avoid visible flickering we need to have at least a 60Hz signal at the GPIO pin. Since the ratio of <code>PWM Clock Frequency/Range</code> determines the signal frequency at the pin, we will need a PWM Clock frequency of at least 600kHz. A range of 10000 times a minimum pin signal frequency of 60Hz is 600kHz (10,000 * 60 = 600,000). To check our work, <code>PWM Clock Frequency / Range</code>, 600,000 / 10,000 = 60 (Hz).</p>
+<h5 id="pulse-width">Pulse width</h5>
+<p>At higher GPIO pin frequencies pulse width effects the brightness of an LED. At lower GPIO pin frequencies pulse width is visible as the length of time the LED is on vs. the blink rate. Let&rsquo;s again use extreme examples to illustrate this.</p>
+<p>For the first example let&rsquo;s use a PWM clock frequency of 1MHz and a range of 10,000. The frequency at the GPIO pin will be 100Hz 1,000,000/10,000), fast enough that no blinking or flickering will be visible. The range of 10,000 is likewise high enough that we won&rsquo;t be able to discern discrete steps in the brightness of the LED.</p>
+<p>Here are the settings for the first example:</p>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Go</th>
+<th>C</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PWM Pin</td>
+<td>18</td>
+<td>1</td>
+</tr>
+<tr>
+<td>Non-PWM Pin</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>Clock Frequency/Clock Divisor</td>
+<td>1000000 (5000)</td>
+<td>19 (3840)</td>
+</tr>
+<tr>
+<td>PWM Mode</td>
+<td>markspace</td>
+<td>markspace</td>
+</tr>
+<tr>
+<td>Range</td>
+<td>10000</td>
+<td>10000</td>
+</tr>
+<tr>
+<td>Pulse Width</td>
+<td>100 (5000)</td>
+<td>100 (5000)</td>
+</tr>
+<tr>
+<td>PWM Type</td>
+<td>hardware</td>
+<td>hardware</td>
+</tr>
+</tbody>
+</table>
+<p>For the second example change the Clock Frequency (Go) to 5000, Clock Divisor (C) to 3840, the Range to 10000 and the Pulse Width to 5000. The LED will flash for a very short period of time and will repeat flashing about once every 2 seconds (Clock Frequency/Range, 5000/10000 = 0.5Hz or once every 2 seconds). Now change the Pulse Width to 5000. Now the LED will be on for 1 second and off for 1 second. This changed the duty cycle from 2% to 50% with the corresponding change in the duration of the LED flash. This example shows how to create a blinking light using PWM, just choose a PWM Clock Frequency and range that result in a very low GPIO pin frequency, well below 60Hz.</p>
+<h5 id="pwm-mode">PWM Mode</h5>
+<p>The available PWM modes are balanced and mark/space. Recall that with mark/space the signal is either on or off (high or low) for a fixed duration within the range. For example, with a duty cycle of 50% and a range of 10, the signal will be on for 5 consecutive seconds and off for 5 consecutive seconds. As explained above, balanced mode will spread this 50% duty cycle evenly across the range which will make the effects of the duty cycle less apparent, except for a dimming of the LED (e.g., a 10ms pulse, every 10ms, 500 times over 10 seconds).</p>
+<p>To illustrate this behavior set the Clock Frequency to 4688 (Go), Clock Divisor to 4095 (C), the PWM Mode to markspace, the Range to 1000, the Pulse Width to 10, and the PWM Type to hardware. This results in a blinking LED at a pin frequency of about 4.69Hz, or almost 5/second. Now change the PWM Mode to balanced. The language must be C to use balanced mode as go-rpio only supports mark/space. Now the blinking is no longer apparent.</p>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Go</th>
+<th>C</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PWM Pin</td>
+<td>18</td>
+<td>1</td>
+</tr>
+<tr>
+<td>Non-PWM Pin</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>Clock Frequency/Clock Divisor</td>
+<td>4688</td>
+<td>4095</td>
+</tr>
+<tr>
+<td>PWM Mode</td>
+<td>markspace (<del>balanced</del>)</td>
+<td>markspace (balanced)</td>
+</tr>
+<tr>
+<td>Range</td>
+<td>1000</td>
+<td>1000</td>
+</tr>
+<tr>
+<td>Pulse Width</td>
+<td>10</td>
+<td>10</td>
+</tr>
+<tr>
+<td>PWM Type</td>
+<td>hardware</td>
+<td>hardware</td>
+</tr>
+</tbody>
+</table>
+<h5 id="pwm-type">PWM Type</h5>
+<p>The available PWM Types are <em>hardware</em> and <em>software</em>. The examples above used hardware PWM only. This is because true balanced mode is only available on hardware. In addition, the software PWM as implemented in Go and C is more akin to balanced mode and definitely not mark/space. Both the Go and C versions have a hardcoded 100MHz clock. Some of the examples in previous sections rely on mark/space behavior, especially the PWM Mode section.</p>
+<h5 id="other-things-to-try">Other things to try</h5>
+<p>To see how the above works with non-PWM pins, try some or all of the above on non-hardware PWM pins using a PWM Type of software. Monitoring CPU usage during these tests might show some differences between CPU usage for hardware vs. software PWM.</p>
+<h5 id="pwm-explorer-code">PWM Explorer code</h5>
+<p>The code in the <a href="https://github.com/youngkin/gpio">PWM Explorer</a> GitHub respository is extensively commented. To avoid repeating what is best illustrated directly in the code there&rsquo;s not much to say here. The structure of both programs is substantially similar although there are differences is how the Go and C libraries are used to accomplish the same task.</p>
+<h5 id="key-takeaways">Key takeaways</h5>
+<ol>
+<li>On the Raspberry Pi there are only 4 hardware PWM pins and 2 channels. There are 2 pins per channel. This reduces the number of effective hardware PWM pins to 2.</li>
+<li>Care must be taken when specifying the Clock Frequency or Clock Divisor. The acceptable range for PWM Clock frequency is 4688Hz to 9.6Mhz.</li>
+<li>Range determines both the frequency at the GPIO pin and the resolution of the signal to a device like an LED or motor. The first, frequency, is significant because at lower pin frequencies the on/off states of the pin become very apparent, as in a blinking LED light. The second, resolution, is important because it defines how fine grained the control of the device will be. For example, at low resolutions there are only a limited set of LED brightnesses that can be chosen and the differences are very apparent. At higher resolutions small changes in pulse width will result in a very small, hardly discernable, change in brightness. This is important when implementing something like a dimmer where the change in brightness from off to fully on should not change in large, discernable steps of brightness. I.e., a smoother transition through the range is desired.</li>
+<li>For higher resolutions (Range) a higher PWM clock frequency should be chosen. This ensures that the GPIO pin frequency won&rsquo;t drop too low, e.g., below the 60Hz frequency needed to avoid a flickering LED light.</li>
+<li>At higher GPIO pin frequencies (e.g., above 60Hz) changing the pulse width will cause the LED to appear dimmer or brighter.</li>
+<li>At lower GPIO pin frequencies (e.g., below 60Hz, and especially below 10Hz) pulse width can be used to cause obvious pulsing, as in a blinking LED light. The length of time the light is on is directly proportional to the pulse width.</li>
+<li>Choice of PWM mode also impacts the &ldquo;smoothness&rdquo; of the signal. Even at low GPIO frequencies, which would normally cause an LED to blink, balanced mode will reduce that effect, often to the point of rendering it unnoticable.</li>
+<li>PWM type (software vs. hardware) can affect the consistency of the period of a PWM signal to the point that even above 60Hz an LED might noticably flicker. It can also result in an inordinate amount of CPU load needed to support the desired clock rate.</li>
+<li>Software PWM can be used, but the resulting signal can be too ragged to be used in some devices.</li>
+<li>Setting a range that is greater than the PWM Clock frequency may seem odd, but it can be used effectively to create a low frequency, pulsing signal that can be used for, among other things, causing an LED to blink.</li>
+</ol>
+<h2 id="summary">Summary</h2>
+<p>Hopefully by now you have enough knowledge to start effectively using PWM on a Raspberry Pi 3B+, or perhaps on other Raspberry Pi models or even on other platforms entirely. Specifically:</p>
+<ul>
+<li>We&rsquo;ve gone through the various terms so you should now be able to read most of the literature on PWM and understand the concepts and terms used in those sources.</li>
+<li>If you followed along setting up and experimenting with PWM on your Raspberry Pi you now have a full, working, GPIO test bed installed on your Raspberry Pi.</li>
+<li>You should have an understanding of the various PWM settings and how they interact with each other.</li>
+<li>If you used the <em>PWM Explorer</em> application you have valuable hands-on experience with using various combinations of PWM settings. You can continue to use the <em>PWM Explorer</em> to experiment with various settings when you have questions or to test assumptions.</li>
+<li>By reading the Go and/or C code you now know how to effectively use the go-rpio and/or WiringPi libraries. Even if you decide to use other libraries, like pigpio<sup id="fnref:8"><a href="#fn:8" class="footnote-ref" role="doc-noteref">8</a></sup>, you should understand the terminology well enough to use them effectively, or at least have a good start on learning how to use them.</li>
+</ul>
+<h2 id="references">References</h2>
+<section class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1" role="doc-endnote">
+<p><a href="https://github.com/youngkin/gpio">PWM Explorer</a> is an application that accompanies this article that can be used to experiment with various PWM settings. It demonstrates PWM using both Go and C libraries. <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:2" role="doc-endnote">
+<p><a href="https://www.allaboutcircuits.com/technical-articles/introduction-to-microcontroller-timers-pwm-timers/">Introduction to Microcontroller Timers: Periodic Timers</a> is a good general introduction to timers. PWM hardware is one type of periodic timer. It is useful to read this introduction. <a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:3" role="doc-endnote">
+<p><a href="https://www.allaboutcircuits.com/technical-articles/introduction-to-microcontroller-timers-pwm-timers/">Pulse-width Modulation (PWM) Timers in Microcontrollers</a> is a good detailed discussion about PWM timers. It&rsquo;s an excellent read if you want more detail than presented here. <a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:4" role="doc-endnote">
+<p><a href="https://www.iot-programmer.com/index.php/books/22-raspberry-pi-and-the-iot-in-c/chapters-raspberry-pi-and-the-iot-in-c/60-raspberry-pi-and-the-iot-in-c-pulse-width-modulation-servos-and-more">Raspberry Pi And The IoT In C - - Pulse Width Modulation, Servos And More</a> is a detailed book about programming GPIO on the Raspberry Pi. There is a chapter devoted to PWM. <a href="#fnref:4" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:5" role="doc-endnote">
+<p><a href="https://github.com/WiringPi/WiringPi">WiringPi</a> is a C library for GPIO programming <a href="#fnref:5" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:6" role="doc-endnote">
+<p><a href="https://github.com/stianeikeland/go-rpio">go-rpio</a> is a Go library for GPIO programming <a href="#fnref:6" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:7" role="doc-endnote">
+<p><a href="https://www.airspayce.com/mikem/bcm2835/">bcm2835 by Mike McCalley</a> is another C library for GPIO programming. <a href="#fnref:7" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:8" role="doc-endnote">
+<p><a href="https://abyz.me.uk/rpi/pigpio/pdif2.html">pigpio</a> is primarily a Python library. It also has a C library. It has the distinction of performing hardware PWM on any GPIO pin. I&rsquo;m not sure how it does this. <a href="#fnref:8" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:9" role="doc-endnote">
+<p><a href="https://projects.raspberrypi.org/en/projects/raspberry-pi-setting-up">Setting up your Raspberry Pi</a> is the official documentation for getting started with a Raspberry Pi including things like required hardware as well as how to install the OS and other important details. <a href="#fnref:9" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:10" role="doc-endnote">
+<p><a href="http://wiki.sunfounder.cc/index.php?title=Breadboard_Basics_%E2%80%93_Types">Breadboard Basics - Types</a> is a useful introduction to breadboards and how to use them. <a href="#fnref:10" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:11" role="doc-endnote">
+<p><a href="http://wiringpi.com/reference/">WiringPi library reference guide</a> documents the main WiringPi functions. The rest of the website also has some useful information. <a href="#fnref:11" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:12" role="doc-endnote">
+<p><a href="https://en.wikipedia.org/wiki/Frequency#CITEREFSerwayFaughn1989">Frequency page on Wikipedia</a> discusses frequency and period <a href="#fnref:12" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:13" role="doc-endnote">
+<p>A <a href="https://www.sensorsone.com/frequency-to-period-calculator/">Frequency to Period Calculator</a> is handy for quick calculations, or validation, of frequency to period conversion (period = 1/frequency). <a href="#fnref:13" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:14" role="doc-endnote">
+<p>The <a href="https://www.raspberrypi.org/app/uploads/2012/02/BCM2835-ARM-Peripherals.pdf">full Broadcom spec for the BCM2835</a>, starting at page 138, for more details about how PWM is implemented on the BCM2835. <a href="#fnref:14" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:15" role="doc-endnote">
+<p>There&rsquo;s a detailed discussion about <a href="https://www.raspberrypi.org/forums/viewtopic.php?t=150254">Which pin(s) on RPi 3B is PWM capable</a>. Specifically regarding the effect of sharing 2 PWM channels for 4 PWM pins. The Broadcom spec<sup id="fnref:14"><a href="#fn:14" class="footnote-ref" role="doc-noteref">14</a></sup> also discusses this in section 9.4 on page 139, but in a less obvious way. <a href="#fnref:15" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:16" role="doc-endnote">
+<p>There is a 3rd way to generate PWM signals, <a href="https://stackoverflow.com/questions/50427275/raspberry-how-does-the-pwm-via-dma-work">DMA or Direct Memory Access</a>. It won&rsquo;t be discussed here in this article. <a href="#fnref:16" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:17" role="doc-endnote">
+<p><a href="https://pinout.xyz/">RaspberryPPi Pinout</a> is a good source that describes each pins&rsquo; role, physical pin number, and for GPIO pins the GPIO pin number for the BCM2835 board. It has tabs that can be used to highlight which pins serve which purpose, e.g., PWM pins. <a href="#fnref:17" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:18" role="doc-endnote">
+<p><a href="https://jared.geek.nz/2013/feb/linear-led-pwm">Linear LED PWM</a> provides guidelines/formulas for getting linear scaling when changing the brightness of an LED via PWM. Googling &ldquo;LED PWM linear brightness&rdquo; brings up several other articles as well. <a href="#fnref:18" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:19" role="doc-endnote">
+<p><a href="https://raspberrypi.stackexchange.com/questions/53854/driving-pwm-output-frequency">Driving PWM output frequency</a> provides some interesting information and discussion on Raspberry Pis with 26 and 40 GPIO pins. <a href="#fnref:19" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</section>
+
+                
+
+                <hr>
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/post/sunfoundergpionotesrgbled/" data-toggle="tooltip" data-placement="top" title="Raspberry Pi GPIO in Go and C - RGB LED">&larr;
+                            Previous Post</a>
+                    </li>
+                    
+                    
+                </ul>
+
+                
+<div id="disqus-comment"></div>
+
+<div id="hyvor-talk-view"></div>
+<script type="text/javascript">
+    var HYVOR_TALK_WEBSITE = 1798; 
+    var HYVOR_TALK_CONFIG = {
+        url: false,
+        id: false
+};
+</script>
+<script async type="text/javascript" src="//talk.hyvor.com/web-api/embed"></script>
+</div>
+
+
+
+            </div>
+            
+            <div class="
+                col-lg-11 col-lg-offset-1
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/c" title="c">
+                            c
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/docker" title="docker">
+                            docker
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/elasticsearch" title="elasticsearch">
+                            elasticsearch
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/go" title="go">
+                            go
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/gpio" title="gpio">
+                            gpio
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/grafana" title="grafana">
+                            grafana
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/kubernetes" title="kubernetes">
+                            kubernetes
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/mysql" title="mysql">
+                            mysql
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/networking" title="networking">
+                            networking
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/prometheus" title="prometheus">
+                            prometheus
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/raspberry-pi" title="raspberry-pi">
+                            raspberry-pi
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/traefik" title="traefik">
+                            traefik
+                        </a>
+                        
+                        
+                    </div>
+                </section>
+                
+
+                
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                   
+                   <li>
+                       <a href='' rel="alternate" type="application/rss+xml" title="Rich Youngkin&#39;s software engineering blog" >
+                           <span class="fa-stack fa-lg">
+                               <i class="fa fa-circle fa-stack-2x"></i>
+                               <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                           </span>
+                       </a>
+                   </li>
+                   
+                    
+                    <li>
+                        <a href="mailto:rich.youngkin@gmail.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    
+                    
+                    
+
+                    
+
+		    
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/youngkin">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://www.linkedin.com/in/richard-youngkin-0749763">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    <li>
+                        <a target="_blank" href="https://medium.com/@RichYoungkin">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-medium fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+            
+                    
+                    <li>
+                        <a target="_blank" href="https://stackoverflow.com/users/2646870/rich">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-stack-overflow fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+            
+                    
+                    <li>
+                        <a target="_blank" href="https://www.reddit.com/user/elevation5280">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-reddit fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+            
+                    
+                    
+            
+            
+            
+                </ul>
+		<p class="copyright text-muted">
+                    Copyright &copy; Rich Youngkin&#39;s software engineering blog 2021
+                    <br>
+                    <a href="https://themes.gohugo.io/hugo-theme-cleanwhite">CleanWhite Hugo Theme</a> by <a href="https://zhaohuabing.com">Huabing</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="100px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=zhaohuabing&repo=hugo-theme-cleanwhite&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+
+
+
+
+
+<script>
+    
+    if($('#tag_cloud').length !== 0){
+        async("/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+
+<script>
+    async("https://cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+
+
+
+
+</body>
+</html>

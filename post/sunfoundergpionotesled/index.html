@@ -19,7 +19,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     
-    <meta property="og:site_name" content="Rich Youngkin">
+    <meta property="og:site_name" content="Rich Youngkin&#39;s software engineering blog">
     <meta property="og:type" content="article">
 
     
@@ -28,15 +28,15 @@
     
 
     
-    <meta name="title" content="Sunfounder Raspberry Pi Kit Notes for Go and C - Blinking LED" />
-    <meta property="og:title" content="Sunfounder Raspberry Pi Kit Notes for Go and C - Blinking LED" />
-    <meta property="twitter:title" content="Sunfounder Raspberry Pi Kit Notes for Go and C - Blinking LED" />
+    <meta name="title" content="Raspberry Pi GPIO in Go and C - Blinking LED" />
+    <meta property="og:title" content="Raspberry Pi GPIO in Go and C - Blinking LED" />
+    <meta property="twitter:title" content="Raspberry Pi GPIO in Go and C - Blinking LED" />
     
 
     
-    <meta name="description" content="Questions about Sunfounder RPi kits? Look no further!">
-    <meta property="og:description" content="Questions about Sunfounder RPi kits? Look no further!" />
-    <meta property="twitter:description" content="Questions about Sunfounder RPi kits? Look no further!" />
+    <meta name="description" content="How to use the Raspberry Pi&#39;s GPIO pins to cause an LED to blink">
+    <meta property="og:description" content="How to use the Raspberry Pi&#39;s GPIO pins to cause an LED to blink" />
+    <meta property="twitter:description" content="How to use the Raspberry Pi&#39;s GPIO pins to cause an LED to blink" />
     
 
     
@@ -44,10 +44,10 @@
     
     
 
-    <meta name="keyword"  content="Rich, Youngkin, Raspberry, Pi, Docker, Kubernetes, Go, Golang, Microservice">
+    <meta name="keyword"  content="Rich, Youngkin, Raspberry, Pi, Docker, Kubernetes, Go, Golang, GPIO, Microservice">
     <link rel="shortcut icon" href="/img/favicon.ico">
 
-    <title>Sunfounder Raspberry Pi Kit Notes for Go and C - Blinking LED-Rich Youngkin Blog</title>
+    <title>Raspberry Pi GPIO in Go and C - Blinking LED-Rich Youngkin Blog</title>
 
     <link rel="canonical" href="/post/sunfoundergpionotesled/">
 
@@ -95,7 +95,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="/">Rich Youngkin</a>
+            <a class="navbar-brand" href="/">Rich Youngkin&#39;s software engineering blog</a>
             
         </div>
 
@@ -119,6 +119,10 @@
                         
                         <li>
                             <a href="/categories/go">go</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/golang">golang</a>
                         </li>
                         
                         <li>
@@ -208,12 +212,12 @@
                         </a>
                         
                     </div>
-                    <h1>Sunfounder Raspberry Pi Kit Notes for Go and C - Blinking LED</h1>
+                    <h1>Raspberry Pi GPIO in Go and C - Blinking LED</h1>
                     <h2 class="subheading"></h2>
                     <span class="meta">
                         Posted by 
                         
-                                Rich Youngkin
+                                Rich Youngkin&#39;s software engineering blog
                          
                         on 
                         Saturday, September 11, 2021
@@ -258,22 +262,41 @@
   </ul>
 </nav>
                 
-                <p>This is the first article in a series that explores GPIO programming on a Raspberry Pi 3B+. It is a supplement to the <a href="https://docs.sunfounder.com/projects/raphael-kit/en/latest/play_with_c.html">Sunfounder Blinking LED project</a>. The code samples will be in Go and C.</p>
+                <p>This is the first article in a series that explores GPIO programming on a Raspberry Pi 3B+. You can find the full series <a href="../../categories/gpio">here</a>. It is a supplement to the <a href="https://docs.sunfounder.com/projects/raphael-kit/en/latest/1.1.1_blinking_led_c.html">Sunfounder Blinking LED project</a>. The code samples will be in Go and C.</p>
 <h2 id="overview">Overview</h2>
 <p>I recently became interested in GPIO programming on a Raspberry Pi. It&rsquo;s a nice way to see something concrete controlled by software. It&rsquo;s also a nice way to learn a little bit about electronics. This is the first article in a series I intend to write to document my journey in GPIO programming.</p>
 <p>To lower the bar to getting started I decided to purchase a GPIO/electronics kit and repurpose one of my Raspberry Pis. I chose <a href="https://www.sunfounder.com/">Sunfounder</a>, mostly because they seem to be well regarded and their kits get good reviews. I ended up choosing the <a href="https://www.amazon.com/gp/product/B09BMVT4CB/ref=ppx_yo_dt_b_asin_title_o02_s00?ie=UTF8&amp;psc=1">Sunfounder Raspberry Pi Ultimate Starter Kit</a> (AKA Raphael)  because it has a good number of interesting electronic components and associated projects.</p>
 <p>One thing I noticed right away is that most GPIO articles assume Python for the programming language. Sunfounder&rsquo;s kits and associated documentation support a number of languages including Python and C, but they lean towards Python and more projects are available in Python and not so many in C. I&rsquo;m primarily a Go developer so I&rsquo;m also interested in implementing GPIO projects in Go.</p>
-<p>Some of the Sunfounder kit reviews mention that the project documentation is a little sparse and short on explaining how things work. I&rsquo;m just getting started and I&rsquo;ve seen a little of this, but the first project, <a href="https://docs.sunfounder.com/projects/raphael-kit/en/latest/play_with_c.html">Sunfounder Blinking LED project</a>, is pretty well documented. I only got hung up in a couple of spots and it didn&rsquo;t take long for me to figure out what I did wrong. The second project, <a href="https://docs.sunfounder.com/projects/raphael-kit/en/latest/1.1.2_rgb_led_c.html">RGB LED</a> was a bit different. It&rsquo;s more complicated and much less detailed regarding explaining how and why things work. If all you want to do is follow a cookbook to implement the project it works well enough. But it&rsquo;s lacking if you want to understand how and why it works in more detail. I spent quite a while working on this one trying to fill in the information missing from the project documentation. The point of this series is to fill that gap, from both coding and electronic perspectives.</p>
-<p>The focus of this article is the <a href="https://docs.sunfounder.com/projects/raphael-kit/en/latest/play_with_c.html">Sunfounder Blinking LED project</a>. It&rsquo;s the first project in a <a href="https://docs.sunfounder.com/projects/raphael-kit/en/latest/introduction.html">set of projects targeting the Ultimate Starter/Raphael kit</a>.</p>
+<p>Some of the Sunfounder kit reviews mention that the project documentation is a little sparse and short on explaining how things work. I&rsquo;m just getting started and I&rsquo;ve seen a little of this, but the first project, <a href="https://docs.sunfounder.com/projects/raphael-kit/en/latest/1.1.1_blinking_led_c.html">Sunfounder Blinking LED project</a>, is pretty well documented. I only got hung up in a couple of spots and it didn&rsquo;t take long for me to figure out what I did wrong. The second project, <a href="https://docs.sunfounder.com/projects/raphael-kit/en/latest/1.1.2_rgb_led_c.html">RGB LED</a> was a bit different. It&rsquo;s more complicated and much less detailed regarding explaining how and why things work. If all you want to do is follow a cookbook to implement the project it works well enough. But it&rsquo;s lacking if you want to understand how and why it works in more detail. I spent quite a while working on this one trying to fill in the information missing from the project documentation. The point of this series is to fill that gap, from both coding and electronic perspectives.</p>
+<p>The focus of this article is the <a href="https://docs.sunfounder.com/projects/raphael-kit/en/latest/1.1.1_blinking_led_c.html">Sunfounder Blinking LED project</a>. It&rsquo;s the first project in a <a href="https://docs.sunfounder.com/projects/raphael-kit/en/latest/introduction.html">set of projects targeting the Ultimate Starter/Raphael kit</a>.</p>
 <h2 id="prerequisites">Prerequisites</h2>
 <p>If you don&rsquo;t have one, you&rsquo;ll need a Raspberry Pi. I used a Raspberry Pi 3B+ with the &lsquo;stretch&rsquo; version of the Raspbian OS. Given that the Sunfounder Ultimate Starter Kit is advertised to work with a Raspberry Pi 4, I would expect the 4 series to work as well. I&rsquo;m less sure about other Raspberry Pi versions, especially versions with 26 vs. 40 GPIO pins.</p>
 <p>Next you&rsquo;ll need is a <a href="https://www.amazon.com/dp/B082KBF7MM/ref=sspa_dk_detail_4?psc=1&amp;pd_rd_i=B082KBF7MM&amp;pd_rd_w=1tGTV&amp;pf_rd_p=887084a2-5c34-4113-a4f8-b7947847c308&amp;pd_rd_wg=fX8JB&amp;pf_rd_r=44DE0RS1E9FD42RBYC7R&amp;pd_rd_r=47cbdc7f-7834-455f-9429-ef74a438bd45&amp;spLa=ZW5jcnlwdGVkUXVhbGlmaWVyPUFVVkdZVUZRNUw3ODkmZW5jcnlwdGVkSWQ9QTA4MzI4MzYyU0VLNzBJM0cxRUVMJmVuY3J5cHRlZEFkSWQ9QTA0Mjk1NTMzSzNSWlNFUjU0NURBJndpZGdldE5hbWU9c3BfZGV0YWlsJmFjdGlvbj1jbGlja1JlZGlyZWN0JmRvTm90TG9nQ2xpY2s9dHJ1ZQ==">breadboard</a>, some <a href="https://www.amazon.com/dp/B08HZ26ZLF/ref=syn_sd_onsite_desktop_19?psc=1&amp;spLa=ZW5jcnlwdGVkUXVhbGlmaWVyPUExRFpLWElCRjg1MUNMJmVuY3J5cHRlZElkPUEwMjMyMTE1M01aOFE3U1BQS09YSiZlbmNyeXB0ZWRBZElkPUEwODE5NTMxMktEMTlZRjEyQjBJNiZ3aWRnZXROYW1lPXNkX29uc2l0ZV9kZXNrdG9wJmFjdGlvbj1jbGlja1JlZGlyZWN0JmRvTm90TG9nQ2xpY2s9dHJ1ZQ==">jumper wires</a>, <a href="https://www.amazon.com/ELEGOO-Electronics-Component-resistors-Potentiometer/dp/B01ERPXFZK/ref=sr_1_7_sspa?crid=3EJQNCOWP00IF&amp;dchild=1&amp;keywords=resistors&amp;qid=1631478270&amp;s=industrial&amp;sprefix=resis%2Cindustrial%2C219&amp;sr=1-7-spons&amp;psc=1&amp;spLa=ZW5jcnlwdGVkUXVhbGlmaWVyPUEzTktVSzNYMkxMSDlKJmVuY3J5cHRlZElkPUEwMjAzMDY0NVRERkFLVjVRTUFWJmVuY3J5cHRlZEFkSWQ9QTA5MjM2NjUxUFZYQUlETVAzRDA3JndpZGdldE5hbWU9c3BfbXRmJmFjdGlvbj1jbGlja1JlZGlyZWN0JmRvTm90TG9nQ2xpY2s9dHJ1ZQ==">a 220 Ohm resistor, and an LED</a>. You should also consider getting a <a href="https://www.amazon.com/dp/B082PRVRYR/ref=sspa_dk_detail_2?psc=1&amp;pd_rd_i=B082PRVRYR&amp;pd_rd_w=8mKhr&amp;pf_rd_p=887084a2-5c34-4113-a4f8-b7947847c308&amp;pd_rd_wg=e9psa&amp;pf_rd_r=S09F37DF2G5FW8B8GX4B&amp;pd_rd_r=c065c120-e60b-45e9-b93b-f581f048cf46&amp;spLa=ZW5jcnlwdGVkUXVhbGlmaWVyPUFCMzhUQ09COFI2VlMmZW5jcnlwdGVkSWQ9QTA5NjU2ODUxRDkxNEYwSTYwV09KJmVuY3J5cHRlZEFkSWQ9QTAxOTg1MTUyRUhEUlc2VzQ2VDQ4JndpZGdldE5hbWU9c3BfZGV0YWlsJmFjdGlvbj1jbGlja1JlZGlyZWN0JmRvTm90TG9nQ2xpY2s9dHJ1ZQ==">40 pin female to female with a T-Type adapter</a> to attach the GPIO outputs to the breadboard. You can use only jumper wires, but the cable will make things easier and will help prevent damage to the GPIO pins on the Raspberry Pi. If you elect not to buy the 40 pin cable with T-Type adapter you&rsquo;ll need to buy <a href="https://www.amazon.com/SinLoon-Breadboard-Arduino-Circuit-40-Pack/dp/B08M3QLL3Q/ref=pd_sbs_7/143-0445142-7950409?pd_rd_w=sVLrc&amp;pf_rd_p=8b76d7a7-ab83-4ddc-a92d-e3e33bfdbf03&amp;pf_rd_r=CDM5TGJT03VKF0ZFB577&amp;pd_rd_r=8e58fd82-8503-41cf-b8f2-c78eaeb78d25&amp;pd_rd_wg=tT1U0&amp;pd_rd_i=B08M3QLL3Q&amp;psc=1">male-to-female jumper wires</a>. Buying all these things separately will cost more than a kit however. <a href="https://www.amazon.com/dp/B06WP7169Y/ref=sspa_dk_detail_5?psc=1&amp;pd_rd_i=B06WP7169Y&amp;pd_rd_w=OZVyf&amp;pf_rd_p=887084a2-5c34-4113-a4f8-b7947847c308&amp;pd_rd_wg=0V0IH&amp;pf_rd_r=623YJTBQ2CN2B2GYXQG5&amp;pd_rd_r=faa61f0f-3aec-4cf0-8e7e-d44eb1b3b92f&amp;spLa=ZW5jcnlwdGVkUXVhbGlmaWVyPUEyUVlDQzMzVVZBMFYxJmVuY3J5cHRlZElkPUEwMzExNzk4MUhGSjFSS0VKTlBROCZlbmNyeXB0ZWRBZElkPUEwMzYwNjg2UUdMRU44N0YzNzIwJndpZGdldE5hbWU9c3BfZGV0YWlsJmFjdGlvbj1jbGlja1JlZGlyZWN0JmRvTm90TG9nQ2xpY2s9dHJ1ZQ==">Here&rsquo;s a simple kit that has all of the above</a>. If you expect to follow this series I recommend buying the <a href="https://www.amazon.com/gp/product/B09BMVT4CB/ref=ppx_yo_dt_b_asin_title_o02_s00?ie=UTF8&amp;psc=1">Sunfounder Raspberry Pi Ultimate Starter Kit</a>.</p>
-<p>You will also need some basic Go programming knowledge as well as familiarity with logging on to a Raspberry Pi terminal, or into the desktop GUI that comes with some OS versions. Depending on the approach you take, you may need to connect a keyboard and monitor to the Raspberry Pi. I simply SSH into the Pi. You&rsquo;ll also need familiarity with how to use an editor like Vi or nano.</p>
-<p>I chose not to download the code from the Sunfounder site, preferring to write my own instead, even if all I did was copy directly from the project documentation. Due to this I created my own location to create the code. In fact, <a href="https://github.com/youngkin/gpio">my code is in Github</a>. If you do like downloading code you have the option of downloading, cloning, or forking it from my Github repository. As an added bonus, the project code written in Go is also located there.</p>
+<img style="border:1px solid black" src="/images/RaphaelKit.png" align="center" width="600" height="300"/>
+<figcaption align="left"><center><i style="color:black;">Sunfounder Ultimate Starter/Raphael kit</i></center></figcaption>
+<p>To compile and run the C program you&rsquo;ll need the WiringPi libary. It&rsquo;s easy to get:</p>
+<pre><code>sudo apt-get install wiringpi
+</code></pre><p>Then test the installation using:</p>
+<pre><code>pi@pi-node1:~/go/src/github.com/youngkin/gpio/rgbled $ gpio -v
+gpio version: 2.50
+Copyright (c) 2012-2018 Gordon Henderson
+This is free software with ABSOLUTELY NO WARRANTY.
+For details type: gpio -warranty
+
+Raspberry Pi Details:
+  Type: Pi 3B+, Revision: 03, Memory: 1024MB, Maker: Sony
+  * Device tree is enabled.
+  *--&gt; Raspberry Pi 3 Model B Plus Rev 1.3
+  * This Raspberry Pi supports user-level GPIO access.
+</code></pre><p>In the above you&rsquo;ll notice <code>gpio version: 2.50</code>. If you&rsquo;re using a Rasberry Pi 4, use the instructions given in the Sunfounder <a href="https://docs.sunfounder.com/projects/raphael-kit/en/latest/check_the_wiringpi_c.html">Checking the WiringPi</a>.</p>
+<p>You will also need some basic C and Go programming knowledge as well as familiarity with logging on to a Raspberry Pi terminal, or into the desktop GUI that comes with some OS versions. Depending on the approach you take, you may need to connect a keyboard and monitor to the Raspberry Pi. I simply SSH into the Pi. You&rsquo;ll also need familiarity with how to use an editor like Vi or nano.</p>
+<p>I chose not to download the code from the Sunfounder site, preferring to write my own instead, even if all I did was copy directly from the project documentation. Due to this I created my own location to create the code. In fact, <a href="https://github.com/youngkin/gpio">my code is in Github</a>. If you do like downloading code you have the option of downloading, cloning, or forking it from my Github repository. As an added bonus, the project code written in Go is also located there. The code for this project is located at <a href="https://github.com/youngkin/gpio/tree/main/ledblink">gpio/ledblink</a>.</p>
 <p>If you&rsquo;re interested in Go development on a Raspberry Pi you&rsquo;ll need to install the development environment onto the Raspberry Pi. <a href="https://www.jeremymorgan.com/tutorials/raspberry-pi/install-go-raspberry-pi/">Here&rsquo;s a simple source</a> that explains how to accomplish this. This source is a little dated, but the only significant issue is with the version of Go to install. The source shows installing Go <strong>1.14.4.linux-arm64.tar.gz</strong> and <strong>1.14.4.linuxarmv6l.tar.gz</strong>. The current versions are <strong>1.17.1.linux-arm64.tar.gz</strong> and <strong>1.17.1.linuxarmv6l.tar.gz</strong>. For the Raspberry Pi 3B+ the correct choice will be <strong>1.17.1.linuxarmv6l.tar.gz</strong>. The other is intended for 64 bit systems like the Raspberry Pi 4 series.</p>
 <p>Finally, I&rsquo;m assuming a basic knowledge of Linux if you want to veer away from the cookbook style of the Sunfounder docs. For example, I won&rsquo;t be explaining what <strong>root privileges</strong> are.</p>
 <h2 id="blinking-led-in-c">Blinking LED in C</h2>
-<p>As mentioned above, this article is about the <a href="https://docs.sunfounder.com/projects/raphael-kit/en/latest/1.1.1_blinking_led_c.html">Blinking LED project</a>. The Sunfounder documentation for this project is quite good. You should start with the <a href="https://docs.sunfounder.com/projects/raphael-kit/en/latest/introduction.html">Introduction</a> and work your way through the following sections up to and including the <a href="https://docs.sunfounder.com/projects/raphael-kit/en/latest/play_with_c.html">Play with C</a> section.</p>
+<p>As mentioned above, this article is about the <a href="https://docs.sunfounder.com/projects/raphael-kit/en/latest/1.1.1_blinking_led_c.html">Blinking LED project</a>. The Sunfounder documentation for this project is quite good. You should start with the <a href="https://docs.sunfounder.com/projects/raphael-kit/en/latest/introduction.html">Introduction</a> and work your way through the following sections up to and including the <a href="https://docs.sunfounder.com/projects/raphael-kit/en/latest/play_with_c.html">Play with C</a> section. You should set up the breadboard as described in the project documentation or in the diagram below:</p>
+<img style="border:1px solid black" src="/images/blinkingLED.png" align="center" width="600" height="300"/>
+<figcaption align="left"><center><i style="color:black;">Sunfounder Blinking LED breadboard setup</i></center></figcaption>
 <p>Since the Sunfounder project documentation is so good, I only have a couple of comments.</p>
 <h3 id="information-that-would-have-been-helpful">Information that would have been helpful</h3>
 <p>The documentation for the project states &ldquo;<em>Therefore, to turn on an LED, we need to make GPIO17 low (0V) level.</em>&rdquo;. What it doesn&rsquo;t explain is why. The reason is that the 220 Ohm resistor is connected on one side to a 3.3 volt power source and the LED anode (positive terminal) on the other. And GPIO17 is connected to the LED&rsquo;s cathode (negative terminal). LEDs only illuminate when current flows from the anode to the cathode. GPIO pins on the Raspberry Pi, e.g., GPIO17, generally have a default state of HIGH (3.3 volts). With the connection of the 3.3 volt power source to the anode and the 3.3 volt GPIO17 pin on the cathode side, no current will flow through the circuit. So the LED will not turn on. Setting GPIO17 to LOW, 0 volts, allows the current to flow, lighting the LED.</p>
@@ -286,62 +309,66 @@
 <li>It seems to be fairly complete</li>
 <li>It&rsquo;s relatively active</li>
 <li>It comes with example code and good documentation</li>
+<li>Its API is similar to WiringPi&rsquo;s</li>
 </ol>
+<p>Another option is <a href="https://github.com/periph/host">periph</a> (code) with <a href="https://periph.io/">documentation</a>. It is more active and the documentation is very good, better than go-rpio. This project would be trivial to do using periph. Overall, for the LED examples I was able to find, go-rpio better matched what I was looking for, especially with regard to the <a href="https://docs.sunfounder.com/projects/raphael-kit/en/latest/1.1.2_rgb_led_c.html">RGB LED</a> using Pulse Width Modulation (PWM, more on this in the next article in the series). But this is an excellent alternative to go-rpio and vice-versa.</p>
 <p>You can just use the <a href="https://github.com/stianeikeland/go-rpio/blob/master/examples/blinker/blinker.go">rpio-go blinker.go example</a>. It uses <code>rpio.Pin.Toggle()</code>. I created a <a href="https://github.com/youngkin/gpio">Github respository</a> that contains examples in both C and Go. My Go version of <code>blinker</code> uses direct writes instead of <code>rpio.Pin.Toggle</code>. I thought showing an optional way to do this would be helpful, especially since later projects will use direct writes. My <a href="https://github.com/youngkin/gpio">gpio respository</a> uses Go&rsquo;s module system which will automatically download the <code>rpio-go</code> library when built. Here&rsquo;s my version of <code>blinker</code>. I won&rsquo;t be explaining Go sytax as I&rsquo;m assuming familiarity with Go.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go">  <span style="color:#ae81ff">1</span> <span style="color:#f92672">package</span> <span style="color:#a6e22e">main</span>
-  <span style="color:#ae81ff">2</span>
-  <span style="color:#ae81ff">3</span> <span style="color:#75715e">// Run using &#39;go run blinkingled.go&#39;
-</span><span style="color:#75715e"></span>  <span style="color:#ae81ff">4</span>
-  <span style="color:#ae81ff">5</span> <span style="color:#75715e">// The Go version of this project uses the go-rpio library to
-</span><span style="color:#75715e"></span>  <span style="color:#ae81ff">6</span> <span style="color:#75715e">// control the GPIO pins.
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go">  <span style="color:#ae81ff">1</span> <span style="color:#75715e">//
+</span><span style="color:#75715e"></span>  <span style="color:#ae81ff">2</span> <span style="color:#75715e">// Copyright (c) 2021 Richard Youngkin. All rights reserved.
+</span><span style="color:#75715e"></span>  <span style="color:#ae81ff">3</span> <span style="color:#75715e">// Use of this source code is governed by a MIT-style
+</span><span style="color:#75715e"></span>  <span style="color:#ae81ff">4</span> <span style="color:#75715e">// license that can be found in the LICENSE file.
+</span><span style="color:#75715e"></span>  <span style="color:#ae81ff">5</span> <span style="color:#75715e">//
+</span><span style="color:#75715e"></span>  <span style="color:#ae81ff">6</span> <span style="color:#75715e">// Run using &#39;go run blinkingled.go&#39;
 </span><span style="color:#75715e"></span>  <span style="color:#ae81ff">7</span> <span style="color:#75715e">//
-</span><span style="color:#75715e"></span>  <span style="color:#ae81ff">8</span> <span style="color:#75715e">// The Go module system is used to choose the correct version of
-</span><span style="color:#75715e"></span>  <span style="color:#ae81ff">9</span> <span style="color:#75715e">// this library. See the file &#39;../go.mod&#39; for details.
-</span><span style="color:#75715e"></span> <span style="color:#ae81ff">10</span>
- <span style="color:#ae81ff">11</span> <span style="color:#f92672">import</span> (
- <span style="color:#ae81ff">12</span>     <span style="color:#e6db74">&#34;fmt&#34;</span>
- <span style="color:#ae81ff">13</span>     <span style="color:#e6db74">&#34;os&#34;</span>
- <span style="color:#ae81ff">14</span>     <span style="color:#e6db74">&#34;time&#34;</span>
- <span style="color:#ae81ff">15</span>
- <span style="color:#ae81ff">16</span>     <span style="color:#e6db74">&#34;github.com/stianeikeland/go-rpio/v4&#34;</span>
- <span style="color:#ae81ff">17</span> )
- <span style="color:#ae81ff">18</span>
- <span style="color:#ae81ff">19</span> <span style="color:#66d9ef">func</span> <span style="color:#a6e22e">main</span>() {
- <span style="color:#ae81ff">20</span>     <span style="color:#75715e">// Initialize the go-rpio library. By default it uses BCM pin numbering.
-</span><span style="color:#75715e"></span> <span style="color:#ae81ff">21</span>     <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">rpio</span>.<span style="color:#a6e22e">Open</span>(); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
- <span style="color:#ae81ff">22</span>         <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#a6e22e">err</span>)
- <span style="color:#ae81ff">23</span>         <span style="color:#a6e22e">os</span>.<span style="color:#a6e22e">Exit</span>(<span style="color:#ae81ff">1</span>)
- <span style="color:#ae81ff">24</span>     }
- <span style="color:#ae81ff">25</span>
- <span style="color:#ae81ff">26</span>     <span style="color:#75715e">// Release resources held by the go-rpio library obtained above after
-</span><span style="color:#75715e"></span> <span style="color:#ae81ff">27</span>     <span style="color:#75715e">// &#39;main()&#39; exits.
-</span><span style="color:#75715e"></span> <span style="color:#ae81ff">28</span>     <span style="color:#66d9ef">defer</span> <span style="color:#a6e22e">rpio</span>.<span style="color:#a6e22e">Close</span>()
- <span style="color:#ae81ff">29</span>
- <span style="color:#ae81ff">30</span>     <span style="color:#75715e">// Select the GPIO pin to use, BCM pin 17
-</span><span style="color:#75715e"></span> <span style="color:#ae81ff">31</span>     <span style="color:#a6e22e">pin</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">rpio</span>.<span style="color:#a6e22e">Pin</span>(<span style="color:#ae81ff">17</span>)
- <span style="color:#ae81ff">32</span>
- <span style="color:#ae81ff">33</span>     <span style="color:#75715e">// Set the pin (BCM pin 17) to OUTPUT mode to allow writes to the pin,
-</span><span style="color:#75715e"></span> <span style="color:#ae81ff">34</span>     <span style="color:#75715e">// e.g., set the pin to LOW or HIGH
-</span><span style="color:#75715e"></span> <span style="color:#ae81ff">35</span>     <span style="color:#a6e22e">pin</span>.<span style="color:#a6e22e">Output</span>()
- <span style="color:#ae81ff">36</span>
- <span style="color:#ae81ff">37</span>     <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">0</span>; <span style="color:#a6e22e">i</span> &lt; <span style="color:#ae81ff">5</span>; <span style="color:#a6e22e">i</span><span style="color:#f92672">++</span> {
- <span style="color:#ae81ff">38</span>         <span style="color:#75715e">// Setting the GPIO pin to LOW allows current to flow from the power source thru
-</span><span style="color:#75715e"></span> <span style="color:#ae81ff">39</span>         <span style="color:#75715e">// the anode to cathode turning on the LED.
-</span><span style="color:#75715e"></span> <span style="color:#ae81ff">40</span>         <span style="color:#a6e22e">pin</span>.<span style="color:#a6e22e">Low</span>()
- <span style="color:#ae81ff">41</span>         <span style="color:#75715e">//        pin.Write(rpio.Low)
-</span><span style="color:#75715e"></span> <span style="color:#ae81ff">42</span>         <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Printf</span>(<span style="color:#e6db74">&#34;LED on, Pin value should be 0: %d\n&#34;</span>, <span style="color:#a6e22e">pin</span>.<span style="color:#a6e22e">Read</span>())
- <span style="color:#ae81ff">43</span>         <span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Sleep</span>(<span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Millisecond</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">500</span>)
- <span style="color:#ae81ff">44</span>         <span style="color:#a6e22e">pin</span>.<span style="color:#a6e22e">High</span>()
- <span style="color:#ae81ff">45</span>         <span style="color:#75715e">//        pin.Write(rpio.High)
-</span><span style="color:#75715e"></span> <span style="color:#ae81ff">46</span>         <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Printf</span>(<span style="color:#e6db74">&#34;\tLED off, Pin value should be 1: %d\n&#34;</span>, <span style="color:#a6e22e">pin</span>.<span style="color:#a6e22e">Read</span>())
- <span style="color:#ae81ff">47</span>         <span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Sleep</span>(<span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Millisecond</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">500</span>)
- <span style="color:#ae81ff">48</span>     }
- <span style="color:#ae81ff">49</span>
- <span style="color:#ae81ff">50</span>     <span style="color:#75715e">// Turn off the LED
-</span><span style="color:#75715e"></span> <span style="color:#ae81ff">51</span>     <span style="color:#a6e22e">pin</span>.<span style="color:#a6e22e">High</span>()
- <span style="color:#ae81ff">52</span> }
-</code></pre></div><p>Line 16 imports the <code>rpio-go</code> library</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#ae81ff">16</span>     <span style="color:#e6db74">&#34;github.com/stianeikeland/go-rpio/v4&#34;</span>
+</span><span style="color:#75715e"></span>  <span style="color:#ae81ff">8</span> <span style="color:#f92672">package</span> <span style="color:#a6e22e">main</span>
+  <span style="color:#ae81ff">9</span>
+ <span style="color:#ae81ff">10</span> <span style="color:#f92672">import</span> (
+ <span style="color:#ae81ff">11</span>     <span style="color:#e6db74">&#34;fmt&#34;</span>
+ <span style="color:#ae81ff">12</span>     <span style="color:#e6db74">&#34;os&#34;</span>
+ <span style="color:#ae81ff">13</span>     <span style="color:#e6db74">&#34;time&#34;</span>
+ <span style="color:#ae81ff">14</span>
+ <span style="color:#ae81ff">15</span>     <span style="color:#e6db74">&#34;github.com/stianeikeland/go-rpio/v4&#34;</span>
+ <span style="color:#ae81ff">16</span> )
+ <span style="color:#ae81ff">17</span>
+ <span style="color:#ae81ff">18</span> <span style="color:#66d9ef">func</span> <span style="color:#a6e22e">main</span>() {
+ <span style="color:#ae81ff">19</span>     <span style="color:#75715e">// Initialize the go-rpio library. By default it uses BCM pin numbering.
+</span><span style="color:#75715e"></span> <span style="color:#ae81ff">20</span>     <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">rpio</span>.<span style="color:#a6e22e">Open</span>(); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+ <span style="color:#ae81ff">21</span>         <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#a6e22e">err</span>)
+ <span style="color:#ae81ff">22</span>         <span style="color:#a6e22e">os</span>.<span style="color:#a6e22e">Exit</span>(<span style="color:#ae81ff">1</span>)
+ <span style="color:#ae81ff">23</span>     }
+ <span style="color:#ae81ff">24</span>
+ <span style="color:#ae81ff">25</span>     <span style="color:#75715e">// Release resources held by the go-rpio library obtained above after
+</span><span style="color:#75715e"></span> <span style="color:#ae81ff">26</span>     <span style="color:#75715e">// &#39;main()&#39; exits.
+</span><span style="color:#75715e"></span> <span style="color:#ae81ff">27</span>     <span style="color:#66d9ef">defer</span> <span style="color:#a6e22e">rpio</span>.<span style="color:#a6e22e">Close</span>()
+ <span style="color:#ae81ff">28</span>
+ <span style="color:#ae81ff">29</span>     <span style="color:#75715e">// Select the GPIO pin to use, BCM pin 17
+</span><span style="color:#75715e"></span> <span style="color:#ae81ff">30</span>     <span style="color:#a6e22e">pin</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">rpio</span>.<span style="color:#a6e22e">Pin</span>(<span style="color:#ae81ff">17</span>)
+ <span style="color:#ae81ff">31</span>
+ <span style="color:#ae81ff">32</span>     <span style="color:#75715e">// Set the pin (BCM pin 17) to OUTPUT mode to allow writes to the pin,
+</span><span style="color:#75715e"></span> <span style="color:#ae81ff">33</span>     <span style="color:#75715e">// e.g., set the pin to LOW or HIGH
+</span><span style="color:#75715e"></span> <span style="color:#ae81ff">34</span>     <span style="color:#a6e22e">pin</span>.<span style="color:#a6e22e">Output</span>()
+ <span style="color:#ae81ff">35</span>
+ <span style="color:#ae81ff">36</span>     <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">0</span>; <span style="color:#a6e22e">i</span> &lt; <span style="color:#ae81ff">5</span>; <span style="color:#a6e22e">i</span><span style="color:#f92672">++</span> {
+ <span style="color:#ae81ff">37</span>         <span style="color:#75715e">// Setting the GPIO pin to LOW allows current to flow from the power source thru
+</span><span style="color:#75715e"></span> <span style="color:#ae81ff">38</span>         <span style="color:#75715e">// the anode to cathode turning on the LED.
+</span><span style="color:#75715e"></span> <span style="color:#ae81ff">39</span>         <span style="color:#a6e22e">pin</span>.<span style="color:#a6e22e">Low</span>()
+ <span style="color:#ae81ff">40</span>         <span style="color:#75715e">//        pin.Write(rpio.Low)
+</span><span style="color:#75715e"></span> <span style="color:#ae81ff">41</span>         <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Printf</span>(<span style="color:#e6db74">&#34;LED on, Pin value should be 0: %d\n&#34;</span>, <span style="color:#a6e22e">pin</span>.<span style="color:#a6e22e">Read</span>())
+ <span style="color:#ae81ff">42</span>         <span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Sleep</span>(<span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Millisecond</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">500</span>)
+ <span style="color:#ae81ff">43</span>         <span style="color:#a6e22e">pin</span>.<span style="color:#a6e22e">High</span>()
+ <span style="color:#ae81ff">44</span>         <span style="color:#75715e">//        pin.Write(rpio.High)
+</span><span style="color:#75715e"></span> <span style="color:#ae81ff">45</span>         <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Printf</span>(<span style="color:#e6db74">&#34;\tLED off, Pin value should be 1: %d\n&#34;</span>, <span style="color:#a6e22e">pin</span>.<span style="color:#a6e22e">Read</span>())
+ <span style="color:#ae81ff">46</span>         <span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Sleep</span>(<span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Millisecond</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">500</span>)
+ <span style="color:#ae81ff">47</span>     }
+ <span style="color:#ae81ff">48</span>
+ <span style="color:#ae81ff">49</span>     <span style="color:#75715e">// Turn off the LED
+</span><span style="color:#75715e"></span> <span style="color:#ae81ff">50</span>     <span style="color:#a6e22e">pin</span>.<span style="color:#a6e22e">High</span>()
+ <span style="color:#ae81ff">51</span> }<span style="color:#e6db74">```
+</span><span style="color:#e6db74">
+</span><span style="color:#e6db74">Line 15 imports the `</span><span style="color:#a6e22e">rpio</span><span style="color:#f92672">-</span><span style="color:#66d9ef">go</span><span style="color:#e6db74">` library
+</span><span style="color:#e6db74">
+</span><span style="color:#e6db74">```</span><span style="color:#66d9ef">go</span>
+<span style="color:#ae81ff">15</span>     <span style="color:#e6db74">&#34;github.com/stianeikeland/go-rpio/v4&#34;</span>
 </code></pre></div><p>The rest of the program is explained through embedded comments. The program can be run typing <code>go run blinkingled.go</code> at the command prompt and hitting enter.</p>
 <h2 id="summary">Summary</h2>
 <p>This article has shown how to configure a breadboard with an LED that can be controlled by programs written in both C and Go. Feel free to suggest changes or ask questions in the comments section below.</p>
@@ -356,6 +383,11 @@
                             Previous Post</a>
                     </li>
                     
+                    
+                    <li class="next">
+                        <a href="/post/sunfoundergpionotesrgbled/" data-toggle="tooltip" data-placement="top" title="Raspberry Pi GPIO in Go and C - RGB LED">Next
+                            Post &rarr;</a>
+                    </li>
                     
                 </ul>
 
@@ -397,6 +429,9 @@
                         
                         
                         
+                        <a href="/tags/c" title="c">
+                            c
+                        </a>
                         
                         
                         
@@ -404,6 +439,15 @@
                         
                         
                         
+                        <a href="/tags/docker" title="docker">
+                            docker
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/elasticsearch" title="elasticsearch">
+                            elasticsearch
+                        </a>
                         
                         
                         
@@ -411,9 +455,23 @@
                         
                         
                         
+                        <a href="/tags/go" title="go">
+                            go
+                        </a>
                         
                         
                         
+                        
+                        
+                        <a href="/tags/gpio" title="gpio">
+                            gpio
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/grafana" title="grafana">
+                            grafana
+                        </a>
                         
                         
                         
@@ -441,9 +499,21 @@
                         
                         
                         
+                        <a href="/tags/mysql" title="mysql">
+                            mysql
+                        </a>
                         
                         
                         
+                        <a href="/tags/networking" title="networking">
+                            networking
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/prometheus" title="prometheus">
+                            prometheus
+                        </a>
                         
                         
                         
@@ -456,6 +526,10 @@
                         
                         
                         
+                        
+                        <a href="/tags/traefik" title="traefik">
+                            traefik
+                        </a>
                         
                         
                     </div>
@@ -479,7 +553,7 @@
                 <ul class="list-inline text-center">
                    
                    <li>
-                       <a href='' rel="alternate" type="application/rss+xml" title="Rich Youngkin" >
+                       <a href='' rel="alternate" type="application/rss+xml" title="Rich Youngkin&#39;s software engineering blog" >
                            <span class="fa-stack fa-lg">
                                <i class="fa fa-circle fa-stack-2x"></i>
                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
@@ -565,7 +639,7 @@
             
                 </ul>
 		<p class="copyright text-muted">
-                    Copyright &copy; Rich Youngkin 2021
+                    Copyright &copy; Rich Youngkin&#39;s software engineering blog 2021
                     <br>
                     <a href="https://themes.gohugo.io/hugo-theme-cleanwhite">CleanWhite Hugo Theme</a> by <a href="https://zhaohuabing.com">Huabing</a> |
                     <iframe

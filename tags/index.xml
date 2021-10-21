@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Tags on Rich Youngkin</title>
+    <title>Tags on Rich Youngkin&#39;s software engineering blog</title>
     <link>https://youngkin.github.io/tags/</link>
-    <description>Recent content in Tags on Rich Youngkin</description>
+    <description>Recent content in Tags on Rich Youngkin&#39;s software engineering blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 11 Sep 2021 13:13:42 -0600</lastBuildDate>
+    <lastBuildDate>Sun, 19 Sep 2021 13:13:42 -0600</lastBuildDate>
     
 	<atom:link href="https://youngkin.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     
@@ -14,25 +14,25 @@
     <item>
       <title>C</title>
       <link>https://youngkin.github.io/tags/c/</link>
-      <pubDate>Sat, 11 Sep 2021 13:13:42 -0600</pubDate>
+      <pubDate>Sun, 19 Sep 2021 13:13:42 -0600</pubDate>
       
       <guid>https://youngkin.github.io/tags/c/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Go</title>
-      <link>https://youngkin.github.io/tags/go/</link>
-      <pubDate>Sat, 11 Sep 2021 13:13:42 -0600</pubDate>
+      <title>Golang</title>
+      <link>https://youngkin.github.io/tags/golang/</link>
+      <pubDate>Sun, 19 Sep 2021 13:13:42 -0600</pubDate>
       
-      <guid>https://youngkin.github.io/tags/go/</guid>
+      <guid>https://youngkin.github.io/tags/golang/</guid>
       <description></description>
     </item>
     
     <item>
       <title>GPIO</title>
       <link>https://youngkin.github.io/tags/gpio/</link>
-      <pubDate>Sat, 11 Sep 2021 13:13:42 -0600</pubDate>
+      <pubDate>Sun, 19 Sep 2021 13:13:42 -0600</pubDate>
       
       <guid>https://youngkin.github.io/tags/gpio/</guid>
       <description></description>
@@ -41,9 +41,18 @@
     <item>
       <title>Raspberry Pi</title>
       <link>https://youngkin.github.io/tags/raspberry-pi/</link>
-      <pubDate>Sat, 11 Sep 2021 13:13:42 -0600</pubDate>
+      <pubDate>Sun, 19 Sep 2021 13:13:42 -0600</pubDate>
       
       <guid>https://youngkin.github.io/tags/raspberry-pi/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Go</title>
+      <link>https://youngkin.github.io/tags/go/</link>
+      <pubDate>Tue, 14 Sep 2021 13:13:42 -0600</pubDate>
+      
+      <guid>https://youngkin.github.io/tags/go/</guid>
       <description></description>
     </item>
     

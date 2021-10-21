@@ -1,23 +1,32 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Go on Rich Youngkin</title>
+    <title>Go on Rich Youngkin&#39;s software engineering blog</title>
     <link>https://youngkin.github.io/tags/go/</link>
-    <description>Recent content in Go on Rich Youngkin</description>
+    <description>Recent content in Go on Rich Youngkin&#39;s software engineering blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 11 Sep 2021 13:13:42 -0600</lastBuildDate>
+    <lastBuildDate>Tue, 14 Sep 2021 13:13:42 -0600</lastBuildDate>
     
 	<atom:link href="https://youngkin.github.io/tags/go/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>Sunfounder Raspberry Pi Kit Notes for Go and C - Blinking LED</title>
+      <title>Raspberry Pi GPIO in Go and C - RGB LED</title>
+      <link>https://youngkin.github.io/post/sunfoundergpionotesrgbled/</link>
+      <pubDate>Tue, 14 Sep 2021 13:13:42 -0600</pubDate>
+      
+      <guid>https://youngkin.github.io/post/sunfoundergpionotesrgbled/</guid>
+      <description>&lt;p&gt;This is the second article in a series that explores GPIO programming on a Raspberry Pi 3B+. It is a supplement to the &lt;a href=&#34;../sunfoundergpionotesled/&#34;&gt;Sunfounder RGB LED project&lt;/a&gt;. You can find the full series &lt;a href=&#34;../../categories/gpio&#34;&gt;here&lt;/a&gt;. It explores the use of Pulse Width Modulation (PWM) to drive an RGB LED as well as how to control an individual&amp;rsquo;s LED brightness. The code samples will be in Go and C.&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Raspberry Pi GPIO in Go and C - Blinking LED</title>
       <link>https://youngkin.github.io/post/sunfoundergpionotesled/</link>
       <pubDate>Sat, 11 Sep 2021 13:13:42 -0600</pubDate>
       
       <guid>https://youngkin.github.io/post/sunfoundergpionotesled/</guid>
-      <description>&lt;p&gt;This is the first article in a series that explores GPIO programming on a Raspberry Pi 3B+. It is a supplement to the &lt;a href=&#34;https://docs.sunfounder.com/projects/raphael-kit/en/latest/play_with_c.html&#34;&gt;Sunfounder Blinking LED project&lt;/a&gt;. The code samples will be in Go and C.&lt;/p&gt;</description>
+      <description>&lt;p&gt;This is the first article in a series that explores GPIO programming on a Raspberry Pi 3B+. You can find the full series &lt;a href=&#34;../../categories/gpio&#34;&gt;here&lt;/a&gt;. It is a supplement to the &lt;a href=&#34;https://docs.sunfounder.com/projects/raphael-kit/en/latest/1.1.1_blinking_led_c.html&#34;&gt;Sunfounder Blinking LED project&lt;/a&gt;. The code samples will be in Go and C.&lt;/p&gt;</description>
     </item>
     
     <item>
