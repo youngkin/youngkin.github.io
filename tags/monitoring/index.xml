@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Monitoring on Rich Youngkin&#39;s software engineering blog</title>
+    <title>Monitoring on Rich Youngkin</title>
     <link>https://youngkin.github.io/tags/monitoring/</link>
-    <description>Recent content in Monitoring on Rich Youngkin&#39;s software engineering blog</description>
+    <description>Recent content in Monitoring on Rich Youngkin</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Wed, 26 Aug 2020 13:06:44 -0600</lastBuildDate>
