@@ -6,7 +6,7 @@
     <description>Recent content in Tags on Rich Youngkin</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 21 Oct 2021 13:13:42 -0600</lastBuildDate>
+    <lastBuildDate>Fri, 29 Oct 2021 13:13:42 -0600</lastBuildDate>
     
 	<atom:link href="https://youngkin.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     
@@ -14,9 +14,36 @@
     <item>
       <title>C</title>
       <link>https://youngkin.github.io/tags/c/</link>
-      <pubDate>Thu, 21 Oct 2021 13:13:42 -0600</pubDate>
+      <pubDate>Fri, 29 Oct 2021 13:13:42 -0600</pubDate>
       
       <guid>https://youngkin.github.io/tags/c/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Golang</title>
+      <link>https://youngkin.github.io/tags/golang/</link>
+      <pubDate>Fri, 29 Oct 2021 13:13:42 -0600</pubDate>
+      
+      <guid>https://youngkin.github.io/tags/golang/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>GPIO</title>
+      <link>https://youngkin.github.io/tags/gpio/</link>
+      <pubDate>Fri, 29 Oct 2021 13:13:42 -0600</pubDate>
+      
+      <guid>https://youngkin.github.io/tags/gpio/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Raspberry Pi</title>
+      <link>https://youngkin.github.io/tags/raspberry-pi/</link>
+      <pubDate>Fri, 29 Oct 2021 13:13:42 -0600</pubDate>
+      
+      <guid>https://youngkin.github.io/tags/raspberry-pi/</guid>
       <description></description>
     </item>
     
@@ -26,33 +53,6 @@
       <pubDate>Thu, 21 Oct 2021 13:13:42 -0600</pubDate>
       
       <guid>https://youngkin.github.io/tags/go/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Golang</title>
-      <link>https://youngkin.github.io/tags/golang/</link>
-      <pubDate>Thu, 21 Oct 2021 13:13:42 -0600</pubDate>
-      
-      <guid>https://youngkin.github.io/tags/golang/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>GPIO</title>
-      <link>https://youngkin.github.io/tags/gpio/</link>
-      <pubDate>Thu, 21 Oct 2021 13:13:42 -0600</pubDate>
-      
-      <guid>https://youngkin.github.io/tags/gpio/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Raspberry Pi</title>
-      <link>https://youngkin.github.io/tags/raspberry-pi/</link>
-      <pubDate>Thu, 21 Oct 2021 13:13:42 -0600</pubDate>
-      
-      <guid>https://youngkin.github.io/tags/raspberry-pi/</guid>
       <description></description>
     </item>
     
