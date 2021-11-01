@@ -216,7 +216,7 @@
                     <span class="meta">
                         
                         Posted on
-                        Friday, October 29, 2021
+                        Monday, November 1, 2021
                         
                         
                         
@@ -359,13 +359,55 @@ Raspberry Pi Details:
 <p>There are several clock sources available on the BCM2835 board.  The clock source used by the GPIO libraries in this article is called the oscillator. It&rsquo;s frequency as documented in several references<sup id="fnref:5"><a href="#fn:5" class="footnote-ref" role="doc-noteref">5</a></sup> <sup id="fnref:6"><a href="#fn:6" class="footnote-ref" role="doc-noteref">6</a></sup> <sup id="fnref:7"><a href="#fn:7" class="footnote-ref" role="doc-noteref">7</a></sup> is 19.2MHz with a period of about 52 nanoseconds (1 / 19,200,000 = ~0.000000052 seconds).</p>
 <p>The BCM2835 board also implements something called a channel<sup id="fnref:14"><a href="#fn:14" class="footnote-ref" role="doc-noteref">14</a></sup>. A hardware PWM pin is controlled by a channel. The PWM Clock, range, and pulse width are specified for a channel. All hardware pins connected to that channel will share the same range, pulse-width, and duty-cycle. The BCM2835 board has 2 channels. GPIO pins<sup id="fnref:17"><a href="#fn:17" class="footnote-ref" role="doc-noteref">17</a></sup> 18 and 12 on one channel, 13 and 19 on the other. This means that a signal that&rsquo;s sent to either pin that share a channel will go to both pins. For example, sending a signal on GPIO12 will also be shared with GPIO18 and vice versa<sup id="fnref:14"><a href="#fn:14" class="footnote-ref" role="doc-noteref">14</a></sup> <sup id="fnref:15"><a href="#fn:15" class="footnote-ref" role="doc-noteref">15</a></sup> <sup id="fnref:13"><a href="#fn:13" class="footnote-ref" role="doc-noteref">13</a></sup>.</p>
 <h2 id="exploring-pwm-on-a-raspberry-pi">Exploring PWM on a Raspberry Pi</h2>
-<p>The setup for this exercise is identical to a combination of the <a href="https://docs.sunfounder.com/projects/raphael-kit/en/latest/1.1.1_blinking_led_c.html">SunFounder Blinking LED</a> and <a href="https://docs.sunfounder.com/projects/raphael-kit/en/latest/1.1.2_rgb_led_c.html">Sunfounder RGB LED</a> projects. If you&rsquo;re familiar with wiring a breadboard the diagrams below may be all you need to get started. Otherwise it may be worth while looking at the Sunfounder LED projects and an <a href="http://wiki.sunfounder.cc/index.php?title=Breadboard_Basics_%E2%80%93_Types">introduction to breadboards</a><sup id="fnref:10"><a href="#fn:10" class="footnote-ref" role="doc-noteref">10</a></sup>. The resistor used in both diagrams is 220 Ohms.</p>
-<img style="border:1px solid black" src="/images/pwmfordummies/blinkingLED.png" align="center" width="600" height="300"/>
-<figcaption align="left"><center><i style="color:black;">Sunfounder Blinking LED breadboard setup</i></center></figcaption>
-<p>This setup will be used to demonstrate software PWM on a non-PWM pin.</p>
-<img style="border:1px solid black" src="/images/pwmfordummies/RgbLed.png" align="center" width="600" height="300"/>
-<figcaption align="left"><center><i style="color:black;">Sunfounder RGB LED breadboard setup</i></center></figcaption>
-<p>This setup will be used to demonstrate hardware and software PWM on a PWM pin. This setup shows an RGB LED pin (green) connected to the GPIO hardware pin 18. A different hardware PWM pin may be used such as 12, 13, and 19. Also, the use of an RGB LED pin isn&rsquo;t required. Any type of LED will work. It will have to be wired up in a similar manner however, i.e., the LED positive lead should be connected to GPIO 18 (green wire) and the LED&rsquo;s ground lead (the longest lead) to the board&rsquo;s ground. If you do choose to use an RGB LED pin it&rsquo;s important to note that only 2 of the colors can be controlled by hardware PWM. The pins need to be on different PWM channels. In the diagram above the LED colors attached to GPIO pins 17 and 27 (blue and red) can only be used for software PWM.</p>
+<p>The setup for this exercise is similar to a combination of the <a href="https://docs.sunfounder.com/projects/raphael-kit/en/latest/1.1.1_blinking_led_c.html">SunFounder Blinking LED</a> and <a href="https://docs.sunfounder.com/projects/raphael-kit/en/latest/1.1.2_rgb_led_c.html">Sunfounder RGB LED</a> projects. If you&rsquo;re familiar with wiring a breadboard the diagrams below may be all you need to get started. Otherwise it may be worth while looking at the Sunfounder LED projects and an <a href="http://wiki.sunfounder.cc/index.php?title=Breadboard_Basics_%E2%80%93_Types">introduction to breadboards</a><sup id="fnref:10"><a href="#fn:10" class="footnote-ref" role="doc-noteref">10</a></sup>. The resistor used in both diagrams is 220 Ohms.</p>
+<!--
+<p align="center">
+  <img style="border:1px solid black" src="/images/pwmfordummies/redledimage.jpeg" align="center" width="600" height="300"/>
+<figcaption align="left"><center><i style="color:black;">Red LED</i></center></figcaption>
+
+  <img style="border:1px solid black" src="/images/pwmfordummies/redled.png" align="center" width="600" height="300"/>
+  <figcaption align="left"><center><i style="color:black;">Red LED breadboard setup</i></center></figcaption>
+</p>
+-->
+<table>
+<thead>
+<tr>
+<th>LED</th>
+<th>Breadboard setup</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><img style="border:1px solid black" src="/images/pwmfordummies/redledimage.jpeg" width="300"/></td>
+<td><img style="border:1px solid black" src="/images/pwmfordummies/redled.png" height="600" width="600"/></td>
+</tr>
+</tbody>
+</table>
+<p>This setup will be used to demonstrate software PWM on a non-PWM pin. The black wires are the ground. The upper black wire connects the board <em>GND</em> pin to the ground bus on the breadboard. The lower black wire connects the ground bus to the negative leg on the red LED (negative is the shorter leg). The red wire is for positive current. It connects GPIO6 to the positive leg on the red LED (positive is the longer leg). Note the 220 Ohm resistor bridging the red wire and the positive pin on the LED. This is required to avoid burning out the LED.</p>
+<table>
+<thead>
+<tr>
+<th>RGB LED</th>
+<th>Breadboard setup</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><img style="border:1px solid black" src="/images/pwmfordummies/rgbledimage.jpg" width="300"/></td>
+<td><img style="border:1px solid black" src="/images/pwmfordummies/rgbled2.png" height="800" width="800"/></td>
+</tr>
+</tbody>
+</table>
+<p>This setup will be used to demonstrate hardware and software PWM on a hardware PWM pin. Looking down at the the breadboard the RGB LED the pins are set up as follows:</p>
+<ul>
+<li>The red pin is at the top of the RGB LED. It&rsquo;s connected to GPIO pin 13 with the red wire.</li>
+<li>The ground is the next one down. It&rsquo;s connected to the ground bus with the black wire.</li>
+<li>The green pin is 1 down from the ground. It&rsquo;s connected to GPIO pin 18 with the white wire.</li>
+<li>The blue pin is at the bottom of the RGB LED. It&rsquo;s connected to GPIO pin 19 with the blue wire.</li>
+</ul>
+<p>As with the previous diagram, a 220 Ohm resistor bridges the GPIO pins to the red, green, and blue pins of the LED.</p>
+<p>This setup shows the green pin on the LED (white wire) connected to the GPIO hardware PWM pin 18. A different hardware PWM pin may be used such as 12, 13, and 19. Also, the use of an RGB LED isn&rsquo;t required. Any type of LED will work. It will have to be wired up in a similar manner however, i.e., the LED positive lead should be connected to a hardware PWM pin (white wire) and the LED&rsquo;s ground lead (the longest lead) to the board&rsquo;s ground.</p>
+<p>If you do choose to use an RGB LED pin it&rsquo;s important to note that only 2 of the colors can be controlled by hardware PWM. The pins need to be on different PWM channels. In the diagram above the red and blue pins attached to GPIO pins 13 and 19 (blue and red) to demonstrate this limitation. Recall that GPIO pins 13 and 19 share a channel. As a result, a signal sent to one pin be propagated to the other. To get the true RGB LED colors software PWM is required, along with a maximum of 2 hardware pins on different channels. While hardware pins can be used, it&rsquo;s also possible to use all non-hardware pins.</p>
 <p>It&rsquo;ll be easier to play with the different combinations of PWM settings when both of the above setups are wired up at the same time. It allows for any of the GPIO pins to be used by <em>PWM Explorer</em>, with the exception that for hardware PWM the LED(s) must be installed on hardware PWM pins (GPIO pins 13, 19, 18, and 12). If more than one hardware pin is used they must be on different channels.</p>
 <h3 id="driving-pwm-using-pwm-explorer">Driving PWM using PWM Explorer</h3>
 <p>PWM Explorer supports C and Go. Choosing C you can experiment with both Mark/Space and Balanced PWM Modes. The Go library I used, go-rpio<sup id="fnref:6"><a href="#fn:6" class="footnote-ref" role="doc-noteref">6</a></sup> only supports Mark/Space.</p>
@@ -383,6 +425,7 @@ Raspberry Pi Details:
 <li><strong>Pulse Width</strong> - the desired pulse width as defined in the <a href="#Terminology">Terminology</a> section above.</li>
 <li><strong>PWM Type</strong> - this item is used to specify whether hardware or software PWM is to be used.</li>
 </ol>
+<p>Depending on the terminal size some <em>Help</em> and <em>Code</em> text may not be visible. To address this, both the <em>Help</em> and <em>Code</em> sections are scrollable.</p>
 <h4 id="experimenting-with-pwm-parameters">Experimenting with PWM Parameters</h4>
 <p>As was stated earlier, the WiringPi and go-rpio libraries both use the Raspberry Pi 3B&rsquo;s Oscillator clock which has a frequency is 19.2MHz. This is fixed and cannot be changed. But besides the pins chosen, the Clock Frequency/Divisor, PWM Mode, Range, Pulse Width, and PWM Type can all be modified. All of these interact with one another either directly or indirectly. In this section I will explain these relationships and how they interact. You can use the PWM Explorer to follow along and directly see the effects that I&rsquo;ll explain.</p>
 <p>This section uses an LED to demonstrate the effect of the various parameters on a device. There is a property of the human eye that needs to be understood. The human eye perceives linear changes in in brightness in a logarithmic fashion. Specifically, at the lower end of a pulse width setting (lower voltage) changes in a given setting will produce what looks like a more significant result than the same change at the higher end (higher voltage)<sup id="fnref:18"><a href="#fn:18" class="footnote-ref" role="doc-noteref">18</a></sup>. The PWM Explorer doesn&rsquo;t compensate for this.</p>
