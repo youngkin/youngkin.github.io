@@ -121,10 +121,6 @@
                         </li>
                         
                         <li>
-                            <a href="/categories/golang">golang</a>
-                        </li>
-                        
-                        <li>
                             <a href="/categories/gpio">gpio</a>
                         </li>
                         
@@ -184,7 +180,7 @@
 
 <style type="text/css">
     header.intro-header {
-        background-image: url('/images/pwmfordummies/sunfounderLED.jpeg')
+        background-image: url('/images/pwmfordummies/IMG_9133-5.png')
     }
 </style>
 <header class="intro-header">
@@ -216,7 +212,7 @@
                     <span class="meta">
                         
                         Posted on
-                        Saturday, September 11, 2021
+                        Wednesday, November 3, 2021
                         
                         
                         
@@ -268,7 +264,7 @@
 <h2 id="prerequisites">Prerequisites</h2>
 <p>If you don&rsquo;t have one, you&rsquo;ll need a Raspberry Pi. I used a Raspberry Pi 3B+ with the &lsquo;stretch&rsquo; version of the Raspbian OS. Given that the Sunfounder Ultimate Starter Kit is advertised to work with a Raspberry Pi 4, I would expect the 4 series to work as well. I&rsquo;m less sure about other Raspberry Pi versions, especially versions with 26 vs. 40 GPIO pins.</p>
 <p>Next you&rsquo;ll need is a <a href="https://www.amazon.com/dp/B082KBF7MM/ref=sspa_dk_detail_4?psc=1&amp;pd_rd_i=B082KBF7MM&amp;pd_rd_w=1tGTV&amp;pf_rd_p=887084a2-5c34-4113-a4f8-b7947847c308&amp;pd_rd_wg=fX8JB&amp;pf_rd_r=44DE0RS1E9FD42RBYC7R&amp;pd_rd_r=47cbdc7f-7834-455f-9429-ef74a438bd45&amp;spLa=ZW5jcnlwdGVkUXVhbGlmaWVyPUFVVkdZVUZRNUw3ODkmZW5jcnlwdGVkSWQ9QTA4MzI4MzYyU0VLNzBJM0cxRUVMJmVuY3J5cHRlZEFkSWQ9QTA0Mjk1NTMzSzNSWlNFUjU0NURBJndpZGdldE5hbWU9c3BfZGV0YWlsJmFjdGlvbj1jbGlja1JlZGlyZWN0JmRvTm90TG9nQ2xpY2s9dHJ1ZQ==">breadboard</a>, some <a href="https://www.amazon.com/dp/B08HZ26ZLF/ref=syn_sd_onsite_desktop_19?psc=1&amp;spLa=ZW5jcnlwdGVkUXVhbGlmaWVyPUExRFpLWElCRjg1MUNMJmVuY3J5cHRlZElkPUEwMjMyMTE1M01aOFE3U1BQS09YSiZlbmNyeXB0ZWRBZElkPUEwODE5NTMxMktEMTlZRjEyQjBJNiZ3aWRnZXROYW1lPXNkX29uc2l0ZV9kZXNrdG9wJmFjdGlvbj1jbGlja1JlZGlyZWN0JmRvTm90TG9nQ2xpY2s9dHJ1ZQ==">jumper wires</a>, <a href="https://www.amazon.com/ELEGOO-Electronics-Component-resistors-Potentiometer/dp/B01ERPXFZK/ref=sr_1_7_sspa?crid=3EJQNCOWP00IF&amp;dchild=1&amp;keywords=resistors&amp;qid=1631478270&amp;s=industrial&amp;sprefix=resis%2Cindustrial%2C219&amp;sr=1-7-spons&amp;psc=1&amp;spLa=ZW5jcnlwdGVkUXVhbGlmaWVyPUEzTktVSzNYMkxMSDlKJmVuY3J5cHRlZElkPUEwMjAzMDY0NVRERkFLVjVRTUFWJmVuY3J5cHRlZEFkSWQ9QTA5MjM2NjUxUFZYQUlETVAzRDA3JndpZGdldE5hbWU9c3BfbXRmJmFjdGlvbj1jbGlja1JlZGlyZWN0JmRvTm90TG9nQ2xpY2s9dHJ1ZQ==">a 220 Ohm resistor, and an LED</a>. You should also consider getting a <a href="https://www.amazon.com/dp/B082PRVRYR/ref=sspa_dk_detail_2?psc=1&amp;pd_rd_i=B082PRVRYR&amp;pd_rd_w=8mKhr&amp;pf_rd_p=887084a2-5c34-4113-a4f8-b7947847c308&amp;pd_rd_wg=e9psa&amp;pf_rd_r=S09F37DF2G5FW8B8GX4B&amp;pd_rd_r=c065c120-e60b-45e9-b93b-f581f048cf46&amp;spLa=ZW5jcnlwdGVkUXVhbGlmaWVyPUFCMzhUQ09COFI2VlMmZW5jcnlwdGVkSWQ9QTA5NjU2ODUxRDkxNEYwSTYwV09KJmVuY3J5cHRlZEFkSWQ9QTAxOTg1MTUyRUhEUlc2VzQ2VDQ4JndpZGdldE5hbWU9c3BfZGV0YWlsJmFjdGlvbj1jbGlja1JlZGlyZWN0JmRvTm90TG9nQ2xpY2s9dHJ1ZQ==">40 pin female to female with a T-Type adapter</a> to attach the GPIO outputs to the breadboard. You can use only jumper wires, but the cable will make things easier and will help prevent damage to the GPIO pins on the Raspberry Pi. If you elect not to buy the 40 pin cable with T-Type adapter you&rsquo;ll need to buy <a href="https://www.amazon.com/SinLoon-Breadboard-Arduino-Circuit-40-Pack/dp/B08M3QLL3Q/ref=pd_sbs_7/143-0445142-7950409?pd_rd_w=sVLrc&amp;pf_rd_p=8b76d7a7-ab83-4ddc-a92d-e3e33bfdbf03&amp;pf_rd_r=CDM5TGJT03VKF0ZFB577&amp;pd_rd_r=8e58fd82-8503-41cf-b8f2-c78eaeb78d25&amp;pd_rd_wg=tT1U0&amp;pd_rd_i=B08M3QLL3Q&amp;psc=1">male-to-female jumper wires</a>. Buying all these things separately will cost more than a kit however. <a href="https://www.amazon.com/dp/B06WP7169Y/ref=sspa_dk_detail_5?psc=1&amp;pd_rd_i=B06WP7169Y&amp;pd_rd_w=OZVyf&amp;pf_rd_p=887084a2-5c34-4113-a4f8-b7947847c308&amp;pd_rd_wg=0V0IH&amp;pf_rd_r=623YJTBQ2CN2B2GYXQG5&amp;pd_rd_r=faa61f0f-3aec-4cf0-8e7e-d44eb1b3b92f&amp;spLa=ZW5jcnlwdGVkUXVhbGlmaWVyPUEyUVlDQzMzVVZBMFYxJmVuY3J5cHRlZElkPUEwMzExNzk4MUhGSjFSS0VKTlBROCZlbmNyeXB0ZWRBZElkPUEwMzYwNjg2UUdMRU44N0YzNzIwJndpZGdldE5hbWU9c3BfZGV0YWlsJmFjdGlvbj1jbGlja1JlZGlyZWN0JmRvTm90TG9nQ2xpY2s9dHJ1ZQ==">Here&rsquo;s a simple kit that has all of the above</a>. If you expect to follow this series I recommend buying the <a href="https://www.amazon.com/gp/product/B09BMVT4CB/ref=ppx_yo_dt_b_asin_title_o02_s00?ie=UTF8&amp;psc=1">Sunfounder Raspberry Pi Ultimate Starter Kit</a>.</p>
-<img style="border:1px solid black" src="/images/RaphaelKit.png" align="center" width="600" height="300"/>
+<img style="border:1px solid black" src="/images/pwmfordummies/RaphaelKit.png" align="center" width="600" height="300"/>
 <figcaption align="left"><center><i style="color:black;">Sunfounder Ultimate Starter/Raphael kit</i></center></figcaption>
 <p>To compile and run the C program you&rsquo;ll need the WiringPi libary. It&rsquo;s easy to get:</p>
 <pre><code>sudo apt-get install wiringpi
@@ -291,7 +287,7 @@ Raspberry Pi Details:
 <p>Finally, I&rsquo;m assuming a basic knowledge of Linux if you want to veer away from the cookbook style of the Sunfounder docs. For example, I won&rsquo;t be explaining what <strong>root privileges</strong> are.</p>
 <h2 id="blinking-led-in-c">Blinking LED in C</h2>
 <p>As mentioned above, this article is about the <a href="https://docs.sunfounder.com/projects/raphael-kit/en/latest/1.1.1_blinking_led_c.html">Blinking LED project</a>. The Sunfounder documentation for this project is quite good. You should start with the <a href="https://docs.sunfounder.com/projects/raphael-kit/en/latest/introduction.html">Introduction</a> and work your way through the following sections up to and including the <a href="https://docs.sunfounder.com/projects/raphael-kit/en/latest/play_with_c.html">Play with C</a> section. You should set up the breadboard as described in the project documentation or in the diagram below:</p>
-<img style="border:1px solid black" src="/images/blinkingLED.png" align="center" width="600" height="300"/>
+<img style="border:1px solid black" src="/images/pwmfordummies/blinkingLED.png" align="center" width="600" height="300"/>
 <figcaption align="left"><center><i style="color:black;">Sunfounder Blinking LED breadboard setup</i></center></figcaption>
 <p>Since the Sunfounder project documentation is so good, I only have a couple of comments.</p>
 <h3 id="information-that-would-have-been-helpful">Information that would have been helpful</h3>
@@ -359,12 +355,9 @@ Raspberry Pi Details:
  <span style="color:#ae81ff">48</span>
  <span style="color:#ae81ff">49</span>     <span style="color:#75715e">// Turn off the LED
 </span><span style="color:#75715e"></span> <span style="color:#ae81ff">50</span>     <span style="color:#a6e22e">pin</span>.<span style="color:#a6e22e">High</span>()
- <span style="color:#ae81ff">51</span> }<span style="color:#e6db74">```
-</span><span style="color:#e6db74">
-</span><span style="color:#e6db74">Line 15 imports the `</span><span style="color:#a6e22e">rpio</span><span style="color:#f92672">-</span><span style="color:#66d9ef">go</span><span style="color:#e6db74">` library
-</span><span style="color:#e6db74">
-</span><span style="color:#e6db74">```</span><span style="color:#66d9ef">go</span>
-<span style="color:#ae81ff">15</span>     <span style="color:#e6db74">&#34;github.com/stianeikeland/go-rpio/v4&#34;</span>
+ <span style="color:#ae81ff">51</span> }
+</code></pre></div><p>Line 15 imports the <code>rpio-go</code> library</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#ae81ff">15</span>     <span style="color:#e6db74">&#34;github.com/stianeikeland/go-rpio/v4&#34;</span>
 </code></pre></div><p>The rest of the program is explained through embedded comments. The program can be run typing <code>go run blinkingled.go</code> at the command prompt and hitting enter.</p>
 <h2 id="summary">Summary</h2>
 <p>This article has shown how to configure a breadboard with an LED that can be controlled by programs written in both C and Go. Feel free to suggest changes or ask questions in the comments section below.</p>
@@ -375,7 +368,7 @@ Raspberry Pi Details:
                 <ul class="pager">
                     
                     <li class="previous">
-                        <a href="/post/smokedbrisket/" data-toggle="tooltip" data-placement="top" title="Using a Weber Kettle to Cook a Great Smoked Brisket!">&larr;
+                        <a href="/post/pulsewidthmodulationraspberrypi/" data-toggle="tooltip" data-placement="top" title="Pulse Width Modulation for Dummies">&larr;
                             Previous Post</a>
                     </li>
                     
@@ -454,8 +447,6 @@ Raspberry Pi Details:
                         <a href="/tags/go" title="go">
                             go
                         </a>
-                        
-                        
                         
                         
                         
