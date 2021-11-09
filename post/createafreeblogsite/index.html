@@ -730,6 +730,11 @@ categories: []
                 {{ .Content }}
 </code></pre></div><p>Specifically the block starting with <code>{{ if not (eq (.Param &quot;showtoc&quot;) false) }} ...</code> was changed to the block starting with <code>{{ if (.Params.toc) }} ...</code>. So instead of looking for the <code>showtoc</code> parameter in <code>config.toml</code>, <code>.Params.toc</code> directs the HTML template to look in the &ldquo;front matter&rdquo; at the top of an article for a <code>toc</code> entry.</p>
 <h3 id="theme-customizations">Theme Customizations</h3>
+<hr>
+<p><em><strong>NOTE: The manner of theme customizations described in this section is not the right way to customize a theme!</strong></em></p>
+<p><em>Hugo has built in capability for customizing themes that doesn&rsquo;t require copying and modifiying the theme itself. See <a href="https://tangenttechnologies.ca/blog/hugo-themes/">Hugo Themes</a> for a good description of the recommended approach to theme customization. So while the files referenced below are the same ones to be modified, copies of these files containing the overrides should be placed in the appropriate directories as noted in that article.</em></p>
+<p><em><strong>What follows below should be read with the above caution in mind.</strong></em></p>
+<hr>
 <p>I used the <a href="https://themes.gohugo.io/hugo-theme-cleanwhite/">Clean White theme</a>, but I wanted a different look for:</p>
 <ul>
 <li>Title and Description (looking for &ldquo;green screen&rdquo; feel)</li>
