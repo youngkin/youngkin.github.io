@@ -6,10 +6,19 @@
     <description>Recent content in Posts on Rich Youngkin</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 04 Nov 2021 13:13:42 -0600</lastBuildDate>
+    <lastBuildDate>Mon, 08 Nov 2021 13:13:42 -0600</lastBuildDate>
     
 	<atom:link href="https://youngkin.github.io/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Raspberry Pi GPIO in Go and C - LED Bar Graph</title>
+      <link>https://youngkin.github.io/post/ledbargraph/</link>
+      <pubDate>Mon, 08 Nov 2021 13:13:42 -0600</pubDate>
+      
+      <guid>https://youngkin.github.io/post/ledbargraph/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>Raspberry Pi GPIO in Go and C - RGB LED</title>

@@ -254,7 +254,7 @@
 </nav>
                 
                 <h2 id="overview">Overview</h2>
-<p>This is the second article in a series that explores GPIO programming on a Raspberry Pi 3B+. The first is <a href="https://youngkin.github.io/post/sunfoundergpionotesled/">Raspberry Pi GPIO in Go and C - Blinking LED</a>. It is a supplement to the <a href="https://docs.sunfounder.com/projects/raphael-kit/en/latest/1.1.2_rgb_led_c.html">Sunfounder RGB LED</a> project. You can find the full series <a href="https://youngkin.github.io/categories/gpio/">here</a>. </p>
+<p>This is the second article in a series that explores GPIO programming on a Raspberry Pi 3B+. The first is <a href="https://youngkin.github.io/post/sunfoundergpionotesled/">Raspberry Pi GPIO in Go and C - Blinking LED</a>. It is a supplement to the <a href="https://docs.sunfounder.com/projects/raphael-kit/en/latest/1.1.2_rgb_led_c.html">Sunfounder RGB LED</a> project. You can find the full series <a href="https://youngkin.github.io/categories/gpio/">here</a>.</p>
 <p>This article explores the use of Pulse Width Modulation (PWM) to drive an RGB LED, as well as how to control an individual LED pin&rsquo;s brightness. The code samples will be in Go and C.</p>
 <h2 id="prerequisites">Prerequisites</h2>
 <p>If you don&rsquo;t have one, you&rsquo;ll need a Raspberry Pi. I used a Raspberry Pi 3B+ with the &lsquo;stretch&rsquo; version of the Raspbian OS. Given that the Sunfounder Ultimate Starter Kit is advertised to work with a Raspberry Pi 4, I would expect the 4 series to work as well. I&rsquo;m less sure about other Raspberry Pi versions, especially versions with 26 vs. 40 GPIO pins.</p>
@@ -269,20 +269,20 @@
 <figcaption align="left"><center><i style="color:black;">Sunfounder Ultimate Starter/Raphael kit</i></center></figcaption>
 <p>You will also need some basic C  and Go programming knowledge as well as familiarity with logging on to a Raspberry Pi terminal, or into the desktop GUI that comes with some OS versions. Depending on the approach you take, you may need to connect a keyboard and monitor to the Raspberry Pi. I simply SSH into the Pi. You&rsquo;ll also need familiarity with how to use an editor like Vi or nano.</p>
 <p>To compile and run the C program you&rsquo;ll need the <a href="https://github.com/WiringPi/WiringPi">WiringPi</a><sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup> libary. It&rsquo;s easy to get:</p>
-<pre><code>sudo apt-get install wiringpi
-</code></pre><p>Then test the installation using:</p>
-<pre><code>pi@pi-node1:~/go/src/github.com/youngkin/gpio/rgbled $ gpio -v
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sudo apt-get install wiringpi
+</code></pre></div><p>Then test the installation using:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">pi@pi-node1:~/go/src/github.com/youngkin/gpio/rgbled $ gpio -v
 gpio version: 2.50
-Copyright (c) 2012-2018 Gordon Henderson
+Copyright <span style="color:#f92672">(</span>c<span style="color:#f92672">)</span> 2012-2018 Gordon Henderson
 This is free software with ABSOLUTELY NO WARRANTY.
 For details type: gpio -warranty
 
 Raspberry Pi Details:
   Type: Pi 3B+, Revision: 03, Memory: 1024MB, Maker: Sony
   * Device tree is enabled.
-  *--&gt; Raspberry Pi 3 Model B Plus Rev 1.3
+  *--&gt; Raspberry Pi <span style="color:#ae81ff">3</span> Model B Plus Rev 1.3
   * This Raspberry Pi supports user-level GPIO access.
-</code></pre><p>In the above you&rsquo;ll notice <code>gpio version: 2.50</code>. If you&rsquo;re using a Rasberry Pi 4, use the instructions given in the Sunfounder <a href="https://docs.sunfounder.com/projects/raphael-kit/en/latest/check_the_wiringpi_c.html">Checking the WiringPi</a>.</p>
+</code></pre></div><p>In the above you&rsquo;ll notice <code>gpio version: 2.50</code>. If you&rsquo;re using a Rasberry Pi 4, use the instructions given in the Sunfounder <a href="https://docs.sunfounder.com/projects/raphael-kit/en/latest/check_the_wiringpi_c.html">Checking the WiringPi</a>.</p>
 <p>WiringPi is unique in that it includes a command line tool, <code>gpio</code>, as shown above, that can be used to manage, control, and query the GPIO board. This can be very handy. See the <a href="http://wiringpi.com/the-gpio-utility/">gpio reference</a> for more information on what it can do and how to use it.</p>
 <p>I chose not to download the code from the Sunfounder site, preferring to write my own instead, even if all I did was copy directly from the project documentation. Due to this I created my own location to create the code. In fact, <a href="https://github.com/youngkin/gpio">my code is in Github</a>. If you do like downloading code you have the option of downloading, cloning, or forking it from my Github repository. As an added bonus, the project code written in Go is also located there. The code for this project is located at <a href="https://github.com/youngkin/gpio/tree/main/rgbled">gpio/rgbled</a>.</p>
 <p>If you&rsquo;re interested in Go development on a Raspberry Pi you&rsquo;ll need to install the development environment onto the Raspberry Pi. <a href="https://www.jeremymorgan.com/tutorials/raspberry-pi/install-go-raspberry-pi/">Here&rsquo;s a simple source</a> that explains how to accomplish this. This source is a little dated, but the only significant issue is with the version of Go to install. The source shows installing Go <strong>1.14.4.linux-arm64.tar.gz</strong> and <strong>1.14.4.linuxarmv6l.tar.gz</strong>. The current versions are <strong>1.17.1.linux-arm64.tar.gz</strong> and <strong>1.17.1.linuxarmv6l.tar.gz</strong>. For the Raspberry Pi 3B+ the correct choice will be <strong>1.17.1.linuxarmv6l.tar.gz</strong>. The other is intended for 64 bit systems like the Raspberry Pi 4 series.</p>
@@ -308,11 +308,11 @@ Raspberry Pi Details:
 <p>Here is a slightly modified version of the Sunfounder C program that the controls an RGB LED:</p>
 <script type="application/javascript" src="https://gist.github.com/youngkin/58aaaab75b2f16be7bd4a3621d17348b.js"></script>
 
-<p>Line 5 provides the command needed to build the program - <code>gcc -o rgbled rgbled.c  -lwiringPi -lpthread</code>. The <code>-l</code> flags reference the libraries needed to build the program. <code>-lwiringPi</code> refers to the WiringPi library. It should be installed in the correct place along with WiringPi and the build command should just work. Libraries are usually located in <code>/usr/lib</code>.</p>
-<p>Lines 14-16 specify, using the WiringPi pin numbering scheme, the GPIO pins 0, 1, and 2 for <code>LedPinRed</code>, <code>LedPinGreen</code>, and <code>LedPinBlue</code> respectively.</p>
-<p>Line 20 contains the declaration of a signal handler for interrupt signals (SIGINT).</p>
-<p>Lines 23-25 use the <code>softPwmCreate()</code> function to initialize the pins. The initial characters in the function name, <code>softPwm</code>, indicate that the pins are being initialized for software PWM. The function&rsquo;s first parameter is the pin number. The second parameter is the starting pulse width. The final parameter is the range. See <a href="https://youngkin.github.io/post/pulsewidthmodulationraspberrypi/">Pulse Width Modulation for Dummies, with a Slice of Raspberry Pi</a> if you don&rsquo;t understand these terms.</p>
-<p>Lines 29-31, <code>softPwmWrite()</code> send the desired signal/voltage to the associated pin. The first parameter is the pin number, the same as in <code>softPwmCreate()</code> above. The second parameter is the pulse width. Notice that the pulse width was <code>0</code> in <code>softPwmCreate()</code>. This has the effect of setting the pin to zero volts. In <code>softPwmWrite()</code> the pulse width is set to the values specified by <code>r_val</code>, <code>g_val</code>, and <code>b_val</code>. These values represent the red, green, and blue values respectively. The maximum effective value for the pulse width is the range. This will result in full brightness/voltage. Any values greater than range will have no additional impact. It is important to note that the desired voltage will continue to flow to the pins until reset by another <code>softPwmWrite()</code>.</p>
+<p>Line 8 provides the command needed to build the program - <code>gcc -o rgbled rgbled.c  -lwiringPi -lpthread</code>. The <code>-l</code> flags reference the libraries needed to build the program. <code>-lwiringPi</code> refers to the WiringPi library. It should be installed in the correct place along with WiringPi and the build command should just work. Libraries are usually located in <code>/usr/lib</code>. Line 9 provides the command to run the program.</p>
+<p>Lines 18-20 specify, using the WiringPi pin numbering scheme, the GPIO pins 0, 1, and 2 for <code>LedPinRed</code>, <code>LedPinGreen</code>, and <code>LedPinBlue</code> respectively.</p>
+<p>Line 24 contains the declaration of a signal handler for interrupt signals (SIGINT).</p>
+<p>Lines 27-29 use the <code>softPwmCreate()</code> function to initialize the pins. The initial characters in the function name, <code>softPwm</code>, indicate that the pins are being initialized for software PWM. The function&rsquo;s first parameter is the pin number. The second parameter is the starting pulse width. The final parameter is the range. See <a href="https://youngkin.github.io/post/pulsewidthmodulationraspberrypi/">Pulse Width Modulation for Dummies, with a Slice of Raspberry Pi</a> if you don&rsquo;t understand these terms.</p>
+<p>Lines 33-35, <code>softPwmWrite()</code> send the desired signal/voltage to the associated pin. The first parameter is the pin number, the same as in <code>softPwmCreate()</code> above. The second parameter is the pulse width. Notice that the pulse width was <code>0</code> in <code>softPwmCreate()</code>. This has the effect of setting the pin to zero volts. In <code>softPwmWrite()</code> the pulse width is set to the values specified by <code>r_val</code>, <code>g_val</code>, and <code>b_val</code>. These values represent the red, green, and blue values respectively. The maximum effective value for the pulse width is the range. This will result in full brightness/voltage. Any values greater than range will have no additional impact. It is important to note that the desired voltage will continue to flow to the pins until reset by another <code>softPwmWrite()</code>.</p>
 <script type="application/javascript" src="https://gist.github.com/youngkin/55e6a197e7da1d727e9d8cd616571c73.js"></script>
 
 <p>The code snippet above is a continuation of the program. It shows the <code>main()</code> function. Lines 2–5 initialize the WiringPi library. The program exits if this initialization fails.</p>
@@ -387,6 +387,11 @@ Raspberry Pi Details:
                             Previous Post</a>
                     </li>
                     
+                    
+                    <li class="next">
+                        <a href="/post/ledbargraph/" data-toggle="tooltip" data-placement="top" title="Raspberry Pi GPIO in Go and C - LED Bar Graph">Next
+                            Post &rarr;</a>
+                    </li>
                     
                 </ul>
 
