@@ -1,0 +1,1070 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    
+
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-177198277-1"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-177198277-1');
+    </script>
+
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+    <meta property="og:site_name" content="Rich Youngkin">
+    <meta property="og:type" content="article">
+
+    
+    <meta property="og:image" content="https://youngkin.github.io/images/main_go_wideandtall_darklayer.jpeg">
+    <meta property="twitter:image" content="https://youngkin.github.io/images/main_go_wideandtall_darklayer.jpeg" />
+    
+
+    
+    <meta name="title" content="Raspberry Pi GPIO in Go and C - Using a Shift Register &amp; 7 Segment Display" />
+    <meta property="og:title" content="Raspberry Pi GPIO in Go and C - Using a Shift Register &amp; 7 Segment Display" />
+    <meta property="twitter:title" content="Raspberry Pi GPIO in Go and C - Using a Shift Register &amp; 7 Segment Display" />
+    
+
+    
+    <meta name="description" content="Why use a shift register and how to use it with a 7 segment display">
+    <meta property="og:description" content="Why use a shift register and how to use it with a 7 segment display" />
+    <meta property="twitter:description" content="Why use a shift register and how to use it with a 7 segment display" />
+    
+
+    
+    <meta property="twitter:card" content="summary" />
+    
+    
+
+    <meta name="keyword"  content="Rich, Youngkin, Raspberry, Pi, Docker, Kubernetes, Go, Golang, GPIO, Microservice">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>Raspberry Pi GPIO in Go and C - Using a Shift Register &amp; 7 Segment Display-Rich Youngkin Topics in Software Engineering</title>
+
+    <link rel="canonical" href="/post/shiftregistersevensegdisplay/">
+
+    <link rel="stylesheet" href="/css/iDisqus.min.css"/>
+	
+    
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    
+    <link rel="stylesheet" href="/css/zanshang.css">
+    
+    
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    
+    
+
+    
+    
+    <script src="/js/jquery.min.js"></script>
+    
+    
+    <script src="/js/bootstrap.min.js"></script>
+    
+    
+    <script src="/js/hux-blog.min.js"></script>
+
+    
+    
+
+</head>
+
+
+
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Rich Youngkin</a>
+        </div>
+
+        
+        
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    
+                        
+                        <li>
+                            <a href="/categories/barbeque">barbeque</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/blog">blog</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/go">go</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/gpio">gpio</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/kubernetes">kubernetes</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/raspberry-pi">raspberry-pi</a>
+                        </li>
+                        
+                    
+                    
+		    
+                        <li><a href="/top/about/">ABOUT</a></li>
+                    
+
+                    
+                </ul>
+            </div>
+        </div>
+        
+    </div>
+    
+</nav>
+<script>
+    
+    
+    
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        
+            $navbar.className = " ";
+            
+            setTimeout(function(){
+                
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+
+
+<style type="text/css">
+    header.intro-header {
+        background-image: url('/images/sevensegdisplay/header3.png')
+    }
+</style>
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/raspberry-pi" title="raspberry-pi">
+                            raspberry-pi
+                        </a>
+                        
+                        <a class="tag" href="/tags/go" title="Go">
+                            Go
+                        </a>
+                        
+                        <a class="tag" href="/tags/c" title="C">
+                            C
+                        </a>
+                        
+                        <a class="tag" href="/tags/gpio" title="GPIO">
+                            GPIO
+                        </a>
+                        
+                    </div>
+                    <h1>Raspberry Pi GPIO in Go and C - Using a Shift Register &amp; 7 Segment Display</h1>
+                    <h2 class="subheading"></h2>
+                    <span class="meta">
+                        
+                        Posted on
+                        Sunday, November 14, 2021
+                        
+                        
+                        
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+
+
+<article>
+    <div class="container">
+        <div class="row">
+
+            
+            <div class="
+                col-lg-11 col-lg-offset-1
+                col-md-10 col-md-offset-1
+                post-container">
+
+                
+                <header>
+                    <h2>Contents</h2>
+                </header>
+                <nav id="TableOfContents">
+  <ul>
+    <li><a href="#overview">Overview</a></li>
+    <li><a href="#prerequisites">Prerequisites</a></li>
+    <li><a href="#information-that-would-have-been-helpful">Information that would have been helpful</a>
+      <ul>
+        <li><a href="#what-is-a-7-segment-display">What is a 7-segment display?</a></li>
+        <li><a href="#what-is-a-shift-register-and-what-is-it-good-for">What is a shift register and what is it good for?</a></li>
+        <li><a href="#how-does-this-project-use-the-shift-register-and-7-segment-display">How does this project use the shift register and 7-segment display?</a></li>
+      </ul>
+    </li>
+    <li><a href="#setup-and-code">Setup and Code</a>
+      <ul>
+        <li><a href="#shift-register7-segment-display-in-c">Shift Register/7-Segment Display in C</a></li>
+        <li><a href="#shift-register7-segment-display-in-go">Shift Register/7-Segment Display in Go</a></li>
+      </ul>
+    </li>
+    <li><a href="#summary">Summary</a></li>
+    <li><a href="#references">References</a></li>
+  </ul>
+</nav>
+                
+                <h2 id="overview">Overview</h2>
+<p>This is the fourth article in a series that explores GPIO programming on a Raspberry Pi 3B+. It is a supplement to the <a href="https://docs.sunfounder.com/projects/raphael-kit/en/latest/1.1.4_7-segment_display_c.html">Sunfounder 7-Segment Display</a> project. You can find the full series <a href="https://youngkin.github.io/categories/gpio/">here</a>. The code for the series can be found on <a href="https://github.com/youngkin/gpio">github</a>.</p>
+<p>Like the <a href="https://docs.sunfounder.com/projects/raphael-kit/en/latest/1.1.2_rgb_led_c.html">Sunfounder RGB LED</a> project, there are some complicated aspects to this project that aren&rsquo;t well covered in the Sundfounder project documentation. The purpose of this article is to fill those gaps, specifically:</p>
+<ol>
+<li>What is a &ldquo;shift register&rdquo; (the 74HC595 chip)?</li>
+<li>What are the uses of a shift register?</li>
+<li>What is a 7-segment display?</li>
+<li>How is a shift register used on conjuction with a 7-segment display?</li>
+</ol>
+<p>An additional goal of this article is to provide a more complete example of the capability of shift registers and 7-segment displays using a program written in C. This program is significantly more advanced in this area than the Sunfounder code. This article will also provide this same program written in Go.</p>
+<p>If you haven&rsquo;t worked with LEDs before you should consider having a look at my <a href="http://10.0.0.223:1313/post/sunfoundergpionotesled/">Raspberry Pi GPIO in Go and C - Blinking LED</a> first. That article covers the basics of using an LED with Raspberry Pi GPIO and the associated C and Go libraries which isn&rsquo;t discussed in this article.</p>
+<h2 id="prerequisites">Prerequisites</h2>
+<p>This section is repeated in all articles in my <a href="https://youngkin.github.io/categories/gpio/">Raspberry Pi GPIO series</a>. If you&rsquo;ve already completed a project from one of these articles you can skim this section, looking only for required items not included in other projects, specifically the shift register and 7-segment display.</p>
+<p>If you don&rsquo;t have one, you&rsquo;ll need a Raspberry Pi. I used a Raspberry Pi 3B+ with the &lsquo;Stretch&rsquo; version of the Raspbian OS. The Raspberry Pi website has instructions on how to <a href="https://projects.raspberrypi.org/en/projects/raspberry-pi-setting-up">setup a new Raspberry Pi from scratch</a> if you decide to go that way vs. buying a complete kit.</p>
+<p>Other items you&rsquo;ll need include:</p>
+<ul>
+<li>a <a href="https://www.amazon.com/dp/B082KBF7MM/ref=sspa_dk_detail_4?psc=1&amp;pd_rd_i=B082KBF7MM&amp;pd_rd_w=1tGTV&amp;pf_rd_p=887084a2-5c34-4113-a4f8-b7947847c308&amp;pd_rd_wg=fX8JB&amp;pf_rd_r=44DE0RS1E9FD42RBYC7R&amp;pd_rd_r=47cbdc7f-7834-455f-9429-ef74a438bd45&amp;spLa=ZW5jcnlwdGVkUXVhbGlmaWVyPUFVVkdZVUZRNUw3ODkmZW5jcnlwdGVkSWQ9QTA4MzI4MzYyU0VLNzBJM0cxRUVMJmVuY3J5cHRlZEFkSWQ9QTA0Mjk1NTMzSzNSWlNFUjU0NURBJndpZGdldE5hbWU9c3BfZGV0YWlsJmFjdGlvbj1jbGlja1JlZGlyZWN0JmRvTm90TG9nQ2xpY2s9dHJ1ZQ==">breadboard</a> <em>(You may find <a href="https://www.sciencebuddies.org/science-fair-projects/references/how-to-use-a-breadboard">this tutorial on breadboards</a> helpful)</em>,</li>
+<li>some <a href="https://www.amazon.com/dp/B08HZ26ZLF/ref=syn_sd_onsite_desktop_19?psc=1&amp;spLa=ZW5jcnlwdGVkUXVhbGlmaWVyPUExRFpLWElCRjg1MUNMJmVuY3J5cHRlZElkPUEwMjMyMTE1M01aOFE3U1BQS09YSiZlbmNyeXB0ZWRBZElkPUEwODE5NTMxMktEMTlZRjEyQjBJNiZ3aWRnZXROYW1lPXNkX29uc2l0ZV9kZXNrdG9wJmFjdGlvbj1jbGlja1JlZGlyZWN0JmRvTm90TG9nQ2xpY2s9dHJ1ZQ==">jumper wires</a>,</li>
+<li>a <a href="https://www.amazon.com/Resistor-Tolerance-Resistors-Assortment-Certificated/dp/B08QR72BFW/ref=sr_1_8?crid=1E3LWKK431TDV&amp;keywords=resistor+assortment&amp;qid=1636936543&amp;qsid=143-6049131-7886617&amp;s=industrial&amp;sprefix=resistor%2Cindustrial%2C203&amp;sr=1-8&amp;sres=B085NQZNTY%2CB072BL2VX1%2CB07N1ZK8CC%2CB098BKR447%2CB08QR72BFW%2CB07L851T3V%2CB09CZ18Z31%2CB08PF3HNMD%2CB07D54XMFK%2CB088WQMNYK%2CB08NY3XR96%2CB06WRQS97C%2CB07PXYVP3J%2CB07D2Z45CG%2CB089Q88QPN%2CB08ZRYH9VC%2CB08FD1XVL6%2CB08QRH6HFT%2CB07PTNN78Z%2CB07P3MFG5D">220 Ohm resistor</a>,</li>
+<li>a <a href="https://www.amazon.com/Texas-Instruments-SN74HC595N-Registers-3-State/dp/B01J6WI7RA/ref=sr_1_5?keywords=shift+register+74hc595&amp;qid=1636936939&amp;qsid=143-6049131-7886617&amp;s=industrial&amp;sr=1-5&amp;sres=B07HFWB9L9%2CB01J6WI7RA%2CB0993RQGQY%2CB09CTHBH9P%2CB07B9DCR17%2CB08Z8B9QXY%2CB06WD3W8Q3%2CB07ZHGL8LN%2CB0842PRWJG%2CB07DR7PYYT%2CB01HEPJOV4%2CB07WNHBP86%2CB07RL1398S%2CB07B9D7SPC%2CB08Z3NH5BK%2CB07MQ5X9Q3%2CB07DL13RZH%2CB08JTXNP9Q%2CB08BR1PPQM%2CB01D8KOZF4">74HC595 shift register</a></li>
+<li>a <a href="https://www.amazon.com/microtivity-7-segment-Display-Common-Cathode/dp/B004S95VJE/ref=sr_1_11?crid=AOG8YK9L0NA1&amp;keywords=7+segment+display&amp;qid=1636937044&amp;qsid=143-6049131-7886617&amp;s=industrial&amp;sprefix=7+segment%2Cindustrial%2C211&amp;sr=1-11&amp;sres=B07GTQZ286%2CB00XW2L6SS%2CB07MCGDST2%2CB00EZBGUMC%2CB08THC6NGS%2CB07GTQ8NDC%2CB07GTPYXNF%2CB004S95VJE%2CB00XW2NSU2%2CB0060FGD3M%2CB087B8WTRZ%2CB01D0WSCJA%2CB0060FGCW4%2CB08N15PLSQ%2CB081VDVVSS%2CB07CLCC82N%2CB07GTQFL6J%2CB07GTQ42VR%2CB085WMBYH4%2CB08XPSCG4K">common cathode 7-segment display</a></li>
+<li>You should also consider getting a <a href="https://www.amazon.com/dp/B082PRVRYR/ref=sspa_dk_detail_2?psc=1&amp;pd_rd_i=B082PRVRYR&amp;pd_rd_w=8mKhr&amp;pf_rd_p=887084a2-5c34-4113-a4f8-b7947847c308&amp;pd_rd_wg=e9psa&amp;pf_rd_r=S09F37DF2G5FW8B8GX4B&amp;pd_rd_r=c065c120-e60b-45e9-b93b-f581f048cf46&amp;spLa=ZW5jcnlwdGVkUXVhbGlmaWVyPUFCMzhUQ09COFI2VlMmZW5jcnlwdGVkSWQ9QTA5NjU2ODUxRDkxNEYwSTYwV09KJmVuY3J5cHRlZEFkSWQ9QTAxOTg1MTUyRUhEUlc2VzQ2VDQ4JndpZGdldE5hbWU9c3BfZGV0YWlsJmFjdGlvbj1jbGlja1JlZGlyZWN0JmRvTm90TG9nQ2xpY2s9dHJ1ZQ==">40 pin female to female with a T-Type adapter</a> to attach the GPIO outputs to the breadboard. You can use only jumper wires, but the T-Type adapter will make things easier and will help prevent damage to the GPIO pins on the Raspberry Pi. If you elect not to buy the 40 pin cable with T-Type adapter you&rsquo;ll need to buy <a href="https://www.amazon.com/SinLoon-Breadboard-Arduino-Circuit-40-Pack/dp/B08M3QLL3Q/ref=pd_sbs_7/143-0445142-7950409?pd_rd_w=sVLrc&amp;pf_rd_p=8b76d7a7-ab83-4ddc-a92d-e3e33bfdbf03&amp;pf_rd_r=CDM5TGJT03VKF0ZFB577&amp;pd_rd_r=8e58fd82-8503-41cf-b8f2-c78eaeb78d25&amp;pd_rd_wg=tT1U0&amp;pd_rd_i=B08M3QLL3Q&amp;psc=1">male-to-female jumper wires</a>. Buying all these things separately will cost more than a kit however.</li>
+</ul>
+<p><a href="https://www.amazon.com/dp/B06WP7169Y/ref=sspa_dk_detail_5?psc=1&amp;pd_rd_i=B06WP7169Y&amp;pd_rd_w=OZVyf&amp;pf_rd_p=887084a2-5c34-4113-a4f8-b7947847c308&amp;pd_rd_wg=0V0IH&amp;pf_rd_r=623YJTBQ2CN2B2GYXQG5&amp;pd_rd_r=faa61f0f-3aec-4cf0-8e7e-d44eb1b3b92f&amp;spLa=ZW5jcnlwdGVkUXVhbGlmaWVyPUEyUVlDQzMzVVZBMFYxJmVuY3J5cHRlZElkPUEwMzExNzk4MUhGSjFSS0VKTlBROCZlbmNyeXB0ZWRBZElkPUEwMzYwNjg2UUdMRU44N0YzNzIwJndpZGdldE5hbWU9c3BfZGV0YWlsJmFjdGlvbj1jbGlja1JlZGlyZWN0JmRvTm90TG9nQ2xpY2s9dHJ1ZQ==">Here&rsquo;s a simple kit</a> that has all (most?) of the above. The photo of the kit appears to show a shift register, but I can&rsquo;t be sure. I&rsquo;m finding the <a href="https://www.amazon.com/gp/product/B09BMVT4CB/ref=ppx_yo_dt_b_asin_title_o02_s00?ie=UTF8&amp;psc=1">Sunfounder Raspberry Pi Ultimate Starter Kit</a> especially useful. NOTE: The Ultimate Starter Kit and the Raphael Kit are the same product.</p>
+<img style="border:1px solid black" src="/images/pwmfordummies/RaphaelKit.png" align="center" width="600" height="300"/>
+<figcaption align="left"><center><i style="color:black;">Sunfounder Ultimate Starter/Raphael kit</i></center></figcaption>
+<p>You will also need some basic C  and Go programming knowledge as well as familiarity with logging on to a Raspberry Pi terminal, or into the desktop GUI that comes with some OS versions. Depending on the approach you take, you may need to connect a keyboard and monitor to the Raspberry Pi. I simply SSH into the Pi. You&rsquo;ll also need familiarity with how to use an editor like vim or nano.</p>
+<p>To compile and run the C program you&rsquo;ll need the <a href="https://github.com/WiringPi">WiringPi</a> library. It&rsquo;s easy to get:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sudo apt-get install wiringpi
+</code></pre></div><p>Then test the installation using:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">pi@pi-node1:~/go/src/github.com/youngkin/gpio/rgbled $ gpio -v
+gpio version: 2.50
+Copyright <span style="color:#f92672">(</span>c<span style="color:#f92672">)</span> 2012-2018 Gordon Henderson
+This is free software with ABSOLUTELY NO WARRANTY.
+For details type: gpio -warranty
+
+Raspberry Pi Details:
+  Type: Pi 3B+, Revision: 03, Memory: 1024MB, Maker: Sony
+  * Device tree is enabled.
+  *--&gt; Raspberry Pi <span style="color:#ae81ff">3</span> Model B Plus Rev 1.3
+  * This Raspberry Pi supports user-level GPIO access.
+</code></pre></div><p>In the above you&rsquo;ll notice <code>gpio version: 2.50</code>. If you&rsquo;re using a Rasberry Pi 4, use the instructions given in the Sunfounder <a href="https://docs.sunfounder.com/projects/raphael-kit/en/latest/check_the_wiringpi_c.html">Checking the WiringPi</a>.</p>
+<p>WiringPi is unique in that it includes a command line tool, <code>gpio</code>, as shown above, that can be used to manage, control, and query the GPIO board. This can be very handy. See the <a href="http://wiringpi.com/the-gpio-utility/">gpio reference</a> for more information on what it can do and how to use it.</p>
+<p>If you&rsquo;re interested in Go development on a Raspberry Pi you&rsquo;ll need to install the development environment onto the Raspberry Pi. <a href="https://www.jeremymorgan.com/tutorials/raspberry-pi/install-go-raspberry-pi/">Here&rsquo;s a simple source</a> that explains how to accomplish this. This source is a little dated, but the only significant issue is with the version of Go to install. The source shows installing Go <strong>1.14.4.linux-arm64.tar.gz</strong> and <strong>1.14.4.linuxarmv6l.tar.gz</strong>. The current versions are <strong>1.17.1.linux-arm64.tar.gz</strong> and <strong>1.17.1.linuxarmv6l.tar.gz</strong>. For the Raspberry Pi 3B+ the correct choice will be <strong>1.17.1.linuxarmv6l.tar.gz</strong>. The other is intended for 64 bit systems like the Raspberry Pi 4 series. You can find current ARM versions of Go at the <a href="https://golang.org/dl/">Golang download site</a>.</p>
+<p>For Go development you&rsquo;ll also need the <a href="https://github.com/stianeikeland/go-rpio">go-rpio</a> library.</p>
+<p>If you want to veer away from the cookbook style of the Sunfounder docs you&rsquo;ll need some basic knowledge of Linux . For example, I won&rsquo;t be explaining what <strong>root privileges</strong> are.</p>
+<h2 id="information-that-would-have-been-helpful">Information that would have been helpful</h2>
+<p>The <a href="https://docs.sunfounder.com/projects/raphael-kit/en/latest/1.1.4_7-segment_display_c.html">Sunfounder 7-Segment Display</a> project documentation pretty much just jumps into how to wire up the breadboard and the code without mentioning much about the hardware components, especially the shift register. Even the code description was a little confusing given my lack of knowledge about shift registers. I accidentally stumbled across the <a href="https://docs.sunfounder.com/projects/electronic-kit/en/latest/lesson_19_7-segment.html">Sunfounder 7-Segment Python</a> project documentation that did provide some useful information on the 7-segment display, but still no mention of the shift register. This project could easily be done without the shift register, in fact many <a href="https://www.circuitbasics.com/arduino-7-segment-display-tutorial/">other articles on 7-segment displays</a> do just that. So why does the project use a shift register? Why not just wire the 7-segment display directly to the GPIO pins? Clearly there&rsquo;s something to the shift register and I wanted to know what that was. It turns out, for me anyway, that this project is really about shift register with the 7-segment display being merely a tool to visualize how shift registers work. But before we get to shift registers, let&rsquo;s have a short discussion about 7-segment displays.</p>
+<h3 id="what-is-a-7-segment-display">What is a 7-segment display?</h3>
+<p>So what is a 7-segment display? Well, to be pendantic, it has 8 segments if you include the decimal point on the device. That aside, it&rsquo;s a common device you&rsquo;re already familiar with having seen them used in everything from clocks to calculators and other devices that need a numeric display. In terms of the physical implementation there are a few details we need to know.</p>
+<table>
+<thead>
+<tr>
+<th>Pinout diagram</th>
+<th>LED Identification diagram</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><img style="border:1px solid black" src="/images/sevensegdisplay/7segmentdisplaypinout.png" align="center" width="150"/></td>
+<td><img style="border:1px solid black" src="/images/sevensegdisplay/sevensegmentdisplaydiagram.png" align="center" width="200"/></td>
+</tr>
+</tbody>
+</table>
+<figcaption align="left"><center><i style="color:black;"><a href="https://www.circuitbasics.com/arduino-7-segment-display-tutorial/">Image Credit: Circuit Basics</a></i></center></figcaption>
+<p>First of all, the diagram to the above left shows the pinout designations for the 7-segment display. This diagram shows the middle pins on the top and the bottom with a (-) annotation. This designates those pins to be the ground pins for the display. The letters on the remaining pins correspond to the letters in the LED identification diagram on the right. For example, applying power to the &lsquo;A&rsquo; pin on the display will light up the LED labeled &lsquo;A&rsquo; in the diagram to the right. The letters &ldquo;DP&rdquo; stand for decimal point.</p>
+<p>For this project we need what is known as a common cathode 7-segment display. This is what the diagram above left is showing <em>(the middle pins on the top and the bottom have a (-) annotation)</em>. All this means is that all the negative terminals of the LEDs in the display are connected to a common ground pin. Common anode is the other type, which as you might expect, means all the LEDs&rsquo; positive terminals are connected to the same pin.</p>
+<img style="border:1px solid black" src="/images/sevensegdisplay/commoncathodeoranode.png" align="center" width="600" height="300"/>
+<figcaption align="left"><center><i style="color:black;"><a href="https://www.circuitbasics.com/arduino-7-segment-display-tutorial/">Image Credit: Circuit Basics</a></i></center></figcaption>
+<p>If you&rsquo;re using the Sunfounder kit the 7-segment display is a common cathode display. If you got a 7-segment display from another source you might want to verify it&rsquo;s type. Determining whether a 7-segment display is a common cathode or common anode is fairly easy to do. Paraphrasing from <a href="https://www.circuitbasics.com/arduino-7-segment-display-tutorial/">How to set up seven segment displays on the Arduino</a>, <em>which is also the source of the above diagram</em>, the steps are as follows:</p>
+<blockquote>
+<p>While the above diagram shows an Arduino, hooking it up to a Raspberry Pi is very similar.</p>
+</blockquote>
+<ol>
+<li>You&rsquo;ll need the Raspberry Pi 3.3v power pin hooked up to a breadboard.
+<ol>
+<li>Connect the power from the Raspberry Pi as shown above (or to the breadboard&rsquo;s power bus).</li>
+<li>Connect a resistor between the 2 sides of the breadboard, or from the power bus to one side of the breadboard.</li>
+</ol>
+</li>
+<li>Connect a jumper wire (red) on the far end of the resistor from the power source.</li>
+<li>Connect a jumper wire (black) to the Raspberry Pi&rsquo;s GPIO ground pin.</li>
+<li>Connect the black jumper wire (ground) to the middle pin, top or bottom, of the display.</li>
+<li>Connect the red jumper wire (positive) to any of the other pins (except the middle pin!).</li>
+<li>If an LED lights up the display is a common cathode.</li>
+<li>If an LED doesn&rsquo;t light up
+<ol>
+<li>Disconnect the jumpers from the display</li>
+<li>Connect the red jumper to one of the middle pins, top or bottom</li>
+<li>Connect the black wire to one of the other pins.</li>
+<li>At this point an LED should light up and you&rsquo;ve verified that the display is a common anode display</li>
+<li>If no LED lights up then double-check your wiring.</li>
+</ol>
+</li>
+</ol>
+<p><a href="https://youtu.be/Fa7BHbPAM98">This YouTube video</a> shows how to accomplish this using a multimeter instead of wiring up a breadboard as described above.</p>
+<h3 id="what-is-a-shift-register-and-what-is-it-good-for">What is a shift register and what is it good for?</h3>
+<p>There are <a href="https://www.elprocus.com/what-is-a-shift-register-different-types-counters-and-applications/">several types of shift registers</a>. For this project we&rsquo;re using what&rsquo;s known as a &ldquo;Serial In, Parallel Out&rdquo; (SIPO) shift register. This type of shift register converts a serial input into a parallel output. For example, several pulses of a signal generated on a single Raspberry Pi GPIO pin can be accumulated by the shift register and then sent as a single parallel output to a 7-segment display. This is exactly what is being done in this project.</p>
+<p>So why use a shift register? Well for one, as noted above, it only takes one GPIO pin to drive 8 pins on a 7-segment display <em>(not quite true, this will be explained in more detail farther into the article)</em>. Versions of this project without a shift register take 8 GPIO pins to accomplish the same thing. So, one use of a shift register is to conserve GPIO pins. This is especially true of LED displays with a very large number of LEDs that perhaps wouldn&rsquo;t be usable due to a lack of available GPIO pins. Although this isn&rsquo;t true of a 7-segment display, some devices only take parallel input. So for this kind of situation, a SIPO shift register is mandatory in converting a serial source into a parallel output.</p>
+<h4 id="shift-register-anatomy">Shift register anatomy</h4>
+<p>The 74HC595 shift register has a couple of logical components that are pertinent to this article:</p>
+<ul>
+<li>Input shift register - This is a series of connected flip-flop devices that receive incoming (serial) data on the receipt of each synchronizing clock pulse (more about this later). This register is comprised of outputs that are named in sequence from Qa&rsquo; to Qh&rsquo;, i.e., Qa&rsquo;, Qb&rsquo;, &hellip;, Qh&rsquo;.</li>
+<li>Output or storage register - This is another series of connected flip-flop devices that transfer the serial data in parallel to a connected device. This register is comprised of outputs that are named in sequence from Qa to Qh, and Qh&rsquo; (more on Qh&rsquo; below).</li>
+</ul>
+<p>This anatomy is shown graphically in the following, albeit somewhat complex, diagram from the <a href="https://www.ti.com/lit/ds/symlink/cd74hc595.pdf?ts=1636840974607&amp;ref_url=https%253A%252F%252Fwww.google.com%252F">Texas Instruments CD74HC595 8-Bit Shift Registers with 3-State Output Registers datasheet</a>. The first column of 8 boxes to the left, labeled C1 or C2, comprise the input shift register. The second column of 8 boxes to the right, labeled C3, comprise the output shift register. The output register&rsquo;s output pins can be seen at the far right, labeled Qa through Qh, and Qh&rsquo;. The input and control channels, as shown by OE, RCLK, SRCLR, SRCLK, and SER in the upper left of the diagram, are discussed in more detail below.</p>
+<img style="border:1px solid black" src="/images/sevensegdisplay/74HC595Schematic.png" align="center" width="600"/>
+<figcaption align="left"><center><i style="color:black;"><a href=https://www.ti.com/lit/ds/symlink/cd74hc595.pdf?ts=1636840974607&ref_url=https%253A%252F%252Fwww.google.com%252F">TI CD74HC595 schematic diagram - Image Credit: Texas Instruments</a></i></center></figcaption>
+<p>More information pertaining to the Q* names for the registers&rsquo; outputs is provided below.</p>
+<p>It is a little confusing for the entire device to be called shift register as well as the input component to also be called shift register. To differentiate between the two, if it&rsquo;s not clear from the context, I&rsquo;ll make sure to reference which one I&rsquo;m referring to when the term is used later in the article.</p>
+<table>
+<thead>
+<tr>
+<th>Pin Diagram</th>
+<th>Photo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><img style="border:1px solid black" src="/images/sevensegdisplay/74hc595shiftregister.png" align="center" width="600" /></td>
+<td><img style="border:1px solid black" src="/images/sevensegdisplay/74HC595Photo.png" align="center" width="370"/></td>
+</tr>
+</tbody>
+</table>
+<figcaption align="left"><center><i style="color:black;"><a href=https://www.ti.com/lit/ds/symlink/cd74hc595.pdf?ts=1636840974607&ref_url=https%253A%252F%252Fwww.google.com%252F">Image Credit: Texas Instruments</a> (Left) and Author (Right)</i></center></figcaption>
+<p>The diagram at above left shows the pinouts for a SN74HC595 shift register. The photo at above right is in the same orientation as the pin diagram, namely GND is in the lower left, Vcc is in the upper right, and the &ldquo;notch&rdquo; is at the top center. The pins are defined as follows:</p>
+<ul>
+<li><strong>Pin 15</strong> (right side, 2nd from the top), Qa, is the first output pin. Qa is also known as Q0.</li>
+<li><strong>Pins 1-7</strong>, Qb-Qh, are the remaining output pins. Notice that there are 8 output pins (including Qa above). Having 8 outputs makes this an 8-bit shift register. Qb-Qh are also known as Q1-Q7.</li>
+<li><strong>Pin 8</strong>, GND is the ground pin.</li>
+<li><strong>Pin 16</strong>, Vcc, is the power-in pin.</li>
+<li><strong>Pin 14</strong>, SER, is the serial input pin. This is the pin that takes the incoming serial data pulses. This is sometimes referred to as DS, SI, or SDI.</li>
+<li><strong>Pin 11</strong>, SRCLK, is the pin that accepts the synchronization signal that indicates 1 bit of data has been transmitted to the SER pin. This type of signal is called a clock. SRCLK stands for shift register clock. SRCLK is also known as sh_cp.</li>
+<li><strong>Pin 12</strong>, RCLK, is the pin that accepts the synchronization signal that indicates all 8 shift register bits have been populated and it&rsquo;s time to transfer the bits, in parallel, to the output/storage register and thereby to the device connected to the output pins, Qa-Qh. RCLK is also known as st_cp or latch.</li>
+<li><strong>Pin 10</strong>, SRCLR, is used to clear the current values of the shift register. SRCLR stands for shift register clear. SRCLR is also known as MR. If clearing the shift register is not required it can be connected to the power source which generates a HIGH signal (or 1). To clear the shift register the SRCLR pin is set to LOW (or 0). It must be set back to HIGH before the shift register is functional again.</li>
+<li><strong>Pin 13</strong>, OE, is used to block the availability of the output or storage register. The OE pin&rsquo;s effect is temporary. When it&rsquo;s set to LOW (0) the data in the output register is accessible. When it&rsquo;s HIGH(1) the data is not accessible. Setting it from HIGH to LOW makes the data once again accessible. Unlike the SRCLR pin, it does not clear the register. If disabling the output register is not required it can be connected to ground.</li>
+<li><strong>Pin 9</strong>, Qh&rsquo;, is used to daisy chain multiple shift registers. For example, imagine a project that needed to control 16 LEDs in a parallel fashion. In this case a single 8-bit shift register is inadequate, we need 2 that can communicate in some manner. We can get the other required 8 bits from a second 8-bit shift register. To link the 2 shift registers we connect the Qh&rsquo; output from the first, to pin 14, SER, on the second shift register. Daisy chaining shift registers is beyond the scope of this project, but you can read more about it on <a href="https://www.electroschematics.com/multiple-shift-registers-arduino-part-1/">Multilple Shift-out Registers on Arduino - part 1</a>.</li>
+</ul>
+<h4 id="shift-register-in-operation">Shift register in operation</h4>
+<p>As stated above, input data is stored in the input shift register. Data is transferred on each pulse of the SRCLK input. When an SRCLK input is received, data on a prior Q*&rsquo; pin is shifted to the next Q*&rsquo; register in the sequence. When the input shift register has been populated an RCLK signal causes all of the input register contents to be transferred to the output register. The following table illustrates this behavior. To keep things simnple, I&rsquo;m limiting the example to 4 bits, Qa* to Qd*. The input bit sequence will be <code>1011</code>. The first bit, <code>1</code>, will be transmitted at t0. The transmitted bits are indicated in parentheses next to the time indication (e.g., <code>t0(1)</code>). The 4 bits become available at the output register on a signal from RCLK at t4.</p>
+<table>
+<thead>
+<tr>
+<th>SRCLK</th>
+<th>t0 (1)</th>
+<th>t1 (0)</th>
+<th>t2 (1)</th>
+<th>t3 (1)</th>
+<th>t4</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Qa&rsquo;</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>-</td>
+</tr>
+<tr>
+<td>Qb&rsquo;</td>
+<td>-</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>-</td>
+</tr>
+<tr>
+<td>Qc&rsquo;</td>
+<td>-</td>
+<td>-</td>
+<td>1</td>
+<td>0</td>
+<td>-</td>
+</tr>
+<tr>
+<td>Qd&rsquo;</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>1</td>
+<td>-</td>
+</tr>
+<tr>
+<td><strong>RCLK</strong></td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>1</td>
+</tr>
+<tr>
+<td>Qa</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>1</td>
+</tr>
+<tr>
+<td>Qb</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>1</td>
+</tr>
+<tr>
+<td>Qc</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Qd</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+<p>Notice that in the output sequence of bits, if the output bits are read from Qa to Qd, the bit sequence is reversed. That is, <code>1101</code> vs. the input sequence of <code>1011</code>. This manner of shifting is called Most Significant Bit (MSB) shifting. It starts with the leftmost bit as in this example. This must be kept in mind or unexpected results may occur. It is possible to shift in a more intuitive way, Least Significant Bit (LSB). To do this the shifting must start with the least, or rightmost, input bit. In C, MSB shifting is done using the <code>&lt;&lt;</code> shift operator. LSB shifting is done by using the <code>&gt;&gt;</code> shift operator. The impact of shift method will become more obvious when we get to how the shift register (not the input shift register) is used in conjunction with the 7-segment display. <a href="https://en.wikipedia.org/wiki/Bit_numbering">See Wikipedia for more about MSB and LSB</a>.</p>
+<p>I simplified things a little bit when I stated above that only one Raspberry Pi GPIO pin is needed to drive the 8 LED segments in the 7-segment display. The one pin I identified is used for the SER (serial data in) pin. A minimum of 2 more are needed; 1 for the SRCLK pin and the other for the RCLK pins. As shown above these are required to advance the clock on the input shift register and transfer data from the input shift register to the output register respectively. So that&rsquo;s now 3 pins to drive the 8 LEDs on the 7-segment display. This is still a good tradeoff. But 2 more GPIO pins are needed if the SRCLR and OE pins are needed. So now that&rsquo;s 5 GPIO pins to drive 8 LED segments. Still a net gain of 3 pins. However, the savings become even greater when shift registers are daisy-chained as discussed above. Without requiring additional GPIO pins it is possible to control 16 or even more LEDs from those 5 GPIO pins. The savings become more significant as more devices, e.g., LEDs, need to be controlled.</p>
+<h3 id="how-does-this-project-use-the-shift-register-and-7-segment-display">How does this project use the shift register and 7-segment display?</h3>
+<p>This project uses the shift register component to capture serial input, accumulate it until 8 bits are written, and then make it available to the output register. Since the shift register component is wired to the 7-segment display, the contents of the output register are made available to the 7-segment display, controlling what is ultimately displayed. The details of the pin connections from the shift register component to the 7-segment display pins, coupled with the shift method used, MSB in this case, dictate what LEDs will be illuminated on the 7-segment display. The following table provides the specific pin assignments as well as what the final values at the output register will be given that the input number is <code>0x3f</code>, <code>0011 1111</code>, is used with MSB shifting.</p>
+<table>
+<thead>
+<tr>
+<th>74HC595 pin</th>
+<th>7-segment display pin</th>
+<th>Final value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Qa</td>
+<td>A</td>
+<td>1</td>
+</tr>
+<tr>
+<td>Qb</td>
+<td>B</td>
+<td>1</td>
+</tr>
+<tr>
+<td>Qc</td>
+<td>C</td>
+<td>1</td>
+</tr>
+<tr>
+<td>Qd</td>
+<td>D</td>
+<td>1</td>
+</tr>
+<tr>
+<td>Qe</td>
+<td>E</td>
+<td>1</td>
+</tr>
+<tr>
+<td>Qf</td>
+<td>F</td>
+<td>1</td>
+</tr>
+<tr>
+<td>Qg</td>
+<td>G</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Qh</td>
+<td>DP</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<p>Using the diagrams below we can ascertain what number will be displayed at the 7-segment LED.</p>
+<table>
+<thead>
+<tr>
+<th>Pinout diagram</th>
+<th>LED Identification diagram</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><img style="border:1px solid black" src="/images/sevensegdisplay/7segmentdisplaypinout.png" align="center" width="150"/></td>
+<td><img style="border:1px solid black" src="/images/sevensegdisplay/sevensegmentdisplaydiagram.png" align="center" width="200"/></td>
+</tr>
+</tbody>
+</table>
+<figcaption align="left"><center><i style="color:black;"><a href="https://www.circuitbasics.com/arduino-7-segment-display-tutorial/">Image Credit: Circuit Basics</a></i></center></figcaption>
+<p>7-segment display pins A-F will have the value 1, G and DP will have the values 0. Mapping this to the above LED Identification diagram we can see that the number displayed will be <code>0</code>.</p>
+<h2 id="setup-and-code">Setup and Code</h2>
+<img style="border:1px solid black" src="/images/sevensegdisplay/breadboard.png" align="center" width="800"/>
+<figcaption align="left"><center><i style="color:black;">Sunfounder wiring diagram - <a href="https://docs.sunfounder.com/projects/raphael-kit/en/latest/1.1.4_7-segment_display_c.html">Image Credit - Sunfounder</a></i></center></figcaption>
+<img style="border:1px solid black" src="/images/sevensegdisplay/flatbreadboard2.png" align="center" width="800"/>
+<figcaption align="left"><center><i style="color:black;">Actual wiring (mostly) - Image Credit: Author</i></center></figcaption>
+<p>The breadboard should be wired as illustrated in the above diagram <em>(as indicated in the <a href="https://docs.sunfounder.com/projects/raphael-kit/en/latest/1.1.4_7-segment_display_c.html">Sunfounder 7-Segment Display</a> project documentation)</em>. One very important thing to note, something that I spent way too much time debugging, is that the resistor connecting the ground pin on the 7-segment display must be connected to the ground or negative bus on the breadboard. In all my prior projects I&rsquo;ve connected the resistor to the positive breadboard bus. I initially missed this detail and the 7-segment display didn&rsquo;t display anything. One other thing I got wrong on the initial wiring is that I had the 74HC595 output register pins connected incorrectly to the 7-segment display. This is easy to do. I debugged this by noting wich LED segments lit up for which expected number. After going through several numbers it became apparent that I had the &lsquo;G&rsquo; and &lsquo;E&rsquo; pins on the 7-segment display reversed.</p>
+<p>If you&rsquo;re unfamiliar  with breadboards and breadboard diagrams this <a href="https://www.sciencebuddies.org/science-fair-projects/references/how-to-use-a-breadboard">breadboard tutorial </a> should be helpful.</p>
+<h3 id="shift-register7-segment-display-in-c">Shift Register/7-Segment Display in C</h3>
+<p>This code is quite different from the Sunfounder code. This is because I chose to add several capabilities including:</p>
+<ol>
+<li>Support for an interrupt handler. This will gracefully exit the program by clearing the input shift register thereby turning off all the LEDs. The Sunfounder program will leave the LEDs in whatever state they were in when that version exits.</li>
+<li>It supports setting both the SRCLR and OE shift register pins.</li>
+<li>It adds support for illuminating the decimal point in the 7-segment display.</li>
+<li>It add several functions that provide the ability to test different capabilities of the 74HC595 shift register including using the SRCLR and OE pins.</li>
+<li>It accepts user input from the keyboard allowing the user to specify how they&rsquo;d like the program to drive the shift register and hence the LED. This includes things like clearing the input shift register, disabling and reenabling the output register as well as writing all hexidecimal digits/deciamal point as well as writing an <code>8.</code> to the display.</li>
+</ol>
+<script type="application/javascript" src="https://gist.github.com/youngkin/84d8e9f350d19d184255adb3fb7ad93c.js"></script>
+
+<p>Most of this is pretty well explained by the embedded comments, but I&rsquo;ll mention of few highlights.</p>
+<p>Lines 12 and 13 provide information on how to build and run the program.</p>
+<p>Lines 27 and 28 define the GPIO pins that drive the SRCLR and OE pins respectively. Note that the GPIO pin numbers are the <a href="https://github.com/WiringPi/WiringPi">WiringPi</a> pin numbers. If you decide you want to see this behavior in action, wire pin 24 to the SRCLR shift register pin, and wire pin 29 to the OE shift register pin instead of positive and ground respectively.</p>
+<p><img style="border:1px solid black" src="/images/sevensegdisplay/74hc595shiftregister.png" align="center" width="300" /></p>
+<figcaption align="left"><center><i style="color:black;"><a href=https://www.ti.com/lit/ds/symlink/cd74hc595.pdf?ts=1636840974607&ref_url=https%253A%252F%252Fwww.google.com%252F">Image Credit: Texas Instruments</a></i></center></figcaption>
+<p>Lines 32 and 33 define an array, <code>SegCode</code>, that contains the hexidecimal numbers that will be shifted into the shift register in order to display a number that matches the index of a particular number in the array. For example, to display an 8 <code>SegCode[8]</code> should be used. Note that these numbers reflect the use of the MSB form of shifting. The numbers would be different if the LSB shifting form were used. For example, the number to use to display 0, as shown on line 32, is <code>0x3F</code> (<code>0011 1111</code>). To display 0 using the LSB method the hex number <code>0xFC</code>(<code>1111 1100</code>) and the C right-shift operator, <code>&gt;&gt;</code>, should be used.</p>
+<script type="application/javascript" src="https://gist.github.com/youngkin/f9f9d14b5405805f9f2ef31ec36d7c46.js"></script>
+
+<p>This next code snippet shows the initialization of the shift register. In a nutshell, all the pins we&rsquo;re using are placed in OUTPUT mode so we can write to them. Next, all pins except for the SRCLR pin are set to LOW (0). Recall that the SRCLR pin must be set to HIGH for the shift register to be operational.</p>
+<blockquote>
+<p>The alternative to pin mode OUTPUT is PWM. Since PWM simulates lower voltages by rapidly pulsing the associated pin it&rsquo;s not suitable for use with shift registers. Recall that a pulse to the SRCLK and RCLK pins represents a clock advancing. Using PWM, and the resulting rapid pulsing, would interfere with the clocks advancing in a reliable manner.</p>
+</blockquote>
+<script type="application/javascript" src="https://gist.github.com/youngkin/332b51486edd22771dda7bac8f88ae62.js"></script>
+
+<p>This code snippet demonstrates 2 methods of turning off all the LEDs in the 7-segment display. Specifically, it shows how to use both the SRCLR pin and writing zeros to all the input shift register bits to clear the input shift register that will result in the 7-segment display showing nothing.</p>
+<p>In <code>shiftRegClr</code>, lines 1 through 11, note the use of the RCLK pin on lines 4 and 6. The clock signal to that pin must be pulsed, i.e., set to HIGH followed by LOW, in order to make the input shift register contents available to the output register. Also note that the SRCLR pin needs to be reset to HIGH after the operation to reenable the shift register.</p>
+<p>Lines 16 through 28 show the method of writing zeros to all the input shift register bits to clear the input shift register (<code>zeroClear()</code>). This is functionally equivalent to using the SRCLR method, they both set the input shift register bits to 0. It does take a lot more effort however. The <code>for</code> loop in lines 18 through 23 shifts a zero into each bit of the input shift register. It repeats the process 8 times, advancing the SRCLK with each write, to fill the input shift register bits. Lines 20 and 22 send the SRCLK pulse to advance the input shift register bits. Strictly speaking, it&rsquo;s not necessary to shift the <code>0</code> and <code>&amp;</code> it to <code>0x80</code> on line 19. It would be sufficient to merely write <code>0</code> to the SDI pin. However, it is necessary to use this method of writing to the SDI pin write any other number, e.g., <code>0x3F</code> into the input shift register.</p>
+<p>As with <code>shiftRegClr()</code> above, lines 25 and 27 toggle the RCLK pin to transfer the bits to the output register.</p>
+<script type="application/javascript" src="https://gist.github.com/youngkin/ce54e1d33e27f7005dcabfde0611f0e6.js"></script>
+
+<p>This next code snippet demonstrates how to light up all the LEDs, including the decimal point, as well as toggling the OE pin to temporarily disable the output register.</p>
+<p>Lines 3 through 15 show <code>writeAllOnes()</code>. It&rsquo;s implemented almost exactly like <code>zeroClear()</code> above. The one notable exception is that it doesn&rsquo;t left-shift the 1 and <code>&amp;</code> it to <code>0x80</code> before writing it to the pin. This demonstrates that when all input shift register bits will have the same value, i.e., 1 or 0, it&rsquo;s not necessary to do this. It does however repeat the process of writing to the pin 8 times, advancing the SRCLK clock after each write.</p>
+<p>Lines 22 through 29 implement <code>oeToggle()</code>, which toggles the OE pin to HIGH (1) and then LOW again. There&rsquo;s a 1 second delay between the writes to ensure that the effect is visible. Recall that setting to OE pin to HIGH is how the output register is disabled. From the observer&rsquo;s perspective, the 7-segment display will turn off for 1 second and then be restored to whatever was being displayed prior to the toggling. It&rsquo;s up to the calling function to decide what is displayed on the 7-segment display prior to calling this function.</p>
+<script type="application/javascript" src="https://gist.github.com/youngkin/beb013db757698a7467564c6f118e99a.js"></script>
+
+<p><code>hc595_shift()</code> is responsible for shifting the various bits of the input number, <code>dat</code>, into the input shift register. With the exception that the input number is variable based on what the value of <code>dat</code> is, the function is implemented exactly like <code>zeroClr()</code> above. In fact, both <code>zeroClr()</code> and <code>writeAllOnes()</code> can, and probably should have been, implemented using <code>hc595_shift()</code>.</p>
+<p>For those that might have trouble imagining how the <code>&lt;&lt;</code> works in conjuction with the <code>&amp;</code> operator, like I did, here&rsquo;s a short example using <code>0x3f</code> or <code>0011 1111</code> as an example. Note that the order of precedence of the operations is that <code>&lt;&lt;</code> happens first followed by the <code>&amp;</code>.</p>
+<table>
+<thead>
+<tr>
+<th><code>i</code></th>
+<th><code>dat</code> after shift</th>
+<th><code>dat &amp; 0x80</code></th>
+<th>result written to the SDI pin</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>0011 1111</td>
+<td>0011 1111 &amp; 1000 0000</td>
+<td>0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0111 1110</td>
+<td>0111 1110 &amp; 1000 0000</td>
+<td>0</td>
+</tr>
+<tr>
+<td>2</td>
+<td>1111 1100</td>
+<td>1111 1100 &amp; 1000 0000</td>
+<td>1</td>
+</tr>
+<tr>
+<td>3</td>
+<td>1111 1000</td>
+<td>1111 1000 &amp; 1000 0000</td>
+<td>1</td>
+</tr>
+<tr>
+<td>4</td>
+<td>1111 0000</td>
+<td>1111 0000 &amp; 1000 0000</td>
+<td>1</td>
+</tr>
+<tr>
+<td>5</td>
+<td>1110 0000</td>
+<td>1110 0000 &amp; 1000 0000</td>
+<td>1</td>
+</tr>
+<tr>
+<td>6</td>
+<td>1100 0000</td>
+<td>1100 0000 &amp; 1000 0000</td>
+<td>1</td>
+</tr>
+<tr>
+<td>7</td>
+<td>1000 0000</td>
+<td>1000 0000 &amp; 1000 0000</td>
+<td>1</td>
+</tr>
+<tr>
+<td>8</td>
+<td>0000 0000</td>
+<td>0000 0000 &amp; 1000 0000</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<p>The last entry, <code>i = 8</code>,  is what would happen if <code>dat</code> was shifted 9 times instead of 8. This was included just to make it clear that <code>dat</code> has been shifted 8 bits to the left leaving all 8 bits set to 0.</p>
+<script type="application/javascript" src="https://gist.github.com/youngkin/ba2fdb83fa9819be02fb8237aa299fd1.js"></script>
+
+<p>Most of the functions in the above code snippet merely setup the test by setting the display to <code>8</code>, and then delegate the behavior to the functions that we saw implemented above (e.g., <code>shiftRegCLr()</code>. Instead of merely displaying an <code>8</code>, <code>testWriteNum()</code> will rotate through all the heximdecimal numbers and decimal point.</p>
+<script type="application/javascript" src="https://gist.github.com/youngkin/dc409c1a8995949b09f51baccdf81752.js"></script>
+
+<p>Finally, this code snippet implements the <code>main()</code> and <code>interruptHandler()</code> functions.</p>
+<p>Line 3 registers a signal handler, <code>interruptHandler()</code>, with interest in the <code>SIGINT</code> signal. <code>SIGINT</code> is what will be generated when <code>ctl-C</code> is entered at the terminal.</p>
+<p>Lines 6 through 9 initialize the WiringPi library, exiting if the initializtion fails.</p>
+<p>Line 16 prompts the user for what behavior they&rsquo;d like to see demonstrated.</p>
+<p>Lines 17 through 25 first read the terminal input from the user and populate a null terminated string with the results. The code doesn&rsquo;t care for any characters that might have been entered except the first character. Any additional characters between it and the newline will be ignored.</p>
+<p>Line 26 frees the memory allocated by <code>getline()</code> on line 19. This is necessary to avoid memory leaks. Don&rsquo;t worry if you don&rsquo;t understand this. It&rsquo;s not important to what&rsquo;s being demonstrated in this program. If you&rsquo;re interested, investigate memory allocation in C including how memory is allocated (<code>malloc</code>), how it&rsquo;s freed (<code>free</code>), why this is important, and finally the operation of the <code>getline()</code> function. Otherwise just remember it&rsquo;s required.</p>
+<blockquote>
+<p><em>ASIDE: strictly speaking it&rsquo;s not actually required in this program as the resulting memory leak is likely to be trivial in normal use. At a minimum it&rsquo;s bad form to not <code>free</code> all allocated memory when it&rsquo;s no longer needed. At worst, the program can fail in various ways once all available memory has been allocated. So, call <code>free</code> when the memory associated with a variable like <code>line</code> is no longer needed.</em></p>
+</blockquote>
+<blockquote>
+<p><a href="https://en.wikipedia.org/wiki/C_dynamic_memory_allocation">Wikipedia</a> has a very detailed discussion about memory allocation and management.</p>
+</blockquote>
+<p>Lines 28 through 56 detect which option the user chose and call the function associated with that option. The entire process described from line 15 onwards is repeated until the user chooses the (q)uit option.</p>
+<p>Lines 63 through 67 register the signal handler that will gracefully exit the program if <code>ctl-C</code> is entered at the terminal. It calls <code>toggle8()</code> which briefly displays an <code>8</code> before turning off all the LEDs in the 7-segment display.</p>
+<h3 id="shift-register7-segment-display-in-go">Shift Register/7-Segment Display in Go</h3>
+<p>The Go program is very similar to the C version. There are some minor differences in the implementation and the runtime output. Some of these differences are due to structural differences between the languages as well as differences in coding conventions. The snippets below represent most, but not all of the program. I left out some of the boiler plate and whitespace.</p>
+<script type="application/javascript" src="https://gist.github.com/youngkin/372686065e31b4fcc896de3398e3a80a.js"></script>
+
+<p>There are 4 major parts to this snippet. The first is the definition of the <code>segcode</code> variable on line 3. It serves the same purpose as <code>SegCode</code> in the C program, namely defining the values to be left-shifted into the shift register. One thing of note is that, as with the C version, these values are dependent on the use of Most Significant Bit shifting (MSB). For convenience, here&rsquo;s the explanatory text from the C version:</p>
+<blockquote>
+<p><code>SegCode</code> &hellip; contains the hexidecimal numbers that should be shifted into the shift register in order to display a number that matches the index of a particular number in the array. For example, to display an 8 <code>SegCode[8]</code> should be used. Note that these numbers reflect the use of the MSB form of shifting. The numbers would be different if the LSB shifting form were used. For example, the number to use to display 0, as shown on line 32, is <code>0x3F</code> (<code>0011 1111</code>). To display 0 using the LSB method the hex number <code>0xFC</code>(<code>1111 1100</code>) and the C right-shift operator, <code>&gt;&gt;</code>, should be used.</p>
+</blockquote>
+<p>Second, lines 7-13, in <code>main()</code>, initialize the go-rpio library.</p>
+<p>Third, lines 15-20, create the go-rpio required <code>rpio.Pin</code> objects that are manipulated by the rest of the program.</p>
+<p>Finally, lines 22-35, define a signal/interrupt handler to catch <code>ctl-C</code> inputs from the terminal. This is needed to gracefully exit the program if the user enters <code>ctl-C</code> at the keyboard. A key point to notice in this snippet is the use of the channel named <code>stop</code>. The signal/interrupt handler runs in its own goroutine (line 35). At this point there are 2 goroutines running, the <code>main()</code> goroutine and the goroutine associated with the signal/interrupt handler. They are run and scheduled independently and as a result control can shift from one goroutine to another in arbitrary and unpredictable ways. In order to gracefully shutdown the program they must both be stopped in a controlled manner. Otherwise exiting the program would result in unpredictable behavior. For example, at program exit the 7-segment display might still have some illuminated LEDs. Synchronizing program exit using the <code>stop</code> channel prevents this from happening. See the Tour of Go lessons on <a href="https://tour.golang.org/concurrency/1">Goroutines</a> and <a href="https://tour.golang.org/concurrency/2">Channels</a> for a quick introduction to goroutines and channels. Don&rsquo;t worry if you don&rsquo;t quite understand all this, concurrency in Go is an advanced topic. Mostly I just wanted to provide a high level explanation of why the code is written this way.</p>
+<p>The program comments provide additional detail. The rest of <code>main()</code> is in the following snippet.</p>
+<script type="application/javascript" src="https://gist.github.com/youngkin/84ed027cd69b1682444466703b2c699a.js"></script>
+
+<p>The rest of <code>main()</code> as shown above handles prompting the user about what capability they&rsquo;d like to see demonstrated is fairly self-explanatory. One thing to point out though is the <code>for/select</code> loop starting in lines 2-8. <code>for/select</code> is a common pattern used in Go programs. It&rsquo;s use here goes back to the the prior discussion about the <code>stop</code> channel. The <code>select</code> part of the <code>for/select</code> pattern is listening on the <code>stop</code> for the message indicating this goroutine should exit. Notice the <code>select</code> had 2 <code>case</code> choices. The first is for listening to the <code>stop</code> channel. If no message is received then control will immediately pass to the <code>default</code> case, continuing with normal program flow. In the <code>default</code> case the user is prompted, in lines 18-57, for their choice which will result in one of the test functions being called.</p>
+<script type="application/javascript" src="https://gist.github.com/youngkin/61200f26ffe1211c8b09efb87a6b82d8.js"></script>
+
+<p>There are 3 parts to this next code snippet. The first is the creation of the go-rpio <code>rpio.Pin</code> objects that represent the logical connection to the shift register&rsquo;s physical pins. The GPIO/BCM pins 17, 18, 27, 19, and 21 are used for the SDI, RCLK, SRCLK, SRCLR, and OE pins respectively.</p>
+<p>The second part sets the pins to OUTPUT mode so that they can be written to.</p>
+<p>The final part sets the voltage on the pins to their initial values. Note the the SRCLR pin is set to HIGH. This is required in order for the shift register to work. In later code snippets we&rsquo;ll see that clearing the input shift register is accomplished by setting the SRCLR pin to LOW to clear the input shift register, and then back to HIGH to reenable the normal operation of the shift register.</p>
+<script type="application/javascript" src="https://gist.github.com/youngkin/7898d5147333eefb86a45494c5e7e189.js"></script>
+
+<p>This code snippet shows the implementation of the test functions that are called in response to users&rsquo; choices regarding what capability they&rsquo;d like to see demonstrated.</p>
+<script type="application/javascript" src="https://gist.github.com/youngkin/d81ec6100f22e48b25ab536ce115fe56.js"></script>
+
+<p>This code snippet shows the implementation of the function that&rsquo;s the heart of the program, <code>hc595_shift()</code>, which does the actual writing to the input shift register. The comments provide a good detailed explanation of what the function does.</p>
+<script type="application/javascript" src="https://gist.github.com/youngkin/4fa966a3ff8ed3e550feca78bab2baa3.js"></script>
+
+<p>This final code snippet shows the implementation of 2 helper functions and the signal/interrupt handler. The first helper function, <code>writeNums()</code>, writes the actual data needed to illuminate the hexidecimal numbers on the 7-segment display. The second, <code>shiftRegClr()</code>, shows how to use the combination of the SRCLR and RCLK pins to clear the shift register ultimately clearing the 7-segment display. Note that, as described above, the SRCLR pin needs to be set back to HIGH in order to reenable the shift register.</p>
+<p>In <code>shiftRegClr</code>, lines 1 through 11, note the use of the RCLK pin on lines 4 and 6. The clock signal to that pin must be pulsed, i.e., set to HIGH followed by LOW, in order to make the input shift register contents available to the output register. Also note that the SRCLR pin needs to be reset to HIGH after the operation to reenable the shift register.</p>
+<p>Finally, the <code>signalHandler()</code> function catches the signal from the OS (line 23) via the <code>sigs</code> channel. Then (line 25) it closes the stop channel. A side effect of closing a channel is a notification is sent to all listeners on the other end of the channel. This is a common pattern in Go. Finally it clears the shift register, releases go-rpio resources (line 30), and exits the program.</p>
+<h2 id="summary">Summary</h2>
+<p>This article has covered quite a bit of ground. If you&rsquo;ve been following my series starting with the <a href="http://10.0.0.223:1313/post/sunfoundergpionotesled/">Raspberry Pi GPIO in Go and C - Blinking LED</a> project, you&rsquo;re already familiar with using GPIO to drive LEDs. You might agree that the <a href="https://docs.sunfounder.com/projects/raphael-kit/en/latest/1.1.4_7-segment_display_c.html">Sunfounder 7-Segment Display</a> project didn&rsquo;t really add to your knowledge of GPIO and LEDs that hasn&rsquo;t already been covered in previous projects. So this is why, for me anyway, this project is really about learning shift register fundamentals and using them in a non-trivial way.</p>
+<p>This article covered several interesting things:</p>
+<ol>
+<li>It demonstrated wiring up a relatively complex circuit on a breadboard. As I did, you might have made some mistakes along the way that gave you some useful knowledge of how to debug circuits.</li>
+<li>Through an academic discussion and hands-on practice you&rsquo;ve learned quite a bit about shift registers and what they can be used for.</li>
+<li>Despite my somewhat trivializing the use of LEDs in this project, this project did shed light on how to use LEDs in a more realistic manner. Controlling an individual LED is interesting, but being able to control an array of LEDs in parallel and display digits on that array is a big step forward. You also learned that there are 2 types of 7-segment displays, common anode and common cathode.</li>
+</ol>
+<p>Please feel free to comment on, or ask questions about, any aspect of this article.</p>
+<h2 id="references">References</h2>
+<ul>
+<li>The <a href="https://docs.sunfounder.com/projects/raphael-kit/en/latest/1.1.4_7-segment_display_c.html">Sunfounder 7-Segment Display</a> project documentation.</li>
+<li>The <a href="https://docs.sunfounder.com/projects/electronic-kit/en/latest/lesson_19_7-segment.html">Sunfounder 7-Segment Python</a> project contains some additional information not available in the C version of the project.</li>
+<li><a href="https://pinout.xyz/">Raspberry Pi GPIO Pinout diagram</a> including the physical board pin numbers, the BCM/GPIO pin numbers, and the WiringPi pin numbers.</li>
+<li><a href="https://www.allaboutcircuits.com/textbook/digital/chpt-12/serial-in-parallel-out-shift-register/">Shift Registers: Serial-in, Parallel-out (SIPO) Conversion</a> is a good resource for getting a detailed introduction to shift registers in general, and the 74HC595 shift register in particular.</li>
+<li><a href="https://www.ti.com/lit/ds/symlink/cd74hc595.pdf?ts=1636840974607&amp;ref_url=https%253A%252F%252Fwww.google.com%252F">Texas Instruments CD74HC595 Datasheet</a> contains some interesting information including a timing diagram.</li>
+<li><a href="https://www.circuitbasics.com/arduino-7-segment-display-tutorial/">How to set up seven segment displays on the Arduino</a> provides an example of a 7-segment LED project that doesn&rsquo;t use a shift register. It also has some other useful information such as how to determine whether a 7-segment display is a common cathode or common anode display.</li>
+<li><a href="https://github.com/WiringPi/WiringPi">WiringPi</a> library for C</li>
+<li><a href="http://wiringpi.com/">WiringPi website</a></li>
+<li><a href="https://github.com/stianeikeland/go-rpio">go-rpio</a> library for Go</li>
+<li>Other articles in my <a href="https://youngkin.github.io/categories/gpio/">Raspberry Pi GPIO series</a></li>
+<li><a href="https://github.com/youngkin/gpio">The gpio repository</a> containing the code for this article</li>
+<li><a href="https://projects.raspberrypi.org/en/projects/raspberry-pi-setting-up">How to setup a new Raspberry Pi from scratch</a></li>
+<li><a href="https://www.sciencebuddies.org/science-fair-projects/references/how-to-use-a-breadboard">How to use a breadboard</a></li>
+</ul>
+
+                
+
+                <hr>
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/post/ledbargraph/" data-toggle="tooltip" data-placement="top" title="Raspberry Pi GPIO in Go and C - LED Bar Graph">&larr;
+                            Previous Post</a>
+                    </li>
+                    
+                    
+                </ul>
+
+                
+<div id="disqus-comment"></div>
+
+<div id="hyvor-talk-view"></div>
+<script type="text/javascript">
+    var HYVOR_TALK_WEBSITE = 1798; 
+    var HYVOR_TALK_CONFIG = {
+        url: false,
+        id: false
+};
+</script>
+<script async type="text/javascript" src="//talk.hyvor.com/web-api/embed"></script>
+</div>
+
+
+
+            </div>
+            
+            <div class="
+                col-lg-11 col-lg-offset-1
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/c" title="c">
+                            c
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/docker" title="docker">
+                            docker
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/elasticsearch" title="elasticsearch">
+                            elasticsearch
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/go" title="go">
+                            go
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/gpio" title="gpio">
+                            gpio
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/grafana" title="grafana">
+                            grafana
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/kubernetes" title="kubernetes">
+                            kubernetes
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/mysql" title="mysql">
+                            mysql
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/networking" title="networking">
+                            networking
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/prometheus" title="prometheus">
+                            prometheus
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/raspberry-pi" title="raspberry-pi">
+                            raspberry-pi
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/traefik" title="traefik">
+                            traefik
+                        </a>
+                        
+                        
+                    </div>
+                </section>
+                
+
+                
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                   
+                   <li>
+                       <a href='' rel="alternate" type="application/rss+xml" title="Rich Youngkin" >
+                           <span class="fa-stack fa-lg">
+                               <i class="fa fa-circle fa-stack-2x"></i>
+                               <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                           </span>
+                       </a>
+                   </li>
+                   
+                    
+                    <li>
+                        <a href="mailto:rich.youngkin@gmail.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    
+                    
+                    
+
+                    
+
+		    
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/youngkin">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://www.linkedin.com/in/richard-youngkin-0749763">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    <li>
+                        <a target="_blank" href="https://medium.com/@RichYoungkin">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-medium fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+            
+                    
+                    <li>
+                        <a target="_blank" href="https://stackoverflow.com/users/2646870/rich">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-stack-overflow fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+            
+                    
+                    <li>
+                        <a target="_blank" href="https://www.reddit.com/user/elevation5280">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-reddit fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+            
+                    
+                    
+            
+            
+            
+                </ul>
+		<p class="copyright text-muted">
+                    Copyright &copy; Rich Youngkin 2021
+                    <br>
+                    <a href="https://themes.gohugo.io/hugo-theme-cleanwhite">CleanWhite Hugo Theme</a> by <a href="https://zhaohuabing.com">Huabing</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="100px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=zhaohuabing&repo=hugo-theme-cleanwhite&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+
+
+
+
+
+<script>
+    
+    if($('#tag_cloud').length !== 0){
+        async("/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+
+<script>
+    async("https://cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+
+
+
+
+</body>
+</html>

@@ -47,7 +47,7 @@
     <meta name="keyword"  content="Rich, Youngkin, Raspberry, Pi, Docker, Kubernetes, Go, Golang, GPIO, Microservice">
     <link rel="shortcut icon" href="/img/favicon.ico">
 
-    <title>Raspberry Pi GPIO in Go and C - LED Bar Graph-Rich Youngkin Blog</title>
+    <title>Raspberry Pi GPIO in Go and C - LED Bar Graph-Rich Youngkin Topics in Software Engineering</title>
 
     <link rel="canonical" href="/post/ledbargraph/">
 
@@ -271,13 +271,14 @@ LED bar graphs have several uses including:
 </ul>
 <p>In short, just about anything that requires an indication of a value at a relative position on a scale can be represented by an LED bar graph.</p>
 <h2 id="prerequisites">Prerequisites</h2>
-<p>This section is repeated in all articles in my <a href="https://youngkin.github.io/categories/gpio/">Raspberry Pi GPIO series</a>. If you&rsquo;ve already completed a project from one of these articles you can skip this section.</p>
+<p>This section is repeated in all articles in my <a href="https://youngkin.github.io/categories/gpio/">Raspberry Pi GPIO series</a>. If you&rsquo;ve already completed a project from one of these articles you can skim this section for required items not included in other projects (e.g., an LED Bar Graph).</p>
 <p>If you don&rsquo;t have one, you&rsquo;ll need a Raspberry Pi. I used a Raspberry Pi 3B+ with the &lsquo;Stretch&rsquo; version of the Raspbian OS. The Raspberry Pi website has instructions on how to <a href="https://projects.raspberrypi.org/en/projects/raspberry-pi-setting-up">setup a new Raspberry Pi from scratch</a> if you decide to go that way vs. buying a complete kit.</p>
 <p>Other items you&rsquo;ll need include:</p>
 <ul>
 <li>a <a href="https://www.amazon.com/dp/B082KBF7MM/ref=sspa_dk_detail_4?psc=1&amp;pd_rd_i=B082KBF7MM&amp;pd_rd_w=1tGTV&amp;pf_rd_p=887084a2-5c34-4113-a4f8-b7947847c308&amp;pd_rd_wg=fX8JB&amp;pf_rd_r=44DE0RS1E9FD42RBYC7R&amp;pd_rd_r=47cbdc7f-7834-455f-9429-ef74a438bd45&amp;spLa=ZW5jcnlwdGVkUXVhbGlmaWVyPUFVVkdZVUZRNUw3ODkmZW5jcnlwdGVkSWQ9QTA4MzI4MzYyU0VLNzBJM0cxRUVMJmVuY3J5cHRlZEFkSWQ9QTA0Mjk1NTMzSzNSWlNFUjU0NURBJndpZGdldE5hbWU9c3BfZGV0YWlsJmFjdGlvbj1jbGlja1JlZGlyZWN0JmRvTm90TG9nQ2xpY2s9dHJ1ZQ==">breadboard</a> <em>(You may find <a href="http://wiki.sunfounder.cc/index.php?title=Breadboard_Basics_%E2%80%93_Types">this tutorial on breadboards</a> helpful)</em>,</li>
 <li>some <a href="https://www.amazon.com/dp/B08HZ26ZLF/ref=syn_sd_onsite_desktop_19?psc=1&amp;spLa=ZW5jcnlwdGVkUXVhbGlmaWVyPUExRFpLWElCRjg1MUNMJmVuY3J5cHRlZElkPUEwMjMyMTE1M01aOFE3U1BQS09YSiZlbmNyeXB0ZWRBZElkPUEwODE5NTMxMktEMTlZRjEyQjBJNiZ3aWRnZXROYW1lPXNkX29uc2l0ZV9kZXNrdG9wJmFjdGlvbj1jbGlja1JlZGlyZWN0JmRvTm90TG9nQ2xpY2s9dHJ1ZQ==">jumper wires</a>,</li>
-<li><a href="https://www.amazon.com/EDGELEC-Tri-Color-Multicolor-Diffused-Resistors/dp/B077XGF3YR/ref=asc_df_B077XGF3YR/?tag=hyprod-20&amp;linkCode=df0&amp;hvadid=242051162351&amp;hvpos=&amp;hvnetw=g&amp;hvrand=11064062033670066895&amp;hvpone=&amp;hvptwo=&amp;hvqmt=&amp;hvdev=c&amp;hvdvcmdl=&amp;hvlocint=&amp;hvlocphy=9028749&amp;hvtargid=pla-430228081645&amp;psc=1">a 220 Ohm resistor, and a RGB LED</a>.</li>
+<li>10 <a href="https://www.amazon.com/Resistor-Tolerance-Resistors-Assortment-Certificated/dp/B08QR72BFW/ref=sr_1_8?crid=1E3LWKK431TDV&amp;keywords=resistor+assortment&amp;qid=1636936543&amp;qsid=143-6049131-7886617&amp;s=industrial&amp;sprefix=resistor%2Cindustrial%2C203&amp;sr=1-8&amp;sres=B085NQZNTY%2CB072BL2VX1%2CB07N1ZK8CC%2CB098BKR447%2CB08QR72BFW%2CB07L851T3V%2CB09CZ18Z31%2CB08PF3HNMD%2CB07D54XMFK%2CB088WQMNYK%2CB08NY3XR96%2CB06WRQS97C%2CB07PXYVP3J%2CB07D2Z45CG%2CB089Q88QPN%2CB08ZRYH9VC%2CB08FD1XVL6%2CB08QRH6HFT%2CB07PTNN78Z%2CB07P3MFG5D">220 Ohm resistors</a> - this set actually has an assortment of resistors including 220 Ohm resistors.</li>
+<li>a <a href="https://www.amazon.com/10-Segment-LED-BAR-Graph-Indicator/dp/B0155SPLN2/ref=pd_sbs_3/143-6049131-7886617?pd_rd_w=1Ex07&amp;pf_rd_p=0a3ad226-8a77-4898-9a99-63ffeb1aef90&amp;pf_rd_r=PSA6XYZEJZTWWA8QVHG1&amp;pd_rd_r=63d233c3-3180-4b34-8452-eee71e2cc984&amp;pd_rd_wg=GSCIp&amp;pd_rd_i=B0155SPLN2&amp;psc=1">10 segment LED Bar Graph</a></li>
 <li>You should also consider getting a <a href="https://www.amazon.com/dp/B082PRVRYR/ref=sspa_dk_detail_2?psc=1&amp;pd_rd_i=B082PRVRYR&amp;pd_rd_w=8mKhr&amp;pf_rd_p=887084a2-5c34-4113-a4f8-b7947847c308&amp;pd_rd_wg=e9psa&amp;pf_rd_r=S09F37DF2G5FW8B8GX4B&amp;pd_rd_r=c065c120-e60b-45e9-b93b-f581f048cf46&amp;spLa=ZW5jcnlwdGVkUXVhbGlmaWVyPUFCMzhUQ09COFI2VlMmZW5jcnlwdGVkSWQ9QTA5NjU2ODUxRDkxNEYwSTYwV09KJmVuY3J5cHRlZEFkSWQ9QTAxOTg1MTUyRUhEUlc2VzQ2VDQ4JndpZGdldE5hbWU9c3BfZGV0YWlsJmFjdGlvbj1jbGlja1JlZGlyZWN0JmRvTm90TG9nQ2xpY2s9dHJ1ZQ==">40 pin female to female with a T-Type adapter</a> to attach the GPIO outputs to the breadboard. You can use only jumper wires, but the T-Type adapter will make things easier and will help prevent damage to the GPIO pins on the Raspberry Pi. If you elect not to buy the 40 pin cable with T-Type adapter you&rsquo;ll need to buy <a href="https://www.amazon.com/SinLoon-Breadboard-Arduino-Circuit-40-Pack/dp/B08M3QLL3Q/ref=pd_sbs_7/143-0445142-7950409?pd_rd_w=sVLrc&amp;pf_rd_p=8b76d7a7-ab83-4ddc-a92d-e3e33bfdbf03&amp;pf_rd_r=CDM5TGJT03VKF0ZFB577&amp;pd_rd_r=8e58fd82-8503-41cf-b8f2-c78eaeb78d25&amp;pd_rd_wg=tT1U0&amp;pd_rd_i=B08M3QLL3Q&amp;psc=1">male-to-female jumper wires</a>. Buying all these things separately will cost more than a kit however.</li>
 </ul>
 <p><a href="https://www.amazon.com/dp/B06WP7169Y/ref=sspa_dk_detail_5?psc=1&amp;pd_rd_i=B06WP7169Y&amp;pd_rd_w=OZVyf&amp;pf_rd_p=887084a2-5c34-4113-a4f8-b7947847c308&amp;pd_rd_wg=0V0IH&amp;pf_rd_r=623YJTBQ2CN2B2GYXQG5&amp;pd_rd_r=faa61f0f-3aec-4cf0-8e7e-d44eb1b3b92f&amp;spLa=ZW5jcnlwdGVkUXVhbGlmaWVyPUEyUVlDQzMzVVZBMFYxJmVuY3J5cHRlZElkPUEwMzExNzk4MUhGSjFSS0VKTlBROCZlbmNyeXB0ZWRBZElkPUEwMzYwNjg2UUdMRU44N0YzNzIwJndpZGdldE5hbWU9c3BfZGV0YWlsJmFjdGlvbj1jbGlja1JlZGlyZWN0JmRvTm90TG9nQ2xpY2s9dHJ1ZQ==">Here&rsquo;s a simple kit that has all of the above</a>. I&rsquo;m finding the <a href="https://www.amazon.com/gp/product/B09BMVT4CB/ref=ppx_yo_dt_b_asin_title_o02_s00?ie=UTF8&amp;psc=1">Sunfounder Raspberry Pi Ultimate Starter Kit</a> especially useful. NOTE: The Ultimate Starter Kit and the Raphael Kit are the same product.</p>
@@ -375,6 +376,11 @@ Raspberry Pi Details:
                             Previous Post</a>
                     </li>
                     
+                    
+                    <li class="next">
+                        <a href="/post/shiftregistersevensegdisplay/" data-toggle="tooltip" data-placement="top" title="Raspberry Pi GPIO in Go and C - Using a Shift Register &amp; 7 Segment Display">Next
+                            Post &rarr;</a>
+                    </li>
                     
                 </ul>
 
