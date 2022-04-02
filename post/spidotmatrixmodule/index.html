@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    
+
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-177198277-1"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-177198277-1');
+    </script>
+
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+    <meta property="og:site_name" content="Rich Youngkin">
+    <meta property="og:type" content="article">
+
+    
+    <meta property="og:image" content="https://youngkin.github.io/images/main_go_wideandtall_darklayer.jpeg">
+    <meta property="twitter:image" content="https://youngkin.github.io/images/main_go_wideandtall_darklayer.jpeg" />
+    
+
+    
+    <meta name="title" content="Raspberry Pi GPIO - Using SPI to display alphanumeric characters on a MAX7219 Dot Matrix Display Module" />
+    <meta property="og:title" content="Raspberry Pi GPIO - Using SPI to display alphanumeric characters on a MAX7219 Dot Matrix Display Module" />
+    <meta property="twitter:title" content="Raspberry Pi GPIO - Using SPI to display alphanumeric characters on a MAX7219 Dot Matrix Display Module" />
+    
+
+    
+    <meta name="description" content="Learn how to directly program the BCM2835 using registers to perform tasks such as writing to a GPIO pin or using advanced capabilites such as SPI.">
+    <meta property="og:description" content="Learn how to directly program the BCM2835 using registers to perform tasks such as writing to a GPIO pin or using advanced capabilites such as SPI." />
+    <meta property="twitter:description" content="Learn how to directly program the BCM2835 using registers to perform tasks such as writing to a GPIO pin or using advanced capabilites such as SPI." />
+    
+
+    
+    <meta property="twitter:card" content="summary" />
+    
+    
+
+    <meta name="keyword"  content="Rich, Youngkin, Raspberry, Pi, Docker, Kubernetes, Go, Golang, GPIO, Microservice">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>Raspberry Pi GPIO - Using SPI to display alphanumeric characters on a MAX7219 Dot Matrix Display Module-Rich Youngkin Topics in Software Engineering</title>
+
+    <link rel="canonical" href="/post/spidotmatrixmodule/">
+
+    <link rel="stylesheet" href="/css/iDisqus.min.css"/>
+	
+    
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    
+    <link rel="stylesheet" href="/css/zanshang.css">
+    
+    
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    
+    
+
+    
+    
+    <script src="/js/jquery.min.js"></script>
+    
+    
+    <script src="/js/bootstrap.min.js"></script>
+    
+    
+    <script src="/js/hux-blog.min.js"></script>
+
+    
+    
+
+</head>
+
+
+
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Rich Youngkin</a>
+        </div>
+
+        
+        
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    
+                        
+                        <li>
+                            <a href="/categories/barbeque">barbeque</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/blog">blog</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/c">c</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/go">go</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/gpio">gpio</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/kubernetes">kubernetes</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/raspberry-pi">raspberry-pi</a>
+                        </li>
+                        
+                    
+                    
+		    
+                        <li><a href="/top/about/">ABOUT</a></li>
+                    
+
+                    
+                </ul>
+            </div>
+        </div>
+        
+    </div>
+    
+</nav>
+<script>
+    
+    
+    
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        
+            $navbar.className = " ";
+            
+            setTimeout(function(){
+                
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+
+
+<style type="text/css">
+    header.intro-header {
+        background-image: url('/images/bcm2835programming/Raspberry-Pi-3B-top_1500_dark.jpg')
+    }
+</style>
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/raspberry-pi" title="raspberry-pi">
+                            raspberry-pi
+                        </a>
+                        
+                        <a class="tag" href="/tags/c" title="C">
+                            C
+                        </a>
+                        
+                        <a class="tag" href="/tags/gpio" title="GPIO">
+                            GPIO
+                        </a>
+                        
+                    </div>
+                    <h1>Raspberry Pi GPIO - Using SPI to display alphanumeric characters on a MAX7219 Dot Matrix Display Module</h1>
+                    <h2 class="subheading"></h2>
+                    <span class="meta">
+                        
+                        Posted on
+                        Saturday, April 2, 2022
+                        
+                        
+                        
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+
+
+<article>
+    <div class="container">
+        <div class="row">
+
+            
+            <div class="
+                col-lg-11 col-lg-offset-1
+                col-md-10 col-md-offset-1
+                post-container">
+
+                
+                <header>
+                    <h2>Contents</h2>
+                </header>
+                <nav id="TableOfContents">
+  <ul>
+    <li><a href="#overview">Overview</a></li>
+    <li><a href="#prerequisites">Prerequisites</a></li>
+    <li><a href="#an-introduction-to-the-bcm2835-arm-peripherals">An introduction to the BCM2835 ARM Peripherals</a>
+      <ul>
+        <li><a href="#io-functions">I/O Functions</a></li>
+        <li><a href="#addressing">Addressing</a></li>
+        <li><a href="#registers">Registers</a></li>
+      </ul>
+    </li>
+    <li><a href="#setup-and-code">Setup and Code</a>
+      <ul>
+        <li><a href="#controlling-an-led---main-program">Controlling an LED - main program</a></li>
+        <li><a href="#controlling-an-led---interacting-with-the-bcm2835">Controlling an LED - interacting with the BCM2835</a></li>
+      </ul>
+    </li>
+    <li><a href="#summary">Summary</a></li>
+    <li><a href="#references">References</a></li>
+  </ul>
+</nav>
+                
+                <h2 id="overview">Overview</h2>
+<p>This is the seventh article in a series that explores <a href="https://youngkin.github.io/categories/gpio/">GPIO programming on a Raspberry Pi 3B+</a>. It is an introduction to controlling GPIO peripheral devices by directly interacting with the appropriate registers on the BCM2835 board. It is an introduction in that it only covers one of the capabilities, using the basic GPIO capability as described in <a href="https://www.raspberrypi.org/app/uploads/2012/02/BCM2835-ARM-Peripherals.pdf">Section 6 of the BCM2835 datasheet</a>. This excludes BCM2835 support for protocols such as SPI, Pulse Width Modulation, and IC2 which overlay specific protocol capability by utilizing the underlying pins mapped to a given protocol (e.g., GPIO pins 8-11 are associated with the SPI protocol and have behaviors that can be enabled that are specific to that protocol). That said, using the basic pin level functionality covers the same concepts needed to utilize advanced protocol capabilites such as SPI. This article, coupled with the <a href="https://www.raspberrypi.org/app/uploads/2012/02/BCM2835-ARM-Peripherals.pdf">BCM2835 datasheet</a>, should provide enough background to drive devices that are controlled via those capabilities. Of course there are multiple libraries such as the C <a href="https://www.airspayce.com/mikem/bcm2835/index.html">BCM2835</a> and <a href="http://wiringpi.com">WiringPi</a> libraries, the Python <a href="http://abyz.me.uk/rpi/pigpio/">pgpio</a> and <a href="https://pypi.org/project/RPi.GPIO/">RPi.GPIO</a> libraries, and the Go <a href="https://github.com/stianeikeland/go-rpio">go-rpio</a> library that make this much easier. And while these libraries are usually more appropriate for most projects it can be helpful to understand how the BCM2835 board works, and how those libraries interact with the board. This background is also helpful if you find yourself reading library code and/or would like to contribute to these projects, or even write your own library.</p>
+<p>This article assumes you already have some familiarity with the BCM2835 and GPIO programming on the Raspberry Pi. If you don&rsquo;t you may want to consider trying the projects covered in some of <a href="https://youngkin.github.io/categories/gpio/">my other GPIO articles</a>. The simplist article in the series is <a href="https://youngkin.github.io/post/sunfoundergpionotesled/">Raspberry Pi GPIO in Go and C - Blinking LED</a>. It demonstrates the same capability, blinking an LED, but it demonstrates the usage of the <a href="http://wiringpi.com">WiringPi</a> and the Go <a href="https://github.com/stianeikeland/go-rpio">go-rpio</a> libraries. It is a good introduction to using GPIO on the Raspberry Pi, but it only covers basic GPIO concepts and how to wire a breadboard to a Raspberry Pi&rsquo;s GPIO outputs.</p>
+<p>The following topics will be covered:</p>
+<ol>
+<li><strong>Prerequisites</strong> - describes the hardware and libraries you&rsquo;ll need for this article.</li>
+<li><strong>An introduction to the BCM2835 GPIO Peripherals board</strong> - provides an overview the board&rsquo;s architecture and capabililites.</li>
+<li><strong>An introduction to the <a href="https://www.airspayce.com/mikem/bcm2835/index.html">BCM2835 C library</a></strong> - provides a brief overview of the BCM2835 C library. This library is the source of much is what is covered in this article.</li>
+<li><strong>Using the BCM2835 board to control an LED via the GPIO pins</strong> - provides the details, including code, for controlling an LED.
+<ul>
+<li>An advanced program is included that will demonstrate how to program a SPI application to display characters on a MAX7219 Dot Matrix Display Module. Since the underlying BCM2835 programming is the same as with a single LED it won&rsquo;t be explained in as much detail.</li>
+</ul>
+</li>
+<li><strong>Summary</strong> - summarizes the important concepts covered in this article.</li>
+<li><strong>References</strong> - provides a list of references I found helpful and some that were used in the creation of this article.</li>
+</ol>
+<h2 id="prerequisites">Prerequisites</h2>
+<p>If you don&rsquo;t have one, you&rsquo;ll need a Raspberry Pi. I used a Raspberry Pi 3B+ with the &lsquo;stretch&rsquo; version of the Raspbian OS. Given that the Sunfounder Ultimate Starter Kit is advertised to work with a Raspberry Pi 4, I would expect the 4 series to work as well. I&rsquo;m less sure about other Raspberry Pi versions, especially versions with 26 vs. 40 GPIO pins.</p>
+<p>Next you&rsquo;ll need is a <a href="https://www.amazon.com/dp/B082KBF7MM/ref=sspa_dk_detail_4?psc=1&amp;pd_rd_i=B082KBF7MM&amp;pd_rd_w=1tGTV&amp;pf_rd_p=887084a2-5c34-4113-a4f8-b7947847c308&amp;pd_rd_wg=fX8JB&amp;pf_rd_r=44DE0RS1E9FD42RBYC7R&amp;pd_rd_r=47cbdc7f-7834-455f-9429-ef74a438bd45&amp;spLa=ZW5jcnlwdGVkUXVhbGlmaWVyPUFVVkdZVUZRNUw3ODkmZW5jcnlwdGVkSWQ9QTA4MzI4MzYyU0VLNzBJM0cxRUVMJmVuY3J5cHRlZEFkSWQ9QTA0Mjk1NTMzSzNSWlNFUjU0NURBJndpZGdldE5hbWU9c3BfZGV0YWlsJmFjdGlvbj1jbGlja1JlZGlyZWN0JmRvTm90TG9nQ2xpY2s9dHJ1ZQ==">breadboard</a>, some <a href="https://www.amazon.com/dp/B08HZ26ZLF/ref=syn_sd_onsite_desktop_19?psc=1&amp;spLa=ZW5jcnlwdGVkUXVhbGlmaWVyPUExRFpLWElCRjg1MUNMJmVuY3J5cHRlZElkPUEwMjMyMTE1M01aOFE3U1BQS09YSiZlbmNyeXB0ZWRBZElkPUEwODE5NTMxMktEMTlZRjEyQjBJNiZ3aWRnZXROYW1lPXNkX29uc2l0ZV9kZXNrdG9wJmFjdGlvbj1jbGlja1JlZGlyZWN0JmRvTm90TG9nQ2xpY2s9dHJ1ZQ==">jumper wires</a>, <a href="https://www.amazon.com/ELEGOO-Electronics-Component-resistors-Potentiometer/dp/B01ERPXFZK/ref=sr_1_7_sspa?crid=3EJQNCOWP00IF&amp;dchild=1&amp;keywords=resistors&amp;qid=1631478270&amp;s=industrial&amp;sprefix=resis%2Cindustrial%2C219&amp;sr=1-7-spons&amp;psc=1&amp;spLa=ZW5jcnlwdGVkUXVhbGlmaWVyPUEzTktVSzNYMkxMSDlKJmVuY3J5cHRlZElkPUEwMjAzMDY0NVRERkFLVjVRTUFWJmVuY3J5cHRlZEFkSWQ9QTA5MjM2NjUxUFZYQUlETVAzRDA3JndpZGdldE5hbWU9c3BfbXRmJmFjdGlvbj1jbGlja1JlZGlyZWN0JmRvTm90TG9nQ2xpY2s9dHJ1ZQ==">a 220 Ohm resistor, and an LED</a>. You should also consider getting a <a href="https://www.amazon.com/dp/B082PRVRYR/ref=sspa_dk_detail_2?psc=1&amp;pd_rd_i=B082PRVRYR&amp;pd_rd_w=8mKhr&amp;pf_rd_p=887084a2-5c34-4113-a4f8-b7947847c308&amp;pd_rd_wg=e9psa&amp;pf_rd_r=S09F37DF2G5FW8B8GX4B&amp;pd_rd_r=c065c120-e60b-45e9-b93b-f581f048cf46&amp;spLa=ZW5jcnlwdGVkUXVhbGlmaWVyPUFCMzhUQ09COFI2VlMmZW5jcnlwdGVkSWQ9QTA5NjU2ODUxRDkxNEYwSTYwV09KJmVuY3J5cHRlZEFkSWQ9QTAxOTg1MTUyRUhEUlc2VzQ2VDQ4JndpZGdldE5hbWU9c3BfZGV0YWlsJmFjdGlvbj1jbGlja1JlZGlyZWN0JmRvTm90TG9nQ2xpY2s9dHJ1ZQ==">40 pin female to female with a T-Type adapter</a> to attach the GPIO outputs to the breadboard. You can use only jumper wires, but the adapter will make things easier and will help prevent damage to the GPIO pins on the Raspberry Pi. If you elect not to buy the 40 pin cable with T-Type adapter you&rsquo;ll need to buy <a href="https://www.amazon.com/SinLoon-Breadboard-Arduino-Circuit-40-Pack/dp/B08M3QLL3Q/ref=pd_sbs_7/143-0445142-7950409?pd_rd_w=sVLrc&amp;pf_rd_p=8b76d7a7-ab83-4ddc-a92d-e3e33bfdbf03&amp;pf_rd_r=CDM5TGJT03VKF0ZFB577&amp;pd_rd_r=8e58fd82-8503-41cf-b8f2-c78eaeb78d25&amp;pd_rd_wg=tT1U0&amp;pd_rd_i=B08M3QLL3Q&amp;psc=1">male-to-female jumper wires</a>. Buying all these things separately will cost more than a kit however. <a href="https://www.amazon.com/dp/B06WP7169Y/ref=sspa_dk_detail_5?psc=1&amp;pd_rd_i=B06WP7169Y&amp;pd_rd_w=OZVyf&amp;pf_rd_p=887084a2-5c34-4113-a4f8-b7947847c308&amp;pd_rd_wg=0V0IH&amp;pf_rd_r=623YJTBQ2CN2B2GYXQG5&amp;pd_rd_r=faa61f0f-3aec-4cf0-8e7e-d44eb1b3b92f&amp;spLa=ZW5jcnlwdGVkUXVhbGlmaWVyPUEyUVlDQzMzVVZBMFYxJmVuY3J5cHRlZElkPUEwMzExNzk4MUhGSjFSS0VKTlBROCZlbmNyeXB0ZWRBZElkPUEwMzYwNjg2UUdMRU44N0YzNzIwJndpZGdldE5hbWU9c3BfZGV0YWlsJmFjdGlvbj1jbGlja1JlZGlyZWN0JmRvTm90TG9nQ2xpY2s9dHJ1ZQ==">Here&rsquo;s a simple kit that has all of the above</a>. If you expect to follow this series I recommend buying the <a href="https://www.amazon.com/gp/product/B09BMVT4CB/ref=ppx_yo_dt_b_asin_title_o02_s00?ie=UTF8&amp;psc=1">Sunfounder Raspberry Pi Ultimate Starter Kit</a>.</p>
+<img style="border:1px solid black" src="/images/pwmfordummies/RaphaelKit.png" align="center" width="600" height="300"/>
+<figcaption align="left"><center><i style="color:black;">Sunfounder Ultimate Starter/Raphael kit</i></center></figcaption>
+<p>You will need some basic C programming knowledge as well as familiarity with logging on to a Raspberry Pi terminal, or into the desktop GUI that comes with some OS versions. Depending on the approach you take, you may need to connect a keyboard and monitor to the Raspberry Pi. I simply SSH into the Pi. You&rsquo;ll also need familiarity with how to use an editor like Vi or nano. Finally, you&rsquo;ll need basic familiarity with the Linux command line.</p>
+<h2 id="an-introduction-to-the-bcm2835-arm-peripherals">An introduction to the BCM2835 ARM Peripherals</h2>
+<p>This section provides an overview of the BCM 2835 peripherals. It starts with an overview overview of the capabilites of the various peripherals. It then moves to an overview of BCM2835 addressing. Understanding addressing is fundamental to understanding the rest of the article. It concludes with a more detailed discussion about how registers are used to access the peripherals and their associated I/O functions.</p>
+<p>This is not an exhaustive description of the BCM2835 board. The only capability that will be covered in any detail, and is the focus of this article, is interacting with the GPIO I/O functions, namely defining the function of a pin and setting and clearing the value of the pin (e.g., setting it to HIGH and LOW), specifically programming the the BCM2835 GPIO to blink an LED.</p>
+<p>There are multiple pin numbering schemes. The Raspberry Pi has physical pin numbers, i.e., the numbers printed on the Pi board. BCM2835 has a numbering scheme called GPIO numbering. It is different than, and incompatible with, the Pi&rsquo;s physical numbering scheme. Finally some libraries such as the C WiringPi library have their own numbering schemes which are incompatible with the Pi and BCM2835 schemes. This article uses the BCM2835 numbering scheme exclusively. There is a good <a href="https://pinout.xyz">pin out diagram</a> available that maps between these 3 numbering schemes. Where a pin supports a particular I/O function, as described below, that is also called out on this pin out diagram.</p>
+<p>A quick note on terminology&hellip; The term &ldquo;peripherals&rdquo; is used in the title and in some parts of this article. To me the term peripherals is something of a misnomer. Let me explain. At its most basic the GPIO capability of the BCM2835 is made available through a set of physical pins on the device. Some of these pins provide power and ground needed to drive external devices like LEDs, sensors, and motors. Other pins can be controlled programatically to take input from, or output to, these external devices. At a higher level, subsets of the GPIO pins provide support for complete protocols that implement more sophisticated functions like controlling the speed and direction of a motor and controlling LED displays that display text like those in highway signs. These basic and more sophisticated capabilities are controlled by setting the function of a pin. Input and output are 2 functions that can be set. There are a variety of others that will be covered. Setting the function of a pin describes how the BCM2835 interacts with a device or peripheral. Because of this I prefer to use the term I/O Function. I think that more accurately describes the concept than the term &ldquo;peripherals&rdquo; does. To me &ldquo;peripherals&rdquo; are the external devices. The first use of the term <strong>I/O Functions</strong> is the title of the  next section.</p>
+<h3 id="io-functions">I/O Functions</h3>
+<p>The BCM2835 supports a variety of I/O functions. These are the subject of the BCM2835 datasheet. This section will only describe a few of these functions in detail. There are other sources like Wikipedia that can provide information about the others.</p>
+<p>The main I/O functions supported by the BCM2835 are:</p>
+<ul>
+<li>GPIO</li>
+<li>SPI</li>
+<li>PWM</li>
+<li>AUX</li>
+<li>BSC</li>
+<li>DMA</li>
+<li>External Mass Media Controller</li>
+<li>Interrupts</li>
+<li>Audio (PCM/I2s Audio)</li>
+<li>System Timer</li>
+<li>UART</li>
+</ul>
+<p>As I have direct experience with the first 3 I/O functions, GPIO, SPI, and PWM, this section will focus on these. This will provide enough context in order to get a basic understanding of the kinds of things the BCM2835 is capable of as well as leveraging the information in the Addressing and Registers sections below in order to learn about and use the remaining I/O functions.</p>
+<h4 id="gpio">GPIO</h4>
+<p>GPIO stands for General Purpose Input Output. In the BCM2835 datasheet the term GPIO refers to the most general, or basic, level of control of a physical pin. This is what&rsquo;s used to control the function of a pin, such as setting it as an input or output pin. It&rsquo;s also used to set or get the value of a pin. Values are conceptually referred to as HIGH and LOW, but they are represented by voltage, or lack thereof, passing across the pin. There are other types of settings for pins. One of these settings is used to control whether to detect a state change on the rising or falling edge of a pin&rsquo;s voltage change. Another setting controls what are called pull-up/pull-down resistors attached to each pin. These resistors are used to explicitly control the value of a pin, 1 or 0, when a pin&rsquo;s voltage is in an indeterminate state. <a href="https://www.electronics-tutorials.ws/logic/pull-up-resistor.html">This tutorial</a> has a reasonably good explanation for why pull-up and pull-down resistors are needed.</p>
+<p>The code associated with this article causes and LED to blink. Accomplishing this involves the following steps:</p>
+<ol>
+<li>Set the function of the pin to output, i.e., it&rsquo;s going to be written to in order to send a signal to the LED.</li>
+<li>Write LOW to the pin to cause the LED to turn on.</li>
+<li>Pause</li>
+<li>Write HIGH to the pin to cause the LED to turn off.</li>
+<li>Repeat steps 2 through 4.</li>
+</ol>
+<p>Accomplishing this uses the GPIO function. More accurately it uses the GPIO registers to set the pin&rsquo;s function (e.g., output).</p>
+<h4 id="spi-serial-peripheral-interface">SPI (Serial Peripheral Interface)</h4>
+<p>SPI is used to send data serially to a peripheral that can accept or requires data in parallel. This is helpful because a relatively large set of parallel inputs can be written to using just 3 GPIO pins. If SPI wasn&rsquo;t used, one GPIO pin would be required for each parallel input. This could easily be prohibitive since pins are a limited resource.</p>
+<img style="border:1px solid black" src="/images/sevensegdisplay/7segmentdisplaypinout.png" align="center" width="200" height="100"/>
+<figcaption align="left"><center><i style="color:black;">Image credit: Circuit Basics</i></center></figcaption>
+<p>The diagram above shows a 7 segment display that is commonly used to display display numeric characters in devices like calculators and clocks. It has 8 input lines and 2 ground lines. Controlling this directly using GPIO would use 8 of the 40 GPIO pins. Controlling 6 of these displays would take all 48 GPIO pins, but there are only 40. Clearly the approach to using GPIO to control this peripheral isn&rsquo;t practical. Enter a device called a shift register. Shift registers can control 8 input lines of a connected peripheral. It uses 5 GPIO pins, 3 for input and 2 for control. To control multiple peripherals it&rsquo;s possible to daisy-chain shift registers without requiring additional GPIO pins. Taking our previous example of 6 7 segment displays, using a shift register requires 5 GPIO pins vs. the 48 that would be required by directly using GPIO pins. Some SPI peripherals like the <a href="https://datasheets.maximintegrated.com/en/ds/MAX7219-MAX7221.pdf">MAX7219 Dot Matrix Display Module</a> have an on-board shift register. If you&rsquo;re interested in learning more about shift registers see my article <a href="http://youngkin.github.io/post/shiftregistersevensegdisplay/">Raspberry Pi GPIO in Go and C - Using a Shift Register &amp; 7 Segment Display</a>.</p>
+<p>The SPI interface requires at least 4 GPIO pins. One of the pins, MOSI, sends data to a peripheral. MOSI stands for Master Out Slave In. The second pin, MISO (Master In Slave Out) accepts input.</p>
+<blockquote>
+<p>I reluctantly use the terms &ldquo;master&rdquo; and &ldquo;slave&rdquo;. However these terms are used in all of the documents I&rsquo;ve read on SPI. I&rsquo;ll continue to use them in order to avoid confusion.</p>
+</blockquote>
+<p>The 3rd pin is a clock which controls the data transmission between the master and slave. The 4th pin is called the chip select (CS) or chip enable (CE) pin. It is used to prepare the slave device to interface with the BCM2835. An additional slave device can be accessed by using a 5th pin, the second CE/CS pin. The 2 CE/CS pins are used to enable each of the slave devices, but only one device can be enabled at a time. The article <a href="https://adikedia.com/2016/08/10/using-multiple-spi-slave-devices-with-wiringpi/">Using Multiple SPI Slave Devices with the Raspberry Pi</a> provides more information about how the 2 CE/CS pins are used.</p>
+<p>The primary SPI interface on the BCM2835, SPIO, is implemented on GPIO pins 7-11. Pins 7 &amp; 8 are the 2 CE/CS pins available on the BCM2835. Pin 9 is MISO, 10 is MOSI, and 11 is the clock (SCLK). The BCM2835 has 2 auxilary SPI interfaces, SPI 1 (AKA AUX_SPI0) and SPI 2 (AKA AUX_SPI1). From the BCM2835 datasheet it looks like SPI 1 is available on pins 16-21 and SPI 2 on pins 35-39. These auxilary interfaces are available via the AUX I/O function.</p>
+<p>SPI can be used to control a variety of peripherals including matrixed LED or LCD displays to display characters or images, take input from touchscreens, and interact with various sensors. <a href="https://en.wikipedia.org/wiki/Serial_Peripheral_Interface">Wikipedia has a good article</a> describing SPI in more detail.</p>
+<p>I have an upcoming article devoted to SPI. I&rsquo;ll update this document adding a reference when it becomes available.</p>
+<h4 id="pwm">PWM</h4>
+<p>PWM stands for Pulse Width Modulation. It is used to convert a digital signal, like that produced by the BCM2835, into a simulated analog signal. It is simulated in the sense that it&rsquo;s not a true analog signal. It&rsquo;s still a digital signal but it cycles so fast that, much like a video, it appears to be an analog signal. Many peripherals like electric motors, dimmable LEDs, and color LEDs require an analog signal. As with SPI there are dedicated pins that can be enabled to utilize the PWM I/O function. These are GPIO pins 12, 13, 18, and 19. With these pins the BCM2835 supports something called hardware PWM. The PWM functionality is embedded into the BCM2835. It implements a hardware based clock loop that controls the frequency of the simulated analog signal. It is possible to use other GPIO pins for PWM, this is called software PWM. However, in software PWM the clock loop is written in the code that runs on the Raspberry Pi CPU. Since that CPU is doing many other things it isn&rsquo;t possible to create a reliable clock signal. This can result in some undesirable side effects such as a flickering LED in place of a dim LED. See my article <a href="https://youngkin.github.io/post/sunfoundergpionotesrgbled/">Raspberry Pi GPIO in Go and C - RGB LED</a> for more information about PWM as well as examples of PWM in use.</p>
+<h3 id="addressing">Addressing</h3>
+<p>All GPIO I/O functions are accessed via registers. These registers are located at various offsets in the on-board memory. Accessing the registers requires a knowledge of how addressing works on the BCM2835 board was well as on the Raspberry Pi. Here&rsquo;s a diagram from the <a href="https://www.raspberrypi.org/app/uploads/2012/02/BCM2835-ARM-Peripherals.pdf">BCM2835 datasheet</a>, section 1.2.1, showing how memory is mapped from the Pi&rsquo;s physical address to the BCM2835 addresses.</p>
+<img style="border:1px solid black" src="/images/bcm2835programming/BCM2835Addressing.jpg" align="center" width="1000" height="500"/>
+<figcaption align="left"><center><i style="color:black;">BCM2835 Addressing</i></center></figcaption>
+<p>The Raspberry Pi maps the BCM2835 memory to the Pi&rsquo;s physical address of <code>0x2000 0000</code>. This is shown in the middle column labeled &ldquo;ARM Physical Addresses&rdquo;. The gray shaded area labeled I/0 peripherals is the Pi&rsquo;s physical memory location of the BCM2835&rsquo;s peripherals (e.g., GPIO pins). Moving towards the left you&rsquo;ll see a gold box labeled &ldquo;VC/ARM MMU&rdquo;. This is the <a href="https://en.wikipedia.org/wiki/Memory_management_unit">Memory Management Unit</a> that is responsible for mapping the Pi&rsquo;s physical memory to the BCM2835 memory. Following the line from the middle column&rsquo;s &ldquo;I/O Peripherals&rdquo; partition, through the VC/ARM MMU, to the far left column titled &ldquo;VC CPU Bus Addresses&rdquo; leads to the &ldquo;I/O Peripherals partition on the BCM2835&rsquo;s CPU address bus. It&rsquo;s address is <code>0x7E00 0000</code>.</p>
+<p>The I/O peripheral addresses can be made available to the application through one of 2 ways. The traditional way is via the <code>/dev/mem</code> device mounted on the file system. Accessing this device requires root privileges. A newer method became available starting with the Raspberry Pi 2. This method accesses the I/O peripheral addresses via <code>/dev/gpio</code>. An advantage of using this method is that it doesn&rsquo;t require root access. A disadvantage to using this method is that only the GPIO functionality of the BCM2835 can be accessed. This means advanced capabilities like PWM and SPI are not available. Accessing the I/O peripherals using <code>/dev/mem</code> also requires a little more work, namely mapping the physical memory from <code>/dev/mem</code> to the application&rsquo;s virtual memory. This will be covered in more detail later.</p>
+<h3 id="registers">Registers</h3>
+<p>As mentioned above, specifying the I/O function of a pin or set of pins is accomplished through registers on the BCM2835. Each I/O function has an associated register set located at an offset within the BCM I/O peripheral address space. For example, the GPIO register set starts at the CPU bus address <code>0x7E20 0000</code>. The SPI register set starts at CPU bus address offset <code>0x7E20 4000</code>. The PWM register set starts at offset <code>0x7E20 C000</code>. And so on, each I/O function has it&rsquo;s own set of registers to manage its behavior. That said, they all work on the same principles. Namely, find the offset of the beginning of each I/O function&rsquo;s register set and then set (or get) the appropriate bits at the appropriate offsets to control the behavior. To make this example more explicit, and to highlight additional details, let&rsquo;s do a high level walkthrough of how to control a GPIO pin to blink an LED.</p>
+<p>As mentioned previously the GPIO register starts at bus address <code>0x7e2000 0000</code>. Section 6.1 of the <a href="https://www.raspberrypi.org/app/uploads/2012/02/BCM2835-ARM-Peripherals.pdf">BCM2835 datasheet</a> starting on page 90 provides the details about the GPIO registers. To blink an LED we&rsquo;ll first need to specify the pin&rsquo;s function, output in this case, and then toggle the value of the LED between HIGH and LOW.</p>
+<h4 id="specify-a-pins-function">Specify a pin&rsquo;s function</h4>
+<p>First the I/O function of the pin needs to be set. A pin&rsquo;s functionality is defined via one of 8 alternative functions. Encoding each function requires 3 bits, 000 - 111. These bits are contained within what is called a GPIO Function Select Register. Each register is 32 bits long. Therefore each 32 bit register can control 10 pins with 2 bits left over. In order to control all of the GPIO pins there are 6 function select registers (the BCM2835 has the capability to control 53 pins via function select registers). The first function select register is located at <code>0x7E20 0000</code>, zero-offset from the start of the GPIO register set. The 6th function select register starts at offset <code>0x7E20 0014</code>. The 8 alternative functions are:</p>
+<ul>
+<li>Input - represented by bit pattern <code>000</code></li>
+<li>Output  - represented by bit pattern <code>001</code></li>
+<li>and Alternate functions 0 through 5 represented by bit patterns <code>010</code> through <code>111</code> respectively.</li>
+</ul>
+<p>In this example let&rsquo;s use pin 17 as an output pin. Inspecting the BCM2835 datasheet we see that pin 17 is in function select register 1, AKA GPFSEL1. GPFSEL1 is at offset <code>0x7E20 0004</code>. Pin 17&rsquo;s function select offset within the register is at bits 21-23. Recall that the output bit pattern is <code>001</code> so we&rsquo;ll need to put that bit pattern in bits 21-23. In the section on coding below we&rsquo;ll see how this is actually accomplished.</p>
+<h4 id="set-the-pin-value">Set the pin value</h4>
+<p>This article assumes that pin 17 is attached to the ground terminal of the LED (the cathode). This means that we&rsquo;ll have to set the pin to LOW in order for current to flow from the power input to the anode through to the LED ground on pin 17 and light the LED. Setting the pin to HIGH will cause the LED to turn off. Switching between LOW and HIGH will cause the LED to blink, which is what we&rsquo;re looking for.</p>
+<p>GPIO pin values are controlled via the GPIO Pin Output Set register. There are 2 GPIO Pin Output Set registers. Pin 17 is in the first register, GPIO Pin Output Set 0, AKA GPSET0,, at GPIO register offset <code>0x7E20 002C</code>. Pin 17 is at bit offset 17 within GPSET0. Setting bit 17 to 1 sets the register to HIGH. GPIO Pin Output Set registers can only set a pin to HIGH, setting a pin to 0 has no effect. But recall we need to set the pin to LOW. Since setting a pin in GPSET0 won&rsquo;t result in the pin being set to LOW how can we accomplish this? It turns out there is another set of GPIO registers called GPIO Pin Output Clear registers. These are used to set a pin&rsquo;s value to LOW. Pin 17 is in GPIO Pin Output Clear register 0, AKA GPCLR0, starting at offset <code>0x7E20 0028</code>. It&rsquo;s position within the register is also at bit 17. Setting bit 17 to 1 will set the pin to LOW. So we&rsquo;ll need to left shift a <code>1</code> into bit 17 in order to turn on the LED. We&rsquo;ll use GPSET0 to turn the LED off. As with specifying a pin&rsquo;s function, how this is accomplished will be covered later in this article. By using the GPCLR0 and GPSET0 registers in turn we can cause the LED to blink.</p>
+<h4 id="other-gpio-settings">Other GPIO settings</h4>
+<p>The GPIO register set can be used to control many other functions of a GPIO pin in addition to selecting the function and setting/clearing a pin&rsquo;s value. It can also be used to read the value of a pin. As discussed in the I/O functions section above other things that can be managed include specifying how state changes are to be detected (rising/falling edge detection) and how to set the voltage of a pin when it&rsquo;s in an indeterminate state (pull-up/down resistors). Discussing these other registers is an advanced topic and is beyond the scope of this article.</p>
+<h2 id="setup-and-code">Setup and Code</h2>
+<p>This section starts with a program that causes an LED to blink. It&rsquo;s fairly simple and will show the basic steps needed to program the BCM2835. The next part of this section will cover the BCM2835 programming in more detail. Finally, an more advanced example that uses SPI to control the MAX7219 LED Dot Matrix Display Module will be covered. But before all that, here&rsquo;s how to wire the breadboard to work with the blinking LED example.</p>
+<img style="border:1px solid black" src="/images/pwmfordummies/blinkingLED.png" align="center" width="600" height="300"/>
+<figcaption align="left"><center><i style="color:black;">Image credit: Sunfounder</i></center></figcaption>
+<p>The breadboard should be wired as illustrated in the above diagram. If you&rsquo;re unfamiliar  with breadboards and breadboard diagrams this <a href="https://www.sciencebuddies.org/science-fair-projects/references/how-to-use-a-breadboard">breadboard tutorial </a> should be helpful.</p>
+<p>This section will first describe the main program that blinks an LED. After that it goes into detail about how the code that interacts with the BCM2835 works to control the I/O functions.</p>
+<h3 id="controlling-an-led---main-program">Controlling an LED - main program</h3>
+<script type="application/javascript" src="https://gist.github.com/youngkin/94636963e3658ff55944c8e4e7faa139.js"></script>
+
+<p>This first code snippet shows how to create a character to be displayed on the MAX7219 dot matrix display module. The 2 dimensional matrix <code>disp</code> contains a set of rows, <code>NUM_CHARS</code>, which each define a particular character to be displayed. Each column in the matrix, <code>MATRIX_ROW</code>, defines which LEDs to turn on in the dot matrix display module. The MAX7219 display module is an 8X8 array of LEDs. In the code snippet above the matrix contains 3 rows with 8 columns. The first cell at <code>disp1[0][0]</code> contains the hex value <code>0x3C</code>. This defines which LEDs to turn on in the first row, of 8 rows, of the display module. <code>0x3C</code> translates to <code>0011 1100</code>. Each digit specifies which LED in the row will be turned on. <code>0x3C</code> specifies that the middle 4 LEDs in the row of 8 LEDs will be turned on. <code>disp[0][1]</code> contains the hex value <code>0x42</code> which converts to the binary number <code>0100 0010</code> which specifies that the 2nd and 7th LEDs in the second row of 8 LEDs will be turned on. The dot matrix display will look like this after these 2 cells are displayed:</p>
+<pre><code>--****--
+-*----*-
+</code></pre><p>LED cells with <code>-</code>s are turned off, cells with <code>*</code>s are turned on. Once all 8 cells from <code>disp1[0][0]</code> to <code>disp1[0][7]</code> are displayed the following character, a zero, will be displayed on the dot matrix module:</p>
+<pre><code>--****--
+-*----*-
+-*----*-
+-*----*-
+-*----*-
+-*----*-
+-*----*-
+--****--
+</code></pre><p>This next code snippet shows the code for the <code>main</code> function. Each of the significant lines will be explained below the snippet.</p>
+<script type="application/javascript" src="https://gist.github.com/youngkin/93f04126727ece94481a7d56d9daab9b.js"></script>
+
+<p>Line 1 explains that the GPIO pins are hardcoded. This is because the program using the <code>SPIO</code> interface. The other 2 interfaces, <code>SPI1</code> and <code>SPI2</code> are auxilary SPI interfaces. Section 2.3, page 20, of the <a href="https://www.raspberrypi.org/app/uploads/2012/02/BCM2835-ARM-Peripherals.pdf">The BCM2835 datasheet</a> states the following:</p>
+<blockquote>
+<p>The two universal SPI masters are secondary low throughput SPI interfaces.
+&hellip;
+The universal SPI master has been developed to work even with the most &lsquo;non-standard&rsquo; SPI devices.</p>
+</blockquote>
+<p>Reading between the lines, &lsquo;secondary&rsquo;, low-throughput&rsquo; and &lsquo;non-standard&rsquo; don&rsquo;t seem to be attributes we want to work with. The <a href="https://www.airspayce.com/mikem/bcm2835/index.html">BCM2835</a> library, which is the basis for the code presented in this article, supports <code>SPI0</code> as the primary interface. It has auxilary functions to support the <code>SPI1</code> interface, and no functions to support <code>SPI2</code>. Given all this I elected to hard-code the <code>SPI0</code> interface. Note, the BCM2835 datasheet specifies that GPIO pins 7-11 are dedicated to <code>SPI0</code> when the ALT0 function is specified.</p>
+<p>Line 3 defines a signal handler to provide graceful shutdown of the application if it is killed (e.g., ^C).</p>
+<p>Line 8, the call to <code>bcm_init()</code>, initializes the the BCM2835. Among other things, it finds the appropriate memory offsets for the I/O peripherals address space and maps <code>/dev/mem</code> so that it is usable for programming the I/O functions. <code>bcm_init()</code> is a low-level function that will be described in detail in the next section, &ldquo;Controlling an LED - interacting with the BCM2935&rdquo;.</p>
+<p>Line 13, <code>init_spi()</code>, initializes the SPI interface which includes setting the I/O function on the GPIO pins to ALT0 (enables SPI0).</p>
+<p>Line 14, <code>Delay_xms(50);</code>, causes a short delay, 50ms, to give the spi interface time to complete initializing.</p>
+<p>Lines 40 ad 41 reset the BCM2835 GPIO functionality and release resources (e.g., <code>/dev/mem</code>).</p>
+<p>Lines 18-37 are the heart of the <code>main</code> function. For each row in the <code>disp1</code> array, it writes an entire row&rsquo;s values to the display module resulting in a character being displayed (e.g., <code>0</code>).</p>
+<p>This code snippet shows how the SPI interface is initialized.</p>
+<script type="application/javascript" src="https://gist.github.com/youngkin/f57bf0d0d8282a0db0eea46515db895c.js"></script>
+
+<p>Line 4, <code>bcm_spi_begin()</code>, is another low level function that interfaces with the BCM2835. As the comments state, it&rsquo;s responsible for setting GPIO pins 7-11 to alternate function 0, which for those pins, enables the SPI0 interface. It&rsquo;ll be covered in more detail in the next section.</p>
+<p>Line 6, <code>bcm_spi_setBitOrder()</code>, is more complicated depending on whether you understand the concept of most significant and least significant bit ordering (MSB and LSB). Simplistically, the most significant bit in a binary number is the left-most bit. Likewise the least significant bit in a binary number is the right-most bit. In the binary number <code>100</code> the MSB is <code>1</code> and the LSB is <code>0</code>. What&rsquo;s significant about this is when data is transferred serially bit ordering specifies which bit is sent first. In MSB the most significant bit is sent first. So thinking of the receiving end of a serial data transfer as a stack, the MSB gets pushed to the stack first. The rest of the bits are transferred moving from the MSB to the LSB. So if the number <code>100</code> is tranferred serially in MSB order it would be represented as <code>001</code> on the receiving end. Different devices expect data in either MSB or LSB.</p>
+<p>It&rsquo;s important to know what the device you&rsquo;re interacting with expects with regard to bit order. The BCM2835 SPI0 expects bits in MSB. SPI1 and SPI2 can acccept either MSB or LSB as specified in bit 6 of the AUXSPI0/1_CNTL0 Register (see <a href="https://www.raspberrypi.org/app/uploads/2012/02/BCM2835-ARM-Peripherals.pdf">the BCM2835 datasheet</a>, page 22-23 for details). <code>bcm_spi_setBitOrder()</code> allows the specification of either MSB or LSB. However, for SPI data transfers the data must be sent in MSB. So for SPI, this function is basically a no-op. If you&rsquo;d like to see a more complete example of bit ordering see my article <a href="http://youngkin.github.io/post/shiftregistersevensegdisplay/#what-is-a-shift-register-and-what-is-it-good-for">Raspberry Pi GPIO in Go and C - Using a Shift Register &amp; 7 Segment Display</a>. It describes in detail how bit ordering is used in conjunction with a shift register. If you&rsquo;d like more information on forcing the BCM2835 SPI interface to send data in LSB see this Google Groups thread on <a href="https://groups.google.com/g/bcm2835/c/9H6rDEKTru0?pli=1">BCM2835 SPI communication - LSB first</a>.</p>
+<h3 id="controlling-an-led---interacting-with-the-bcm2835">Controlling an LED - interacting with the BCM2835</h3>
+<h2 id="summary">Summary</h2>
+<p><em><strong>Refer to SPI article for more details about SPI? Also, provide an advanced section in the SPI article covering working directly with the board vs. via a library?</strong></em></p>
+<p>Comments and questions about this article are welcome.</p>
+<h2 id="references">References</h2>
+<ul>
+<li><a href="https://docs.sunfounder.com/projects/raphael-kit/en/latest/1.1.1_blinking_led_c.html">The Sunfounder Blinking LED project</a> is the source of the breadboard diagram. It was also the inspiration for this series on Raspberry Pi GPIO programming. See my <a href="http://10.0.0.223:1313/post/sunfoundergpionotesled/">Blinking LED project</a> for more details.</li>
+<li><a href="https://pinout.xyz/">Raspberry Pi GPIO Pinout diagram</a> including the physical board pin numbers, the BCM/GPIO pin numbers, and the WiringPi pin numbers.</li>
+<li><a href="https://github.com/youngkin/gpio">The gpio repository</a> containing the code for this and other articles</li>
+<li><a href="https://projects.raspberrypi.org/en/projects/raspberry-pi-setting-up">How to setup a new Raspberry Pi from scratch</a></li>
+<li><a href="https://www.sciencebuddies.org/science-fair-projects/references/how-to-use-a-breadboard">How to use a breadboard</a></li>
+<li><a href="https://youngkin.github.io/categories/gpio/">GPIO programming on a Raspberry Pi 3B+</a> is a link to my articles about GPIO programming on the Raspberry Pi</li>
+<li><a href="https://www.raspberrypi.org/app/uploads/2012/02/BCM2835-ARM-Peripherals.pdf">The BCM2835 datasheet</a>.</li>
+<li><a href="https://datasheets.maximintegrated.com/en/ds/MAX7219-MAX7221.pdf">The MAX7219 datasheet</a> describes the low level details of the MAX7219 LED Dot Matrix Display, called the Serially Interfaced, 8-Digit LED Display Drivers in the datasheet. This includes detailed information about the registers, what they do, and how to set them.</li>
+<li>The C <a href="https://www.airspayce.com/mikem/bcm2835/index.html">BCM2835</a> library by Mike McCauley</li>
+<li>The C <a href="http://wiringpi.com">WiringPi</a> library and associated <a href="https://github.com/WiringPi/WiringPi">GitHub repository</a></li>
+<li>The Python <a href="http://abyz.me.uk/rpi/pigpio/">pgpio</a> library</li>
+<li>The Python <a href="https://pypi.org/project/RPi.GPIO/">RPi.GPIO</a> library</li>
+<li>The Go <a href="https://github.com/stianeikeland/go-rpio">go-rpio</a></li>
+<li><a href="https://adikedia.com/2016/08/10/using-multiple-spi-slave-devices-with-wiringpi/">Using Multiple SPI Slave Devices with the Raspberry Pi</a> provides more information about how the 2 CE/CS pins are used.</li>
+</ul>
+
+                
+
+                <hr>
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/post/shiftregistersevensegdisplay/" data-toggle="tooltip" data-placement="top" title="Raspberry Pi GPIO in Go and C - Using a Shift Register &amp; 7 Segment Display">&larr;
+                            Previous Post</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/post/gpioprogramming/" data-toggle="tooltip" data-placement="top" title="Raspberry Pi GPIO - Introduction To Programming Broadcom BCM2835 ARM Peripherals">Next
+                            Post &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+                
+<div id="disqus-comment"></div>
+
+<div id="hyvor-talk-view"></div>
+<script type="text/javascript">
+    var HYVOR_TALK_WEBSITE = 1798; 
+    var HYVOR_TALK_CONFIG = {
+        url: false,
+        id: false
+};
+</script>
+<script async type="text/javascript" src="//talk.hyvor.com/web-api/embed"></script>
+</div>
+
+
+
+            </div>
+            
+            <div class="
+                col-lg-11 col-lg-offset-1
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/c" title="c">
+                            c
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/docker" title="docker">
+                            docker
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/elasticsearch" title="elasticsearch">
+                            elasticsearch
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/go" title="go">
+                            go
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/gpio" title="gpio">
+                            gpio
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/grafana" title="grafana">
+                            grafana
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/kubernetes" title="kubernetes">
+                            kubernetes
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/mysql" title="mysql">
+                            mysql
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/networking" title="networking">
+                            networking
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/prometheus" title="prometheus">
+                            prometheus
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/raspberry-pi" title="raspberry-pi">
+                            raspberry-pi
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/traefik" title="traefik">
+                            traefik
+                        </a>
+                        
+                        
+                    </div>
+                </section>
+                
+
+                
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                   
+                   <li>
+                       <a href='' rel="alternate" type="application/rss+xml" title="Rich Youngkin" >
+                           <span class="fa-stack fa-lg">
+                               <i class="fa fa-circle fa-stack-2x"></i>
+                               <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                           </span>
+                       </a>
+                   </li>
+                   
+                    
+                    <li>
+                        <a href="mailto:rich.youngkin@gmail.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    
+                    
+                    
+
+                    
+
+		    
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/youngkin">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://www.linkedin.com/in/richard-youngkin-0749763">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    <li>
+                        <a target="_blank" href="https://medium.com/@RichYoungkin">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-medium fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+            
+                    
+                    <li>
+                        <a target="_blank" href="https://stackoverflow.com/users/2646870/rich">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-stack-overflow fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+            
+                    
+                    <li>
+                        <a target="_blank" href="https://www.reddit.com/user/elevation5280">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-reddit fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+            
+                    
+                    
+            
+            
+            
+                </ul>
+		<p class="copyright text-muted">
+                    Copyright &copy; Rich Youngkin 2022
+                    <br>
+                    <a href="https://themes.gohugo.io/hugo-theme-cleanwhite">CleanWhite Hugo Theme</a> by <a href="https://zhaohuabing.com">Huabing</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="100px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=zhaohuabing&repo=hugo-theme-cleanwhite&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+
+
+
+
+
+<script>
+    
+    if($('#tag_cloud').length !== 0){
+        async("/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+
+<script>
+    async("https://cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+
+
+
+
+</body>
+</html>

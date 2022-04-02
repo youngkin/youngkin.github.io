@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    
+
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-177198277-1"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-177198277-1');
+    </script>
+
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+    <meta property="og:site_name" content="Rich Youngkin">
+    <meta property="og:type" content="article">
+
+    
+    <meta property="og:image" content="https://youngkin.github.io/images/main_go_wideandtall_darklayer.jpeg">
+    <meta property="twitter:image" content="https://youngkin.github.io/images/main_go_wideandtall_darklayer.jpeg" />
+    
+
+    
+    <meta name="title" content="Raspberry Pi GPIO - Introduction To Programming Broadcom BCM2835 ARM Peripherals" />
+    <meta property="og:title" content="Raspberry Pi GPIO - Introduction To Programming Broadcom BCM2835 ARM Peripherals" />
+    <meta property="twitter:title" content="Raspberry Pi GPIO - Introduction To Programming Broadcom BCM2835 ARM Peripherals" />
+    
+
+    
+    <meta name="description" content="Learn how to directly program the BCM2835 on a Raspberry Pi using its registers to perform tasks such as writing to a GPIO pin or using advanced capabilites such as SPI.">
+    <meta property="og:description" content="Learn how to directly program the BCM2835 on a Raspberry Pi using its registers to perform tasks such as writing to a GPIO pin or using advanced capabilites such as SPI." />
+    <meta property="twitter:description" content="Learn how to directly program the BCM2835 on a Raspberry Pi using its registers to perform tasks such as writing to a GPIO pin or using advanced capabilites such as SPI." />
+    
+
+    
+    <meta property="twitter:card" content="summary" />
+    
+    
+
+    <meta name="keyword"  content="Rich, Youngkin, Raspberry, Pi, Docker, Kubernetes, Go, Golang, GPIO, Microservice">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>Raspberry Pi GPIO - Introduction To Programming Broadcom BCM2835 ARM Peripherals-Rich Youngkin Topics in Software Engineering</title>
+
+    <link rel="canonical" href="/post/gpioprogramming/">
+
+    <link rel="stylesheet" href="/css/iDisqus.min.css"/>
+	
+    
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    
+    <link rel="stylesheet" href="/css/zanshang.css">
+    
+    
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    
+    
+
+    
+    
+    <script src="/js/jquery.min.js"></script>
+    
+    
+    <script src="/js/bootstrap.min.js"></script>
+    
+    
+    <script src="/js/hux-blog.min.js"></script>
+
+    
+    
+
+</head>
+
+
+
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Rich Youngkin</a>
+        </div>
+
+        
+        
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    
+                        
+                        <li>
+                            <a href="/categories/barbeque">barbeque</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/blog">blog</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/c">c</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/go">go</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/gpio">gpio</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/kubernetes">kubernetes</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/raspberry-pi">raspberry-pi</a>
+                        </li>
+                        
+                    
+                    
+		    
+                        <li><a href="/top/about/">ABOUT</a></li>
+                    
+
+                    
+                </ul>
+            </div>
+        </div>
+        
+    </div>
+    
+</nav>
+<script>
+    
+    
+    
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        
+            $navbar.className = " ";
+            
+            setTimeout(function(){
+                
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+
+
+<style type="text/css">
+    header.intro-header {
+        background-image: url('/images/bcm2835programming/Raspberry-Pi-3B-top_1500_dark.jpg')
+    }
+</style>
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/raspberry-pi" title="raspberry-pi">
+                            raspberry-pi
+                        </a>
+                        
+                        <a class="tag" href="/tags/c" title="C">
+                            C
+                        </a>
+                        
+                        <a class="tag" href="/tags/gpio" title="GPIO">
+                            GPIO
+                        </a>
+                        
+                    </div>
+                    <h1>Raspberry Pi GPIO - Introduction To Programming Broadcom BCM2835 ARM Peripherals</h1>
+                    <h2 class="subheading"></h2>
+                    <span class="meta">
+                        
+                        Posted on
+                        Saturday, April 2, 2022
+                        
+                        
+                        
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+
+
+<article>
+    <div class="container">
+        <div class="row">
+
+            
+            <div class="
+                col-lg-11 col-lg-offset-1
+                col-md-10 col-md-offset-1
+                post-container">
+
+                
+                <header>
+                    <h2>Contents</h2>
+                </header>
+                <nav id="TableOfContents">
+  <ul>
+    <li><a href="#overview">Overview</a></li>
+    <li><a href="#prerequisites">Prerequisites</a></li>
+    <li><a href="#an-introduction-to-the-bcm2835-arm-peripherals">An introduction to the BCM2835 ARM Peripherals</a>
+      <ul>
+        <li><a href="#io-functions">I/O Functions</a></li>
+        <li><a href="#addressing">Addressing</a></li>
+        <li><a href="#registers">Registers</a></li>
+      </ul>
+    </li>
+    <li><a href="#setup-and-code">Setup and Code</a>
+      <ul>
+        <li><a href="#controlling-an-led---main-program">Controlling an LED - main program</a></li>
+        <li><a href="#controlling-an-led---interacting-with-the-bcm2835">Controlling an LED - interacting with the BCM2835</a></li>
+      </ul>
+    </li>
+    <li><a href="#summary">Summary</a></li>
+    <li><a href="#references">References</a></li>
+  </ul>
+</nav>
+                
+                <h2 id="overview">Overview</h2>
+<p>This is the sixth article in a series that explores <a href="https://youngkin.github.io/categories/gpio/">GPIO programming on a Raspberry Pi 3B+</a>. It is an introduction to controlling GPIO peripheral devices by directly interacting with the appropriate registers on the BCM2835 SoC (system on a chip). It is an introduction in that it only covers one of the capabilities, using the basic GPIO capability as described in <a href="https://www.raspberrypi.org/app/uploads/2012/02/BCM2835-ARM-Peripherals.pdf">Section 6 of the BCM2835 ARM Peripherals guide</a>. This excludes BCM2835 support for protocols such as SPI, Pulse Width Modulation, and IC2 which overlay specific protocol capability by utilizing the underlying pins mapped to a given protocol (e.g., GPIO pins 8-11 are associated with the SPI protocol and have behaviors that can be enabled that are specific to that protocol). That said, using the basic pin level functionality covers the same concepts needed to utilize advanced protocol capabilites such as SPI. This article, coupled with the <a href="https://www.raspberrypi.org/app/uploads/2012/02/BCM2835-ARM-Peripherals.pdf">BCM2835 ARM Peripherals guide</a>, should provide enough background to drive devices that are controlled via those capabilities. Of course there are multiple libraries such as the C <a href="https://www.airspayce.com/mikem/bcm2835/index.html">BCM2835</a> and <a href="https://github.com/WiringPi/WiringPi">WiringPi</a> libraries, the Python <a href="http://abyz.me.uk/rpi/pigpio/">pgpio</a> and <a href="https://pypi.org/project/RPi.GPIO/">RPi.GPIO</a> libraries, and the Go <a href="https://github.com/stianeikeland/go-rpio">go-rpio</a> library that make this much easier. And while these libraries are usually more appropriate for most projects, it can be helpful to understand how the BCM2835 SoC works and how those libraries interact with the SoC. This background is also helpful if you find yourself reading library code and/or would like to contribute to these projects, or even write your own library.</p>
+<p>This article assumes you already have some familiarity with the BCM2835 and GPIO programming on the Raspberry Pi. If you don&rsquo;t you may want to consider trying the projects covered in some of <a href="https://youngkin.github.io/categories/gpio/">my other GPIO articles</a>. The simplist article in the series is <a href="https://youngkin.github.io/post/sunfoundergpionotesled/">Raspberry Pi GPIO in Go and C - Blinking LED</a>. It demonstrates the same capability as this article does, blinking an LED, but it also demonstrates the usage of the <a href="https://github.com/WiringPi/WiringPi">WiringPi</a> and the Go <a href="https://github.com/stianeikeland/go-rpio">go-rpio</a> libraries. It is a good introduction to using GPIO on the Raspberry Pi, but it only covers basic GPIO concepts and how to wire a breadboard to a Raspberry Pi&rsquo;s GPIO outputs.</p>
+<p>The following topics will be covered:</p>
+<ol>
+<li><strong>Prerequisites</strong> - describes the hardware and libraries you&rsquo;ll need for this article.</li>
+<li><strong>An introduction to BCM2835 GPIO Peripherals</strong> - provides an overview the BCM2835&rsquo;s architecture and capabililites.</li>
+<li><strong>An introduction to the <a href="https://www.airspayce.com/mikem/bcm2835/index.html">BCM2835 C library</a></strong> - provides a brief overview of the BCM2835 C library developed by Mike McCauley. This library is the source of much is what is covered in this article.</li>
+<li><strong>Using the BCM2835 board to control an LED via the GPIO pins</strong> - provides the details, including code, for controlling an LED using the BCM2835 GPIO registers.</li>
+<li><strong>Summary</strong> - summarizes the important concepts covered in this article.</li>
+<li><strong>References</strong> - provides a list of references I found helpful, some of which were used in the creation of this article.</li>
+</ol>
+<h2 id="prerequisites">Prerequisites</h2>
+<p>If you don&rsquo;t have one, you&rsquo;ll need a Raspberry Pi. I used a Raspberry Pi 3B+ with the &lsquo;stretch&rsquo; version of the Raspbian OS. See <a href="https://projects.raspberrypi.org/en/projects/raspberry-pi-setting-up">How to setup a new Raspberry Pi from scratch</a> if you don&rsquo;t already have a Raspberry Pi and need help setting one up.</p>
+<p>Next you&rsquo;ll need is a <a href="https://www.amazon.com/dp/B082KBF7MM/ref=sspa_dk_detail_4?psc=1&amp;pd_rd_i=B082KBF7MM&amp;pd_rd_w=1tGTV&amp;pf_rd_p=887084a2-5c34-4113-a4f8-b7947847c308&amp;pd_rd_wg=fX8JB&amp;pf_rd_r=44DE0RS1E9FD42RBYC7R&amp;pd_rd_r=47cbdc7f-7834-455f-9429-ef74a438bd45&amp;spLa=ZW5jcnlwdGVkUXVhbGlmaWVyPUFVVkdZVUZRNUw3ODkmZW5jcnlwdGVkSWQ9QTA4MzI4MzYyU0VLNzBJM0cxRUVMJmVuY3J5cHRlZEFkSWQ9QTA0Mjk1NTMzSzNSWlNFUjU0NURBJndpZGdldE5hbWU9c3BfZGV0YWlsJmFjdGlvbj1jbGlja1JlZGlyZWN0JmRvTm90TG9nQ2xpY2s9dHJ1ZQ==">breadboard</a>, some <a href="https://www.amazon.com/dp/B08HZ26ZLF/ref=syn_sd_onsite_desktop_19?psc=1&amp;spLa=ZW5jcnlwdGVkUXVhbGlmaWVyPUExRFpLWElCRjg1MUNMJmVuY3J5cHRlZElkPUEwMjMyMTE1M01aOFE3U1BQS09YSiZlbmNyeXB0ZWRBZElkPUEwODE5NTMxMktEMTlZRjEyQjBJNiZ3aWRnZXROYW1lPXNkX29uc2l0ZV9kZXNrdG9wJmFjdGlvbj1jbGlja1JlZGlyZWN0JmRvTm90TG9nQ2xpY2s9dHJ1ZQ==">jumper wires</a>, <a href="https://www.amazon.com/Gikfun-Resistor-Experiment-Raspberry-Arduino/dp/B01G3FCMVA/ref=sr_1_19?keywords=220+ohm+resistor&amp;qid=1648933499&amp;sr=8-19">a 220 Ohm resistor, and an LED</a>. You should also consider getting a <a href="https://www.amazon.com/dp/B082PRVRYR/ref=sspa_dk_detail_2?psc=1&amp;pd_rd_i=B082PRVRYR&amp;pd_rd_w=8mKhr&amp;pf_rd_p=887084a2-5c34-4113-a4f8-b7947847c308&amp;pd_rd_wg=e9psa&amp;pf_rd_r=S09F37DF2G5FW8B8GX4B&amp;pd_rd_r=c065c120-e60b-45e9-b93b-f581f048cf46&amp;spLa=ZW5jcnlwdGVkUXVhbGlmaWVyPUFCMzhUQ09COFI2VlMmZW5jcnlwdGVkSWQ9QTA5NjU2ODUxRDkxNEYwSTYwV09KJmVuY3J5cHRlZEFkSWQ9QTAxOTg1MTUyRUhEUlc2VzQ2VDQ4JndpZGdldE5hbWU9c3BfZGV0YWlsJmFjdGlvbj1jbGlja1JlZGlyZWN0JmRvTm90TG9nQ2xpY2s9dHJ1ZQ==">40 pin female to female with a T-Type adapter</a> to attach the GPIO outputs to the breadboard. You can use only jumper wires, but the adapter will make things easier and will help prevent damage to the GPIO pins on the Raspberry Pi. If you elect not to buy the 40 pin cable with T-Type adapter you&rsquo;ll need to buy <a href="https://www.amazon.com/SinLoon-Breadboard-Arduino-Circuit-40-Pack/dp/B08M3QLL3Q/ref=pd_sbs_7/143-0445142-7950409?pd_rd_w=sVLrc&amp;pf_rd_p=8b76d7a7-ab83-4ddc-a92d-e3e33bfdbf03&amp;pf_rd_r=CDM5TGJT03VKF0ZFB577&amp;pd_rd_r=8e58fd82-8503-41cf-b8f2-c78eaeb78d25&amp;pd_rd_wg=tT1U0&amp;pd_rd_i=B08M3QLL3Q&amp;psc=1">male-to-female jumper wires</a>. Buying all these things separately will cost more than a kit however. <a href="https://www.amazon.com/dp/B06WP7169Y/ref=sspa_dk_detail_5?psc=1&amp;pd_rd_i=B06WP7169Y&amp;pd_rd_w=OZVyf&amp;pf_rd_p=887084a2-5c34-4113-a4f8-b7947847c308&amp;pd_rd_wg=0V0IH&amp;pf_rd_r=623YJTBQ2CN2B2GYXQG5&amp;pd_rd_r=faa61f0f-3aec-4cf0-8e7e-d44eb1b3b92f&amp;spLa=ZW5jcnlwdGVkUXVhbGlmaWVyPUEyUVlDQzMzVVZBMFYxJmVuY3J5cHRlZElkPUEwMzExNzk4MUhGSjFSS0VKTlBROCZlbmNyeXB0ZWRBZElkPUEwMzYwNjg2UUdMRU44N0YzNzIwJndpZGdldE5hbWU9c3BfZGV0YWlsJmFjdGlvbj1jbGlja1JlZGlyZWN0JmRvTm90TG9nQ2xpY2s9dHJ1ZQ==">Here&rsquo;s a simple kit that has all of the above</a>. If you expect to follow this series I recommend buying the <a href="https://www.amazon.com/gp/product/B09BMVT4CB/ref=ppx_yo_dt_b_asin_title_o02_s00?ie=UTF8&amp;psc=1">Sunfounder Raspberry Pi Ultimate Starter Kit</a>.</p>
+<img style="border:1px solid black" src="/images/pwmfordummies/RaphaelKit.png" align="center" width="600" height="300"/>
+<figcaption align="left"><center><i style="color:black;">Sunfounder Ultimate Starter/Raphael kit</i></center></figcaption>
+<p>You&rsquo;ll need to download the <a href="https://www.airspayce.com/mikem/bcm2835/index.html">BCM2835 C library</a>. Please see the website for up-to-date information on how to download and install the library. There is quite a bit more information beyond installation on the website. I suggest at least perusing it to get an idea of what other information is available regarding installation and use.</p>
+<p>Finally, you&rsquo;ll need some basic C programming knowledge as well as familiarity with logging on to a Raspberry Pi terminal, or into the desktop GUI that comes with some OS versions. Depending on the approach you take, you may need to connect a keyboard and monitor to the Raspberry Pi. I simply SSH into the Pi. You&rsquo;ll also need familiarity with how to use an editor like Vi or nano. Finally, you&rsquo;ll need basic familiarity with the Linux command line.</p>
+<h2 id="an-introduction-to-the-bcm2835-arm-peripherals">An introduction to the BCM2835 ARM Peripherals</h2>
+<p>This section provides an overview of the BCM2835 peripherals. It starts with an overview overview of the capabilites of the various types of peripherals. It then moves to an overview of BCM2835 addressing. Understanding addressing is fundamental to understanding the rest of the article. It concludes with a more detailed discussion about how registers are used to access the peripherals and their associated I/O functions.</p>
+<p>This is not an exhaustive description of the BCM2835. The only capability that will be covered in any detail, and is the focus of this article, is interacting with the GPIO I/O functions, namely defining the function of a pin and setting and clearing the value of the pin (e.g., setting it to HIGH and LOW), specifically programming BCM2835 GPIO to blink an LED.</p>
+<p>There are multiple pin numbering schemes. The Raspberry Pi has physical pin numbers, i.e., the numbers printed on the Pi board. BCM2835 has a numbering scheme called GPIO numbering. It is different than, and incompatible with, the Pi&rsquo;s physical numbering scheme. Finally some libraries such as the C WiringPi library have their own numbering schemes which are incompatible with the Pi and BCM2835 schemes. This article uses the BCM2835 numbering scheme exclusively. There is a good <a href="https://pinout.xyz">pin out diagram</a> available that maps between these 3 numbering schemes. Where a pin supports a particular I/O function, as described below, that is also called out on this pin out diagram.</p>
+<p>A quick note on terminology&hellip; The term &ldquo;peripherals&rdquo; is used in the title and in some parts of this article. To me the term peripherals is something of a misnomer. Let me explain. At its most basic the GPIO capability of the BCM2835 is made available through a set of physical pins on the device. Some of these pins provide power and ground needed to drive external devices like LEDs, sensors, and motors. Other pins can be controlled programatically to take input from, or output to, these external devices. At a higher level, subsets of the GPIO pins provide support for complete protocols that implement more sophisticated functions like controlling the speed and direction of a motor and controlling LED displays that display text like those in highway signs. These basic and more sophisticated capabilities are controlled by setting the function of a pin. Input and output are 2 functions that can be set. There are a variety of others that will be covered. Setting the function of a pin describes how the BCM2835 interacts with a device or peripheral. Because of this I prefer to use the term I/O Function. I think that more accurately describes the concept than the term &ldquo;peripherals&rdquo; does. To me &ldquo;peripherals&rdquo; are the external devices. The first use of the term <strong>I/O Functions</strong> is the title of the  next section.</p>
+<h3 id="io-functions">I/O Functions</h3>
+<p>The BCM2835 supports a variety of I/O functions. These are the subject of the <a href="https://www.raspberrypi.org/app/uploads/2012/02/BCM2835-ARM-Peripherals.pdf">BCM2835 ARM Peripherals guide</a>. This section will only describe a few of these functions in detail. There are other sources like Wikipedia that can provide information about the others.</p>
+<p>The main I/O functions supported by the BCM2835 are:</p>
+<ul>
+<li>GPIO</li>
+<li>SPI</li>
+<li>PWM</li>
+<li>AUX</li>
+<li>BSC</li>
+<li>DMA</li>
+<li>External Mass Media Controller</li>
+<li>Interrupts</li>
+<li>Audio (PCM/I2s Audio)</li>
+<li>System Timer</li>
+<li>UART</li>
+</ul>
+<p>As I have direct experience with the first 3 I/O functions, GPIO, SPI, and PWM, this section will focus on these. This will provide enough context in order to get a basic understanding of the kinds of things the BCM2835 is capable of as well as leveraging the information in the Addressing and Registers sections below in order to learn about and use the remaining I/O functions.</p>
+<h4 id="gpio-general-purpose-inputoutput">GPIO (General Purpose Input/Output)</h4>
+<p>GPIO stands for General Purpose Input Output. In the BCM2835 ARM Peripherals guide the term GPIO refers to the most general, or basic, level of control of a physical pin. This is what&rsquo;s used to control the function of a pin, such as setting it as an input or output pin, or more advanced I/O functions such as SPI and PWM. It&rsquo;s also used to set or get the value of a pin. Values are conceptually referred to as HIGH and LOW, but they are represented by voltage, or lack thereof, passing across the pin. There are other types of settings for pins. One of these settings is used to control whether to detect a state change on the rising or falling edge of a pin&rsquo;s voltage change. Another setting controls what are called pull-up/pull-down resistors attached to each pin. These resistors are used to explicitly control the value of a pin, 1 or 0, when a pin&rsquo;s voltage is in an indeterminate state. <a href="https://www.electronics-tutorials.ws/logic/pull-up-resistor.html">This tutorial</a> has a reasonably good explanation for why pull-up and pull-down resistors are needed.</p>
+<p>The code associated with this article causes and LED to blink. Accomplishing this involves the following steps:</p>
+<ol>
+<li>Set the function of the pin to output, i.e., it&rsquo;s going to be written to in order to send a signal to the LED.</li>
+<li>Write LOW to the pin to cause the LED to turn on.</li>
+<li>Pause</li>
+<li>Write HIGH to the pin to cause the LED to turn off.</li>
+<li>Repeat steps 2 through 4.</li>
+</ol>
+<p>Accomplishing this uses the GPIO I/O  functions. More accurately it uses the GPIO registers to set the pin&rsquo;s function (e.g., output) and to control the behavior of the peripheral, an LED in this case.</p>
+<h4 id="spi-serial-peripheral-interface">SPI (Serial Peripheral Interface)</h4>
+<p>SPI is used to send data serially to a peripheral that can accept or requires data in parallel. This is helpful because a relatively large set of parallel inputs can be written to using just 3 GPIO pins. If SPI wasn&rsquo;t used, one GPIO pin would be required for each parallel input. This could easily be prohibitive since pins are a limited resource.</p>
+<img style="border:1px solid black" src="/images/sevensegdisplay/7segmentdisplaypinout.png" align="center" width="200" height="100"/>
+<figcaption align="left"><center><i style="color:black;">Image credit: Circuit Basics</i></center></figcaption>
+<p>The diagram above shows a 7 segment display that is commonly used to display display numeric characters in devices like calculators and clocks. Note that it doesn&rsquo;t support SPI, it&rsquo;s just used to help explain why SPI is useful. It has 8 input lines and 2 ground lines. Controlling this directly using GPIO would use 8 of the 40 GPIO pins. Controlling 6 of these displays would take all 48 GPIO pins, but there are only 40. Clearly the approach to using GPIO to control this peripheral isn&rsquo;t practical. Enter a device called a shift register. Shift registers can control 8 input lines of a connected peripheral. It uses 5 GPIO pins, 3 for input and 2 for control. To control multiple peripherals it&rsquo;s possible to daisy-chain shift registers without requiring additional GPIO pins. Taking our previous example of 6 7 segment displays, using a shift register requires 5 GPIO pins vs. the 48 that would be required by directly using GPIO pins. Some SPI peripherals like the <a href="https://datasheets.maximintegrated.com/en/ds/MAX7219-MAX7221.pdf">MAX7219 Dot Matrix Display Module</a> have an on-board shift register. If you&rsquo;re interested in learning more about shift registers see my article <a href="http://youngkin.github.io/post/shiftregistersevensegdisplay/">Raspberry Pi GPIO in Go and C - Using a Shift Register &amp; 7 Segment Display</a>.</p>
+<p>The SPI interface requires at least 4 GPIO pins. One of the pins, MOSI, sends data to a peripheral. MOSI stands for Master Out Slave In. The second pin, MISO (Master In Slave Out) accepts input.</p>
+<blockquote>
+<p>I reluctantly use the terms &ldquo;master&rdquo; and &ldquo;slave&rdquo;. However these terms are used in all of the documents I&rsquo;ve read on SPI. I&rsquo;ll continue to use them in order to avoid confusion.</p>
+</blockquote>
+<p>The 3rd pin is a clock which controls the data transmission between the master and slave. The 4th pin is called the chip select (CS) or chip enable (CE) pin. It is used to prepare the slave device to interface with the BCM2835. An additional slave device can be accessed by using a 5th pin, the second CE/CS pin. The 2 CE/CS pins are used to enable each of the slave devices, but only one device can be enabled at a time. The article <a href="https://adikedia.com/2016/08/10/using-multiple-spi-slave-devices-with-wiringpi/">Using Multiple SPI Slave Devices with the Raspberry Pi</a> provides more information about how the 2 CE/CS pins are used.</p>
+<p>The primary SPI interface on the BCM2835, SPI0, is implemented on GPIO pins 7-11. Pins 7 &amp; 8 are the 2 CE/CS pins available on the BCM2835. Pin 9 is MISO, 10 is MOSI, and 11 is the clock (SCLK). The BCM2835 has 2 auxilary SPI interfaces, SPI1 (AKA AUX_SPI0) and SPI2 (AKA AUX_SPI1). From the BCM2835 ARM Peripherals guide it looks like SPI1 is available on pins 16-21 and SPI2 on pins 35-39. These auxilary interfaces are available via the AUX I/O function.</p>
+<p>SPI can be used to control a variety of peripherals including matrixed LED or LCD displays to display characters or images, take input from touchscreens, and interact with various sensors. <a href="https://en.wikipedia.org/wiki/Serial_Peripheral_Interface">Wikipedia has a good article</a> describing SPI in more detail.</p>
+<p>I have an upcoming article devoted to SPI. I&rsquo;ll update this document adding a reference when it becomes available.</p>
+<h4 id="pwm-pulse-width-modulation">PWM (Pulse Width Modulation)</h4>
+<p>PWM is used to convert a digital signal, like that produced by the BCM2835, into a simulated analog signal. It is simulated in the sense that it&rsquo;s not a true analog signal. It&rsquo;s still a digital signal but it cycles so fast that, much like a video, it appears to be an analog signal. Many peripherals like electric motors, dimmable LEDs, and color LEDs require an analog signal. As with SPI there are dedicated pins that can be enabled to utilize the PWM I/O function. These are GPIO pins 12, 13, 18, and 19. With these pins the BCM2835 supports something called hardware PWM. The PWM functionality is embedded into the BCM2835. It implements a hardware based clock loop that controls the frequency of the simulated analog signal. It is possible to use other GPIO pins for PWM, this is called software PWM. However, in software PWM the clock loop is written in the code that runs on the Raspberry Pi CPU. Since that CPU is doing many other things it isn&rsquo;t possible to create a reliable clock signal. This can result in some undesirable side effects such as a flickering LED in place of a dim LED. See my articles <a href="https://youngkin.github.io/post/sunfoundergpionotesrgbled/">Raspberry Pi GPIO in Go and C - RGB LED</a> and <a href="https://youngkin.github.io/post/pulsewidthmodulationraspberrypi/">Pulse Width Modulation for Dummies</a> for more information about PWM as well as examples of PWM in use.</p>
+<h3 id="addressing">Addressing</h3>
+<p>All GPIO I/O functions are accessed via registers. These registers are located at various offsets in the on-board memory. Accessing the registers requires a knowledge of how addressing works on the BCM2835 was well as on the Raspberry Pi. Here&rsquo;s a diagram from the <a href="https://www.raspberrypi.org/app/uploads/2012/02/BCM2835-ARM-Peripherals.pdf">BCM2835 ARM Peripherals guide</a>, section 1.2.1, showing how memory is mapped from the Pi&rsquo;s physical address to the BCM2835 addresses.</p>
+<img style="border:1px solid black" src="/images/bcm2835programming/BCM2835Addressing.jpg" align="center" width="1000" height="500"/>
+<figcaption align="left"><center><i style="color:black;">BCM2835 Addressing</i></center></figcaption>
+<p>The Raspberry Pi maps the BCM2835 memory to the Pi&rsquo;s physical address of <code>0x2000 0000</code>. This is shown in the middle column labeled &ldquo;ARM Physical Addresses&rdquo;. The gray shaded area labeled I/0 peripherals is the Pi&rsquo;s physical memory location of the BCM2835&rsquo;s peripherals (e.g., GPIO pins). Moving towards the left you&rsquo;ll see a gold box labeled &ldquo;VC/ARM MMU&rdquo;. This is the <a href="https://en.wikipedia.org/wiki/Memory_management_unit">Memory Management Unit</a> that is responsible for mapping the Pi&rsquo;s physical memory to the BCM2835 memory. Following the line from the middle column&rsquo;s &ldquo;I/O Peripherals&rdquo; partition, through the VC/ARM MMU, to the far left column titled &ldquo;VC CPU Bus Addresses&rdquo; leads to the &ldquo;I/O Peripherals&rdquo; partition on the BCM2835&rsquo;s CPU address bus. It&rsquo;s address is <code>0x7E00 0000</code>.</p>
+<p>The I/O peripheral addresses can be made available to the application through one of 2 ways. The traditional way is via the <code>/dev/mem</code> device mounted on the file system. Accessing this device requires root privileges. A newer method became available starting with the Raspberry Pi 2. This method accesses the I/O peripheral addresses via <code>/dev/gpio</code>. An advantage of using this method is that it doesn&rsquo;t require root access. A disadvantage to using this method is that only the GPIO I/O functionality of the BCM2835 can be accessed. This means advanced capabilities like PWM and SPI are not available. Accessing the I/O peripherals using <code>/dev/mem</code> also requires a little more work, namely mapping the physical memory from <code>/dev/mem</code> to the application&rsquo;s virtual memory. This will be covered in more detail later.</p>
+<blockquote>
+<p>There is third way to interface with GPIO registers. In the case of SPI, there are 2 devices (generally available on many Raspberry Pi models), <code>/dev/spidev0.0</code> and <code>/dev/spidev0.1</code> via <code>ioctl()</code>. This method won&rsquo;t be covered in this article.</p>
+</blockquote>
+<h3 id="registers">Registers</h3>
+<p>As mentioned above, specifying the I/O function of a pin or set of pins is accomplished through registers on the BCM2835. Each I/O function has an associated register set located at an offset within the BCM2835&rsquo;s I/O peripheral address space. For example, the GPIO register set starts at the CPU bus address <code>0x7E20 0000</code>. The SPI register set starts at CPU bus address offset <code>0x7E20 4000</code>. The PWM register set starts at offset <code>0x7E20 C000</code>. And so on, each I/O function has it&rsquo;s own set of registers to manage its behavior. That said, they all work on the same principles. Namely, find the offset of the beginning of each I/O function&rsquo;s register set and then set (or get) the appropriate bits at the appropriate offsets to control the behavior. To make this example more explicit, and to highlight additional details, let&rsquo;s do a high level walkthrough of how to control a GPIO pin to blink an LED.</p>
+<p>As mentioned previously the GPIO register starts at bus address <code>0x7e2000 0000</code>. Section 6.1 of the <a href="https://www.raspberrypi.org/app/uploads/2012/02/BCM2835-ARM-Peripherals.pdf">BCM2835 ARM Peripherals guide</a> starting on page 90 provides the details about the GPIO registers. To blink an LED we&rsquo;ll first need to specify the pin&rsquo;s function, output in this case, and then toggle the value of the LED between HIGH and LOW.</p>
+<h4 id="specify-a-pins-function">Specify a pin&rsquo;s function</h4>
+<p>First the I/O function of the pin needs to be set. A pin&rsquo;s functionality is defined via one of 8 alternative functions. Encoding each function requires 3 bits, 000 - 111. These bits are contained within what is called a GPIO Function Select Register. Each register is 32 bits long. Therefore each 32 bit register can control 10 pins with 2 bits left over. In order to control all of the GPIO pins there are 6 function select registers. The BCM2835 has the capability to control up to 54 pins, if supported, via function select registers (on the Raspberry Pi 3B+ only 40 pins are available). Supporting 54 pins, with 10 pins/register, requires 6 registers. The first function select register is located at <code>0x7E20 0000</code>, zero-offset from the start of the GPIO register set. The 6th function select register starts at offset <code>0x7E20 0014</code>. The 8 alternative functions are:</p>
+<ul>
+<li>Input - represented by bit pattern <code>000</code></li>
+<li>Output  - represented by bit pattern <code>001</code></li>
+<li>and Alternate functions 0 through 5 represented by bit patterns <code>010</code> through <code>111</code> respectively.</li>
+</ul>
+<p>In this example let&rsquo;s use pin 17 as an output pin. Inspecting the BCM2835 ARM Peripherals guide we see that pin 17 is in function select register 1, AKA GPFSEL1. GPFSEL1 is at offset <code>0x7E20 0004</code>. Pin 17&rsquo;s function select offset within the register is at bits 21-23. Recall that the output bit pattern is <code>001</code> so we&rsquo;ll need to put that bit pattern in bits 21-23. In the section on coding below we&rsquo;ll see how this is actually accomplished.</p>
+<h4 id="set-the-pin-value">Set the pin value</h4>
+<p>This article assumes that pin 17 is attached to the ground terminal of the LED (the cathode). This means that we&rsquo;ll have to set the pin to LOW in order for current to flow from the power input to the anode through to the LED ground on pin 17 and light the LED. Setting the pin to HIGH will cause the LED to turn off. Switching between LOW and HIGH will cause the LED to blink, which is what we&rsquo;re looking for.</p>
+<p>GPIO pin values are controlled via the GPIO Pin Output Set register. There are 2 GPIO Pin Output Set registers. Pin 17 is in the first register, GPIO Pin Output Set 0, AKA GPSET0, at GPIO register offset <code>0x7E20 002C</code>. Pin 17 is at bit offset 17 within GPSET0. Setting bit 17 to 1 sets the register to HIGH. GPIO Pin Output Set registers can only set a pin to HIGH, setting a pin to 0 has no effect. But recall we need to set the pin to LOW. Since setting a pin in GPSET0 won&rsquo;t result in the pin being set to LOW how can we accomplish this? It turns out there is another set of GPIO registers called GPIO Pin Output Clear registers. These are used to set a pin&rsquo;s value to LOW. Pin 17 is in GPIO Pin Output Clear register 0, AKA GPCLR0, starting at offset <code>0x7E20 0028</code>. It&rsquo;s position within the register is also at bit 17. Setting bit 17 to 1 will set the pin to LOW. So we&rsquo;ll need to left shift a <code>1</code> into bit 17 in order to turn on the LED. We&rsquo;ll use GPSET0 to turn the LED off. As with specifying a pin&rsquo;s function, how this is accomplished will be covered later in this article. By using the GPCLR0 and GPSET0 registers in turn we can cause the LED to blink.</p>
+<h4 id="other-gpio-settings">Other GPIO settings</h4>
+<p>The GPIO register set can be used to control many other functions of a GPIO pin in addition to selecting the function and setting/clearing a pin&rsquo;s value. It can also be used to read the value of a pin. As discussed in the I/O functions section above other things that can be managed include specifying how state changes are to be detected (rising/falling edge detection) and how to set the voltage of a pin when it&rsquo;s in an indeterminate state (pull-up/down resistors). Discussing these other registers is an advanced topic and is beyond the scope of this article.</p>
+<h2 id="setup-and-code">Setup and Code</h2>
+<p>This section starts with a program that causes an LED to blink. It&rsquo;s fairly simple and will show the basic steps needed to program the BCM2835. The next part of this section will cover the BCM2835 programming in more detail. But before all that, here&rsquo;s how to wire the breadboard to work with the blinking LED example.</p>
+<img style="border:1px solid black" src="/images/pwmfordummies/blinkingLED.png" align="center" width="600" height="300"/>
+<figcaption align="left"><center><i style="color:black;">Image credit: Sunfounder</i></center></figcaption>
+<p>The breadboard should be wired as illustrated in the above diagram. Note that the (bent) long lead of the LED, the anode, is connected to the 3.3 volt power pin via the resister and the cathode, or ground, is connected to GPIO pin 17. If you&rsquo;re unfamiliar  with breadboards and breadboard diagrams this <a href="https://www.sciencebuddies.org/science-fair-projects/references/how-to-use-a-breadboard">breadboard tutorial </a> should be helpful.</p>
+<p>This section will first describe the main program that blinks an LED. After that it goes into detail about how the code that interacts with the BCM2835 works to control the I/O functions.</p>
+<h3 id="controlling-an-led---main-program">Controlling an LED - main program</h3>
+<script type="application/javascript" src="https://gist.github.com/youngkin/b6d09240d211b22dde5cf8efa522598c.js"></script>
+
+<p>This first code snippet shows a couple of important things:</p>
+<ol>
+<li>Line 1 gives the command to compile and link the program.</li>
+<li>Line 3 provides the include directive needed to import the BCM2835 functions that directly interact with the BCM2835.</li>
+<li>Line 8 defines the BCM GPIO pin that is used to control the LED. It matches the wiring diagram above.</li>
+</ol>
+<script type="application/javascript" src="https://gist.github.com/youngkin/f2d0840b28641e0a6412ab87ecc057ab.js"></script>
+
+<p>This snippet declares an interrupt handler to be used to gracefully exit the program. This ensures that the pin, and the LED, are left in a known state. The definition of the interrupt handler will be shown later.</p>
+<script type="application/javascript" src="https://gist.github.com/youngkin/06d98adb2c5d4eb6038d65db0bcdda5e.js"></script>
+
+<p>This snippet shows the beginning of the main function.</p>
+<p><strong>Line 3</strong> registers the interrupt handler for the SIGINT signal (i.e., ctl-C).</p>
+<p><strong>Lines 5-10</strong> initialize the BCM2835 GPIO functionality. Briefly, it finds the GPIO peripherals offset and length within main memory and maps it to <code>/dev/mem</code> so it can be safely accessed within the program. It then sets variables to the offsets of the various capability registers (e.g., GPIO or SPI). If initialization fails the program exits. The <code>bcm_init()</code> function will be described in more detail below.</p>
+<p><strong>Line 13</strong> sets <code>LEDPIN</code> to the GPIO output function. This allows the program to write values, HIGH or LOW, to the pin. The <code>bcm_gpio_fsel()</code> function will be described in more detail below.</p>
+<script type="application/javascript" src="https://gist.github.com/youngkin/90fe4ed60f0dbe266f4f2d6346db1b2d.js"></script>
+
+<p>This snippet implements the primary functionality of the program. <strong>Lines 2-10</strong> blink the LED on and off.</p>
+<p><strong>Lines 5 and 8</strong> set the value of the <code>LEDPIN</code> by calling <code>bcm_gpio_write()</code> and setting the value of the pin to either <code>LOW</code> to turn the LED on, or <code>HIGH</code> to turn the LED off. <code>LOW</code> turns the LED off because the lead connecting BCM GPIO pin 17 to the LED is connected to the LED&rsquo;s ground pin. To get current to flow the pin must be set to 0 volts. Likewise, <code>HIGH</code> turns the LED off. <code>bcm_gpio_write()</code> will be described in more detail below.</p>
+<p><strong>Lines 6 and 9</strong> cause the program to sleep for 500 milliseconds so the LED can be observed blinking.</p>
+<p>As the comment states, <strong>line 13</strong> releases the GPIO resources obtained by <code>bcm_init()</code>. This will also set the GPIO system back to a known state. <code>bcm_close()</code> will be described in more detail below.</p>
+<script type="application/javascript" src="https://gist.github.com/youngkin/a25e8e6c86f81b442a0aa2307f2508ab.js"></script>
+
+<p>This snippet defines the interrupt handler function. <strong>Lines 3 and 4</strong> first turn the LED off, then release the GPIO resources obtained by <code>bcm_init()</code>.</p>
+<h3 id="controlling-an-led---interacting-with-the-bcm2835">Controlling an LED - interacting with the BCM2835</h3>
+<p>This section describes how the code interacts with and controls the GPIO peripherals, specifically setting the values of the various registers associated with the I/O functionality of the BCM2835. Setting register values is used to control GPIO peripherals and reading register values allow the current state of the associated GPIO peripherals to be accessed.</p>
+<h4 id="bcm_init">bcm_init()</h4>
+<p>The section on <a href="./#registers">Registers</a> mentions that all operations on BCM2835 peripherals are accomplished by manipulating the registers associated for that type of peripheral. The purpose of <code>bcm_init()</code> is to determine the address offsets for all the types of registers, e.g., GPIO, PWM, SPI, etc. so that the their associated peripherals can be controlled.</p>
+<script type="application/javascript" src="https://gist.github.com/youngkin/5eb96cc009b06a09d61aca92f031896f.js"></script>
+
+<p>This snippet shows the beginning of the <code>bcm_init()</code> function.</p>
+<p><strong>Line 10</strong> opens the <code>BCM_RPI2_DT_FILENAME</code>. As indicated in the comment, the <code>rb</code> in the <code>fopen()</code> call opens a binary file for reading. <code>BCM_RPI2_DT_FILENAME</code> is defined in the associated <code>bcmfuncs.h</code> header file. It&rsquo;s value is <code>/proc/device-tree/soc/ranges</code>. As stated in <a href="https://www.kernel.org/doc/html/latest/devicetree/usage-model.html">Linux and the Devicetree</a>,</p>
+<blockquote>
+<p>An operating system used the Device Tree to discover the topology of the hardware at runtime, and thereby support a majority of available hardware without hard coded information (assuming drivers were available for all devices).</p>
+</blockquote>
+<p>One of the pieces of information the device tree holds, and is important for our purposes, is the location and length of the I/O Peripherals partition in the BCM2835&rsquo;s physical address space. Here&rsquo;s a hex dump of the contents of <code>/proc/device-tree/soc/ranges</code> on a Raspberry Pi 3B+:</p>
+<pre><code>pi@pi-node1:/ $ hexdump -C /proc/device-tree/soc/ranges
+00000000  7e 00 00 00 3f 00 00 00  01 00 00 00 40 00 00 00  |~...?.......@...|
+00000010  40 00 00 00 00 00 10 00                           |@.......|
+00000018
+</code></pre><p>We&rsquo;ll refer back to this in this next code snippet. Per <a href="https://www.devicetree.org/specifications/">devicetree.org</a>, in <a href="https://github.com/devicetree-org/devicetree-specification/releases/download/v0.4-rc1/devicetree-specification-v0.4-rc1.pdf">v0.4-rc1 of the Devicetree Specification</a>, the <code>soc/ranges</code> property is defined as follows:</p>
+<blockquote>
+<p>The ranges property provides a means of defining a mapping or translation between the address space of the bus (the child address space) and the address space of the bus node’s parent (the parent address space).
+The format of the value of the ranges property is an arbitrary number of triplets of (child-bus-address, parent-bus-address, length)</p>
+</blockquote>
+<p>In the case of the I/O Peripherals address block, as described in the <a href="./#addressing">Addressing section</a> above, the <em>&ldquo;child-bus-address&rdquo;</em> refers to the <em>&ldquo;I/O Peripherals&rdquo;</em> address block in the <em>&ldquo;VC CPU Bus Addresses&rdquo;</em> memory space. The <em>&ldquo;parent-bus-address&rdquo;</em> refers to the the <em>&ldquo;I/O Peripherals&rdquo;</em> address block in the <em>&ldquo;ARM Physical Addresses&rdquo;</em> block. And the <em>&ldquo;length&rdquo;</em> refers to the actual length of the <em>&ldquo;I/O Peripherals&rdquo;</em> address block. The Raspberry Pi 3B+ has a 32 bit address space so each of the values in the triple are 32 bits or 4 bytes.</p>
+<script type="application/javascript" src="https://gist.github.com/youngkin/40c162eaeef54c259d1345f18d9b85e1.js"></script>
+
+<p>This next code snippet finds the <em>parent-bus-address</em> and <em>length</em> of the I/O peripherals block using the data from <code>/proc/device-tree/soc/ranges</code>. Recall that the parent bus address is the second entry in the triplet that also defines the child bus address and length, <strong>Lines 1 thru 4</strong> shift the contents of the <em>parent-bus-address</em>, bytes at <code>buf</code> offsets 4 thru 7, into <code>base_address</code>. <code>3F</code> is shifted into the high order byte of <code>base_address</code>. The remaining <code>buf</code> cells are likewise shifted into <code>base_address</code> from left (most significant) to right (least significant byte). After shifting is complete <code>base_address</code> will be set to <code>0x3F000000</code>. Looking back at the diagram in the <a href="./#addressing">Addressing section</a> above you&rsquo;ll notice it <strong>DOESN&rsquo;T MATCH</strong> the base address of <code>0x20000000</code> in the <em>I/O Peripherals</em> address block in <em>ARM Physical Addresses</em>. This is because the diagram in the Addressing section is for the Raspberry Pi 1. This offset is different in the Raspberry Pi models 2 &amp; 3. And it&rsquo;s different yet again in the Raspberry Pi 4 model.</p>
+<p>Moving on, in a similar manner to <code>base_address</code>, <strong>lines 6 thru 9</strong> get the <em>length</em> by shifting from <code>buf</code> offsets 8 thru 11 into <code>peri-size</code>. For the Raspberry Pi 3B+, <code>0x01000000</code> is the expected length of the address block.</p>
+<script type="application/javascript" src="https://gist.github.com/youngkin/3f8ae5656e480195f3d7293061711016.js"></script>
+
+<p>This next code snippet completes obtaining the addressing information from <code>/proc/device-tree/soc/ranges</code>. Specifically it validates that the <em>&ldquo;child-bus-address&rdquo;</em> and <em>&ldquo;parent-bus-address&rdquo;</em> have the expected values. Recall that the <em>&ldquo;child-bus-address&rdquo;</em> is the first value in the addresses/length triplet, <code>buf</code> offsets 0 thru 3. Lines 1 thru 6 do the following:</p>
+<ol>
+<li><strong>Lines 1 thru 4</strong> verify that the first 4 bytes of <code>buf</code>, the <em>child-bus-address</em>, is <code>0x7E000000</code> as defined by the <em>&ldquo;I/O Peripherals&rdquo;</em> address block in the <em>&ldquo;VC CPU Bus Addresses&rdquo;</em> memory space.</li>
+<li><strong>Line 5</strong> verifies that the <em>parent-bus-address</em>, <code>base_address</code>, matches one of the expected base addresses for Raspberry Pi models 1 thru 4.</li>
+</ol>
+<p><strong>Lines 7 and 8</strong> then set the base address and length of the <em>I/O Peripherals</em> address block to the variables that will be used in the rest of the program. The important thing about this line is that it casts the source variables to the types expected by the target variables.</p>
+<script type="application/javascript" src="https://gist.github.com/youngkin/26f58efe4fdfed3eedf800ae8e167ef4.js"></script>
+
+<p>This next snippet maps the BCM2835&rsquo;s <em>&ldquo;I/O Peripherals&rdquo;</em> address block in the <em>&ldquo;ARM Physical Addresses&rdquo;</em> memory space from <code>/dev/mem</code> so that it can be safely used in the program.</p>
+<p><strong>Line 1</strong> first checks to see if the user running the program is running as <em>root</em> (either <em>root</em> user or <em>sudo</em>). If not, the <code>/dev/mem</code> device can&rsquo;t be used. <code>/dev/mem</code> provides unrestricted access to the CPU&rsquo;s memory. As this is obviously a dangerous thing to do its use is restricted to <em>root</em>. As you may recall from the <a href="./#addressing">Addressing section</a>, there is an alternative to <code>/dev/mem</code>, <code>/dev/gpio</code>. This will be shown later in this section.</p>
+<p><strong>Line 4</strong> opens <code>/dev/mem</code> in preparation to the mapping operation.</p>
+<p><strong>Line 13</strong> assigns the <code>bcm_peripherals</code> variable to the offset and length, <code>bcm_peripherals_base</code> and <code>bcm-peripherals_size</code>, of the <em>I/O Peripherals</em> address block. This mapping effectively restricts the program&rsquo;s access to the <em>I/O Peripherals</em> address block of physical memory.</p>
+<script type="application/javascript" src="https://gist.github.com/youngkin/583d622c0db398a6316f997b66cc219c.js"></script>
+
+<p>This next code snippet calculates the offsets for the various types of registers (e.g., GPIO, PWM, SPI, etc). Each offset is relative to the value of <code>bcm_peripherals</code> which was the result of a <code>mapmem()</code> operation in the previous snippet. So to get the address of a register set like the GPIO register set we would add <code>BCM_GPIO_BASE</code> to the <code>bcm_peripherals</code> base address. But you may have noticed the code divides these offsets by 4 prior to adding them to <code>bcm_peripherals</code>. These offsets, e.g., <code>BCM_GPIO_BASE</code>, which are specified as integers, point to specific byte addresses, i.e., at 8 bit boundaries. <code>bcm_peripherals</code> is specified as a <code>uint32_t*</code>, a pointer. You can&rsquo;t just naively add an integer to a pointer. You may recall that pointer arithmetic operates on a pointer variable based on the size of the type of the associated variable. For <code>unint32_t</code>'s their size is 32 bits or 4 bytes. Adding 1 to a <code>uint32_t</code> pointer will result in that pointer pointing to the next <code>uint32_t</code>, which starts 4 bytes from the current position. Naively adding offsets like <code>BCM_GPIO_BASE</code> to <code>bcm_peripherals</code> will result in <code>bcm_peripherals</code> pointing to a position in memory that is 4 <code>uint32_t</code>s past the current position, not 1 <code>uint32_t</code> past the current position which is what we want. Which is why each register type offset like <code>BCM_GPIO_BASE</code> is divided by 4 prior to adding it to <code>bcm_peripherals</code>.</p>
+<blockquote>
+<p>If you&rsquo;re new to C you may not be aware that pointer arithmetic is inherently dangerous. It can be hard to know exactly what a pointer will reference as a result of pointer arithmetic. The pointer could be an unexpected type or have an unexpected value. This can lead to unexpected behavior which can be very difficult to debug. In some cases, for example performing division, pointing to an unexpected place that contains the value zero will lead to the program abruptly ending (with a segmentation fault). This is good, this way you know something is wrong and you even know where it went wrong. A pointer may even point outside the program&rsquo;s address space the program which may lead to system crashes. In our case however the register locations and associated types are very well known and using pointers is relatively safe. That is, as long as we perform pointer arithmetic correctly&hellip;</p>
+</blockquote>
+<h4 id="bcm_fsel">bcm_fsel()</h4>
+<p><code>bcm_fsel</code> is responsible for setting the I/O function associated for a given pin. There are a total of 8 functions available. One defines that the associated pin is to be set as an input pin meaning that it will be read from. Another function defines the associated pin as an output pin meaning the pin will be written to. The remaining 6 are referred to as &ldquo;alternate functions&rdquo; and are given names like &ldquo;alternate function 0&rdquo;. The I/O function that is assigned for the various alternate functions is different for the various GPIO pins. For example, setting BCM GPIO pin 17 to alternate function 4 defines its I/O function to be SPI. It actually defines the pin to be a specific subset of SPI functionality called chip enable or chip select, but that is a topic for a later article. Recall that in <code>main()</code> above the function is being set to <code>BCM_GPIO_FSEL_OUTP</code> which defines pin 17 to be an output pin.</p>
+<script type="application/javascript" src="https://gist.github.com/youngkin/dc45d2130865d79d989828fea35746d7.js"></script>
+
+<p>There&rsquo;s quite a bit going on in this function even though it is quite short.</p>
+<p><strong>Line 1</strong> defines the function as taking two parameters, <code>pin</code> and <code>mode</code>. It is fairly obvious that <code>pin</code> the pin whose function is to be assigned. <code>mode</code> is the I/O function to associate with <code>pin</code>. <code>mode</code> is actually a bit pattern to be assigned to a particular register offset. The bit pattern assignments are defined in the <a href="https://www.raspberrypi.org/app/uploads/2012/02/BCM2835-ARM-Peripherals.pdf">The BCM2835 I/O Peripherals datasheet</a> in section 6, <strong>GPIO</strong>. The patterns are defined as follows:</p>
+<pre><code>000 = GPIO Pin X is an input
+001 = GPIO Pin X is an output
+100 = GPIO Pin X takes alternate function 0
+101 = GPIO Pin X takes alternate function 1
+110 = GPIO Pin X takes alternate function 2
+111 = GPIO Pin X takes alternate function 3
+011 = GPIO Pin X takes alternate function 4
+010 = GPIO Pin X takes alternate function 5
+</code></pre><p>There is some additional background needed to understand the rest of the function. First, <a href="https://www.raspberrypi.org/app/uploads/2012/02/BCM2835-ARM-Peripherals.pdf">The BCM2835 I/O Peripherals datasheet</a>, section 6, shows that a total of 54 GPIO pins are addressable via the function select registers (GPFSEL0-GPFSEL5). Each function select register is 32 bits long. Since each of the function select patterns above is 3 bits long each function select register can specify the I/O function for 10 pins with 2 bits left over. Ten pins per register and a total of 54 pins explains why there are 6 function select registers numbered 0 thru 5. The math that follows is derived from this information.</p>
+<p><strong>Line 3</strong> defines the register offset, <code>paddr</code>, of the bits that will be set according to <code>mode</code>. <code>BCM_GPFSEL0</code> is the base offset, in bytes, of the function select registers. Here&rsquo;s an explanation of the arithmetic performed in this line.</p>
+<ol>
+<li>Notice that pointer arithmetic is being performed. Recall that the result of pointer arithmetic is based on the type of the target variable (see the <a href="#bcm_init">bcm_init()</a> section above). Since <code>uint32_t</code>'s are 4 bytes long <code>BCM_GPFSEL0</code> needs to be divided  by 4 for the calculation to come out correctly. Hence <code>... paddr = bcm_gpio + BCM_GPFSEL0/4 ...</code>.</li>
+<li>Also recall that each register holds the function select information for 10 pins. For a given pin we need to determine which function select register, GPFSEL0 thru GPFSEL5, specifies the I/O function for a given pin. In C, the result of integer division that results in a fraction will be rounded down. So if we divide the pin number by 10, <code>(pin/10</code>), we&rsquo;ll get the offset to the correct function select register. So pin 9 will result in <code>9/10</code> which equals 0, meaning pin 9&rsquo;s function select location is in GPFSEL0. Likewise, pin 17&rsquo;s, <code>17/10 = 1</code>, function select register is GPFSEL1. And so on.</li>
+</ol>
+<p>Taken together, the equation <code>paddr = bcm_gpio + BCM_GPFSEL0/4 + (pin/10)</code> results in the function select register offset appropriate for a given <code>pin</code>. For pin 17 this will result in <code>paddr</code> logically pointing to GPFSEL1 at address <code>0x7E20 0004</code>, <code>7E</code> being the bus address, <code>20004</code> being the offset of the GPIO registers plus the offset of GPFSEL1, <code>4</code>, from the beginning of the GPIO register set. I say logically because <code>bcm_gpio</code> is an offset from an address returned as the result of a <code>mmap()</code> operation. <code>mmap()</code> returns a pointer into the process&rsquo;s virtual memory whereas <code>0x7E20 0004</code> is an address in the BCM2835&rsquo;s <em>VC CPU Bus Addresses</em> space.</p>
+<p><strong>Line 4</strong> calculates the location within the function select register for given pin&rsquo;s function select value. Since we&rsquo;ll use bit shifting to set the pin&rsquo;s function select value this location becomes the number of bits to <strong>SHIFT</strong> the pin&rsquo;s function select value as provided in the <code>mode</code> parameter. Building the calculation up we first need to find the pin&rsquo;s logical location, that is, which 3 bit cell within the function select register (recall that each function select value is 3 bits long). The calculation for this is given by <code>shift = (pin % 10) ...</code>. For pin 17 <code>(pin % 17) = 7</code>. So pin 17&rsquo;s 3 bit cell is located at the 7th 3-bit offset. Next we have to find the actual bit offset within the register. Since each function select value is 3 bits long each pin&rsquo;s boundary is a multiple of 3, hence the complete calculation of <code>shift = (pin % 10) * 3</code>. For pin 17 this results in <code>(17%10)*3</code> which equals <code>7*3</code> which results in an absolute bit offset of 21. Consulting <a href="https://www.raspberrypi.org/app/uploads/2012/02/BCM2835-ARM-Peripherals.pdf">the BCM2835 I/O Peripherals datasheet, section 6</a>, on page 92,  we can confirm that pin 17&rsquo;s offset within the GPFSEL0 register is in bit positions 21 thru 23.</p>
+<p>Now let&rsquo;s look at <strong>line 5</strong>. When setting a subset of bits to a given value we want to preserve the values of the surrounding bits. A mask is used to accomplish this. The mask contains bit(s) that is in the position of the bit in the target value that we want to change. For example, in the bit pattern <code>0101 1111</code>, if we want to set bit 6&rsquo;s value from 1 to 0 we only need to define a bit sequence with 1 bit set. To create the most general solution we would just set the least significant bit(s). Since we only need a single bit set we would define the mask as hex number <code>0x1</code>, which specifies the bit pattern <code>0000 0001</code>. Next we need to shift this bit pattern as required so that the <code>1</code> bit(s) is moved to the correct position. In our example, since we want to change bit 6, we would left shift the mask pattern 6 bits to the left, e.g., <code>newMask = 0000 0001 &lt;&lt; 6</code>. This results in <code>newMask</code> equaling <code>0100 00000</code>, which is puts the <code>1</code> bit in position 6 as we desire. It&rsquo;s possible that we could have defined the mask as <code>0100 0000</code> outright, but this would not result in a general solution that would work for any mask needed to set a bit(s) in an arbitrary bit position, such as bits 21-23.</p>
+<p>As given in bcmfuncs.h the value of <code>BCM_GPIO_FSEL_MASK</code> is 0x7 or <code>0000 0111</code>, this is because each GPIO function select pattern is 3 bits long. So this is a useful bit pattern for masking 3 bit sequences. If we shift this pattern by the <strong>SHIFT</strong> of 21 as calculated in line 4 above we&rsquo;ll get a 32 bit pattern that looks like this, <code>0000 0000 1110 0000 0000 0000 0000 0000</code>. The mask is now in bit locations 21-23, which is the location of pin 17&rsquo;s function select pattern in the GPFSEL1 function select register.</p>
+<p>In summary, <strong>line 5</strong> creates the mask needed to set the 3 bit function select pattern as specified in the <code>mode</code> parameter on the provided <code>pin</code> parameter.</p>
+<p><strong>Line 6</strong> creates the new 3 bit value that will be placed into the GPFSEL1 register. Recall that GPFSEL1 is a 32 bit register. To use a 3 bit value such as <code>mode</code> to set a 3 bit sequence at an arbitrary position, e.g., bits 21-23, we create a value mask that sets the bits in the desired position to the desired value. As with the mask above, the most general solution specifies that those bits be set starting in the least significant position. Let&rsquo;s say in our example we want pin 17 to be set to alternate function 1. Looking at the bit patterns above we can see that the 3 bit value for alternate function 1 is <code>101</code>. The <code>mode</code> parameter will contain this value. To set pin 17 to alternate function 1 we need to shift <code>mode</code>'s bit pattern of <code>0000 0101</code> 21 bits to the left. As with line 5, line 6 does this in a general way, <code>value = mode &lt;&lt; shift</code>. Given our value of <code>mode</code> and the calculated value of <code>shift</code> we get the 32 bit <code>value</code> of <code>0000 0000 1010 0000 0000 0000 0000 0000</code>.</p>
+<p>So we now have the 4 variables needed to calculate the new value of the GPFSEL1 register, <code>paddr</code>, <code>mode</code>, <code>mask</code>, and <code>value</code>.</p>
+<p><strong>Line 7</strong> calls the function <code>bcm_peri_set_bits()</code> to complete this operation. This operation is done in a separate function since there are other register values that require setting as we will see later.</p>
+<h4 id="bcm_peri_set_bits">bcm_peri_set_bits()</h4>
+<p><code>bcm_peri_set_bits()</code> is the function that sets a 32 bit sequence, <code>v</code>, to a new value, <code>value</code>, at position <code>paddr</code>, using a <code>mask</code> as discussed above. As with <code>bcm_fsel()</code>, this function does quite a bit in just a few lines of code.</p>
+<script type="application/javascript" src="https://gist.github.com/youngkin/3a034112183f8892c5b256eb9095c535.js"></script>
+
+<p><strong>Line 3</strong> uses <code>bcm_peri_read()</code> to read the 32 bit value <code>v</code> located at <code>paddr</code>. More on this later.</p>
+<p><strong>Line 4</strong> sets the <code>v</code> to its new value. Recall that when a mask is used a subset of bits can be set while leaving the remaining bits unchanged. Line 4 does this in 3 steps. First it does a bitwise-AND operation, <code>&amp;</code>, between the current value <code>v</code> with the complement of mask. Taking the example in the previous section for <code>BCM_GPIO_FSEL_MASK</code>, it&rsquo;s bit value, for brevity just bit positions 16 and 23, is reversed from <code>... 1110 0000 ...</code> to <code>... 0001 1111 ...</code>. When the bitwise-AND occurs between the the complemented <code>mask</code> and <code>v</code> as in <code>(v &amp; ~mask)</code>, only the bits 21-23 of the original value <code>v</code> are modified and bits 21-23 are reset to <code>0</code>s. The remaining bits are unchanged. If bits 16-23 of <code>v</code> were originally set to <code>... 0100 1010 ...</code>, the new value of bits 16-23 will now look like <code>... 0000 1010 ...</code>. In our example for pin 17 its function select bits have been reset to zeros. Note the bits in positions 16 thru 20 are unchanged.</p>
+<p>The next operation, <code>(value &amp; mask)</code> only retains the bits values at positions 21-23 of the new value, <code>value</code>, setting the remaining bits to <code>0</code>. Bits 16-23 of <code>value</code> are <code>... 1010 0000 ...</code> which specifies pin 17 is is to be set to alternate function 1. The result of the operation <code>... 1010 0000 ... &amp; ... 1110 0000 ...</code> is <code>... 1010 0000 ...</code>, which is expected. The operation is specified as <code>(value &amp; mask)</code> because we can&rsquo;t say ahead of time that only bits 21-23 are to be reset to <code>value</code>. Both <code>value</code> and <code>mask</code> could have bits set at other positions.</p>
+<p>Putting this all together, the third and final step, <code>(v &amp; ~mask) | (value &amp; mask)</code> will OR the 2 results, <code>... 0000 1010 ... | ... 1010 0000 ...</code> which results in <code>v</code> being reset to <code>... 1010 1010 ...</code>. Remember that only bits 21-23 were changed. This is shown here by bits 16-20 retaining their previous values. Likewise, the other bits ov <code>v</code> will remain unchanged.</p>
+<p><strong>Line 5</strong> the sets the 32 bits at <code>paddr</code> to <code>v</code> via <code>bcm_peri_write()</code>. More on this later as well.</p>
+<h4 id="bcm_peri_read">bcm_peri_read()</h4>
+<p><code>bcm_peri_read()</code> will read the 32 bits starting at <code>paddr</code> and return them to the caller as a 32 bit value. Unlike <code>bcm_fsel()</code> and <code>bcm_peri_set_bits()</code> this function is quite simple.</p>
+<script type="application/javascript" src="https://gist.github.com/youngkin/5ee1dbb21e3e4223492dc96adb61a5f8.js"></script>
+
+<p><strong>Lines 4 &amp; 6</strong> synchronize access to memory so that the read can&rsquo;t be interrupted.</p>
+<p><strong>Line 5</strong> simply sets the return value, <code>ret</code>, to the contents located at <code>paddr</code>.</p>
+<h4 id="bcm_peri_write">bcm_peri_write()</h4>
+<p><code>bcm_peri_write()</code> will write the 32 bits starting at <code>paddr</code> to the value contained in <code>value</code>. Like <code>bcm_peri_read()</code> this function is quite simple.</p>
+<script type="application/javascript" src="https://gist.github.com/youngkin/147e413e5293ddf57965d107995ab6dc.js"></script>
+
+<p><strong>Lines 3 and 5</strong> synchronize access (lock) to the 32 bits starting at <code>paddr</code>.</p>
+<p><strong>Line 4</strong> sets the 32 bits located at <code>paddr</code> to <code>value</code>.</p>
+<h4 id="bcm_gpio_write">bcm_gpio_write()</h4>
+<script type="application/javascript" src="https://gist.github.com/youngkin/b40fcbd81d14eee0a73ed167cb464282.js"></script>
+
+<p><code>bcm_gpio_write()</code> writes the 32 bit <code>value</code> to the specified <code>pin</code>. It uses 2 helper functions, <code>bcm_gpio_set()</code> and <code>bcm_gpio_clr()</code>. The parameter <code>on</code> is used to specify if the <code>value</code> for <code>pin</code> should be set or cleared. There are a set of 4 GPIO registers, GPSET0 and GPSET1, and GPCLR0 and GPCLR1, which specify if the value of a pin is HIGH or LOW. HIGH corresponds to GPSETn. LOW corresponds to GPCLRn. When the value of <code>on</code> is <code>1</code> the GPSETn register associated with the value of <code>pin</code> is set to 1. If <code>on</code> is set to <code>0</code> then the GPCLRn register associated with the value of <code>pin</code> is set to 1. GPSETn&rsquo;s values are only used when a pin&rsquo;s I/O function is set to OUTPUT. GPCLRn&rsquo;s values are likewise only used when a pin&rsquo;s I/O function is set to OUTPUT. Values of <code>0</code> in these registers are ignored. Recall that the BCM2835 allows GPIO functions to be specified for 54 pins (vs. the expected 40). Since each pin requires 1 bit to specify whether it&rsquo;s to be set or cleared a total of 54 bits is required. This explains why two 32 bit registers are needed for set and clear.</p>
+<p>The use of these registers is further described in section 6, page 95, of <a href="https://www.raspberrypi.org/app/uploads/2012/02/BCM2835-ARM-Peripherals.pdf">the BCM2835 I/O Peripherals datasheet</a>.</p>
+<h4 id="bcm_gpio_set-and-bcm_gpio_clr">bcm_gpio_set() and bcm_gpio_clr()</h4>
+<p><code>bcm_gpio_set()</code> and <code>bcm_gpio_clr()</code> are twins in terms of their functionality. They only differ in which registers they operate on. <code>*set()</code> operates on the GPSETn registers and <code>*clr()</code> operates on the GPCLRn registers. They are responsible for setting the appropriate bit offset in the appropriate register for the provided <code>pin</code> argument. This section will only describe <code>bcm_gpio_set()</code>. With the exception of the register set operated on their implementations are identical. In fact, with the addition of another parameter to specify the starting offset they could be collapsed into a single function.</p>
+<script type="application/javascript" src="https://gist.github.com/youngkin/95158df431e7c3b655e013dbc8160fff.js"></script>
+
+<p>In <code>bcm_gpio_set()</code> <strong>line 3</strong> calculates the address, <code>paddr</code>, of the target register. <code>bcm_gpio</code> is the starting offset of the GPIO registers. <code>BCM_GPSET0</code> is the starting offset of the set and clear registers. Recall from the discussion in the <a href="#bcm_init">bcm_init()</a> section above that pointer arithmetic is used to determine the memory offset to use for a given operation. This is why <code>BCM_GPSET0</code> is divided by 4 in this operation. <code>pin/32</code> is used to calculate which of the <code>GP*n</code> registers is to be used for the given <code>pin</code>. Recall that integer division always rounds down. So the result of <code>pin 17/32</code> is <code>0</code> which specifies that the first <code>GP*n</code> register will be used. This is consistent with the BCM2835 ARM Peripherals guide. And <code>0</code> is correct in the calculation of the <code>paddr</code> because of the use of integer arithmetic.</p>
+<p><strong>Line 4</strong> calculates how large of a <code>shift</code> is needed to set the proper bit associated with <code>pin</code> in the <code>GP*n</code> register. Taking our example of pin 17, <code>17%32</code> is 17, which corresponds to bit 17 in GPSET0. Again, per the BCM2835 ARM Peripherals guide, this is the correct offset within the correct register.</p>
+<p><strong>Line 5</strong> then uses <code>bcm_peri_write()</code> to shift <code>1</code>, <code>shift</code> bits to the left, in order to write to the correct offset in the correct register. From the calculation on line 4, <code>1</code> is shifted 17 bits to the left.</p>
+<h4 id="bcm_close">bcm_close()</h4>
+<p><code>bcm_close</code> deallocates all resources and resets all GPIO offsets to their original values, <code>MAP_FAILED</code> in this case. With regard to <code>MAP_FAILED</code>, this value prevents any more operations on the BCM2835 peripheral registers.</p>
+<script type="application/javascript" src="https://gist.github.com/youngkin/953c5dcb578b10ca4b51607e4dade0cb.js"></script>
+
+<p><strong>Line 3</strong> releases the memory reserved by the <code>mapmem()</code> operation in <code>bcm_init()</code>.</p>
+<p><strong>Lines 4-14</strong> reset all the register offsets to their default settings.</p>
+<h2 id="summary">Summary</h2>
+<p>This article has provided a detailed look at how to interact directly with the BCM2835&rsquo;s peripherals registers, without using a 3rd party library, to make an LED blink. It first provided an overview of the BCM2835&rsquo;s ARM peripherals main concepts including the types of I/O functions that operate on external devices/peripherals, how the BCM2835 addressing works as a prerequiste for describing how to interact with the BCM2835 registers to control external devices (like an LED). It then described the lab setup needed to control an LED. Next it presented the code, along with explanations of what the code is doing, used by the main program. It finished up presenting the code, with explanations, that interacts directly with the BCM2835&rsquo;s registers that are associated with various types of peripherals.</p>
+<p>At this point you should have a good understanding of how to directly program the BCM2835 to control a variety of peripheral types using the various I/O functions supported by the BCM2835. While the low-level details for a specific I/O function, e.g., SPI, may differ, the mechanics for programming the BCM2835 are the same.</p>
+<p>Keep an eye out for my upcoming article titled &ldquo;Raspberry Pi GPIO - Using SPI to display alphanumeric characters on a MAX7219 Dot Matrix Display Module&rdquo; which, among other things, will demonstrate how to control a dot matrix LED display using only low-level access to the BCM2835 registers. It makes a nice companion to this article as it will introduce a new set of peripheral registers used to program the SPI I/O function.</p>
+<p>Comments and questions about this article are welcome.</p>
+<h2 id="references">References</h2>
+<ul>
+<li><a href="https://docs.sunfounder.com/projects/raphael-kit/en/latest/1.1.1_blinking_led_c.html">The Sunfounder Blinking LED project</a> is the source of the breadboard diagram. It was also the inspiration for this series on Raspberry Pi GPIO programming. See my <a href="http://10.0.0.223:1313/post/sunfoundergpionotesled/">Blinking LED project</a> for more details.</li>
+<li><a href="https://pinout.xyz/">Raspberry Pi GPIO Pinout diagram</a> including the physical board pin numbers, the BCM/GPIO pin numbers, and the WiringPi pin numbers.</li>
+<li><a href="https://github.com/youngkin/gpio">The gpio repository</a> containing the code for this and other articles</li>
+<li><a href="https://projects.raspberrypi.org/en/projects/raspberry-pi-setting-up">How to setup a new Raspberry Pi from scratch</a></li>
+<li><a href="https://www.sciencebuddies.org/science-fair-projects/references/how-to-use-a-breadboard">How to use a breadboard</a></li>
+<li><a href="https://youngkin.github.io/categories/gpio/">GPIO programming on a Raspberry Pi 3B+</a> contains a list of my articles about GPIO programming on the Raspberry Pi</li>
+<li><a href="https://www.raspberrypi.org/app/uploads/2012/02/BCM2835-ARM-Peripherals.pdf">The BCM2835 Peripherals guide</a>.</li>
+<li>The C <a href="https://www.airspayce.com/mikem/bcm2835/index.html">BCM2835</a> library by Mike McCauley</li>
+<li>The C <a href="http://wiringpi.com">WiringPi</a> library and associated <a href="https://github.com/WiringPi/WiringPi">GitHub repository</a></li>
+<li>The Python <a href="http://abyz.me.uk/rpi/pigpio/">pgpio</a> library</li>
+<li>The Python <a href="https://pypi.org/project/RPi.GPIO/">RPi.GPIO</a> library</li>
+<li>The Go <a href="https://github.com/stianeikeland/go-rpio">go-rpio</a></li>
+<li><a href="https://www.kernel.org/doc/html/latest/devicetree/usage-model.html">Linux and the Devicetree</a> describes what a Linux device tree is and how it is used.</li>
+</ul>
+
+                
+
+                <hr>
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/post/spidotmatrixmodule/" data-toggle="tooltip" data-placement="top" title="Raspberry Pi GPIO - Using SPI to display alphanumeric characters on a MAX7219 Dot Matrix Display Module">&larr;
+                            Previous Post</a>
+                    </li>
+                    
+                    
+                </ul>
+
+                
+<div id="disqus-comment"></div>
+
+<div id="hyvor-talk-view"></div>
+<script type="text/javascript">
+    var HYVOR_TALK_WEBSITE = 1798; 
+    var HYVOR_TALK_CONFIG = {
+        url: false,
+        id: false
+};
+</script>
+<script async type="text/javascript" src="//talk.hyvor.com/web-api/embed"></script>
+</div>
+
+
+
+            </div>
+            
+            <div class="
+                col-lg-11 col-lg-offset-1
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/c" title="c">
+                            c
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/docker" title="docker">
+                            docker
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/elasticsearch" title="elasticsearch">
+                            elasticsearch
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/go" title="go">
+                            go
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/gpio" title="gpio">
+                            gpio
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/grafana" title="grafana">
+                            grafana
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/kubernetes" title="kubernetes">
+                            kubernetes
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/mysql" title="mysql">
+                            mysql
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/networking" title="networking">
+                            networking
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/prometheus" title="prometheus">
+                            prometheus
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/raspberry-pi" title="raspberry-pi">
+                            raspberry-pi
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/traefik" title="traefik">
+                            traefik
+                        </a>
+                        
+                        
+                    </div>
+                </section>
+                
+
+                
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                   
+                   <li>
+                       <a href='' rel="alternate" type="application/rss+xml" title="Rich Youngkin" >
+                           <span class="fa-stack fa-lg">
+                               <i class="fa fa-circle fa-stack-2x"></i>
+                               <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                           </span>
+                       </a>
+                   </li>
+                   
+                    
+                    <li>
+                        <a href="mailto:rich.youngkin@gmail.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    
+                    
+                    
+
+                    
+
+		    
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/youngkin">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://www.linkedin.com/in/richard-youngkin-0749763">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    <li>
+                        <a target="_blank" href="https://medium.com/@RichYoungkin">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-medium fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+            
+                    
+                    <li>
+                        <a target="_blank" href="https://stackoverflow.com/users/2646870/rich">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-stack-overflow fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+            
+                    
+                    <li>
+                        <a target="_blank" href="https://www.reddit.com/user/elevation5280">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-reddit fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+            
+                    
+                    
+            
+            
+            
+                </ul>
+		<p class="copyright text-muted">
+                    Copyright &copy; Rich Youngkin 2022
+                    <br>
+                    <a href="https://themes.gohugo.io/hugo-theme-cleanwhite">CleanWhite Hugo Theme</a> by <a href="https://zhaohuabing.com">Huabing</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="100px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=zhaohuabing&repo=hugo-theme-cleanwhite&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+
+
+
+
+
+<script>
+    
+    if($('#tag_cloud').length !== 0){
+        async("/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+
+<script>
+    async("https://cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+
+
+
+
+</body>
+</html>

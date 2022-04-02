@@ -117,6 +117,10 @@
                         </li>
                         
                         <li>
+                            <a href="/categories/c">c</a>
+                        </li>
+                        
+                        <li>
                             <a href="/categories/go">go</a>
                         </li>
                         
@@ -212,7 +216,7 @@
                     <span class="meta">
                         
                         Posted on
-                        Monday, November 1, 2021
+                        Thursday, October 21, 2021
                         
                         
                         
@@ -261,7 +265,7 @@
   </ul>
 </nav>
                 
-                <p>This article provides some details about hardware and software based PWM on the Raspberry Pi, specifically the 3B+ with the <a href="https://www.raspberrypi.org/app/uploads/2012/02/BCM2835-ARM-Peripherals.pdf">Broadcomm BCM2835 board</a>. This article has an accompanying application, <a href="https://github.com/youngkin/gpio">PWM Explorer</a><sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>, that can be used to experiment with PWM settings and capabilities.</p>
+                <p>This is the second article in a series that explores <a href="https://youngkin.github.io/categories/gpio/">GPIO programming on a Raspberry Pi 3B+</a>. This article provides some details about hardware and software based PWM on the Raspberry Pi, specifically the 3B+ with the <a href="https://www.raspberrypi.org/app/uploads/2012/02/BCM2835-ARM-Peripherals.pdf">Broadcomm BCM2835 board</a>. This article has an accompanying application, <a href="https://github.com/youngkin/gpio">PWM Explorer</a><sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>, that can be used to experiment with PWM settings and capabilities.</p>
 <h2 id="overview">Overview</h2>
 <p>I was writing an <a href="https://youngkin.github.io/post/sunfoundergpionotesrgbled">article</a> as a companion to the <a href="https://docs.sunfounder.com/projects/raphael-kit/en/latest/1.1.1_blinking_led_c.html">SunFounder RGB LED project</a> to cover some areas that were missing in that project such as what is PWM, how does it work, and why the code was written as it was. I had no idea what PWM was or what I was doing or why. To fill the gap I started researching PWM and found numerous articles about PWM<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup> <sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup> <sup id="fnref:4"><a href="#fn:4" class="footnote-ref" role="doc-noteref">4</a></sup>, and also software libraries like <a href="https://github.com/WiringPi/WiringPi">WiringPi</a> (C)<sup id="fnref:5"><a href="#fn:5" class="footnote-ref" role="doc-noteref">5</a></sup>, <a href="https://github.com/stianeikeland/go-rpio">go-rpio</a> (Go)<sup id="fnref:6"><a href="#fn:6" class="footnote-ref" role="doc-noteref">6</a></sup>, <a href="https://www.airspayce.com/mikem/bcm2835">BCM2835 by Mike McCalley</a> (C)<sup id="fnref:7"><a href="#fn:7" class="footnote-ref" role="doc-noteref">7</a></sup> and <a href="https://abyz.me.uk/rpi/pigpio/pdif2.html">pigpio</a> (Python &amp; C)<sup id="fnref:8"><a href="#fn:8" class="footnote-ref" role="doc-noteref">8</a></sup>. So with my focus still on controlling an RGB LED via GPIO and PWM I started writing programs in C and Go. I quickly had difficulty in several areas:</p>
 <ol>
@@ -728,13 +732,13 @@ Raspberry Pi Details:
                 <ul class="pager">
                     
                     <li class="previous">
-                        <a href="/post/smokedbrisket/" data-toggle="tooltip" data-placement="top" title="Using a Weber Kettle to Cook a Great Smoked Brisket!">&larr;
+                        <a href="/post/sunfoundergpionotesled/" data-toggle="tooltip" data-placement="top" title="Raspberry Pi GPIO in Go and C - Blinking LED">&larr;
                             Previous Post</a>
                     </li>
                     
                     
                     <li class="next">
-                        <a href="/post/sunfoundergpionotesled/" data-toggle="tooltip" data-placement="top" title="Raspberry Pi GPIO in Go and C - Blinking LED">Next
+                        <a href="/post/sunfoundergpionotesrgbled/" data-toggle="tooltip" data-placement="top" title="Raspberry Pi GPIO in Go and C - RGB LED">Next
                             Post &rarr;</a>
                     </li>
                     
@@ -986,7 +990,7 @@ Raspberry Pi Details:
             
                 </ul>
 		<p class="copyright text-muted">
-                    Copyright &copy; Rich Youngkin 2021
+                    Copyright &copy; Rich Youngkin 2022
                     <br>
                     <a href="https://themes.gohugo.io/hugo-theme-cleanwhite">CleanWhite Hugo Theme</a> by <a href="https://zhaohuabing.com">Huabing</a> |
                     <iframe

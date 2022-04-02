@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>C on Rich Youngkin</title>
+    <link>https://youngkin.github.io/categories/c/</link>
+    <description>Recent content in C on Rich Youngkin</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 02 Apr 2022 13:13:42 -0600</lastBuildDate>
+    
+	<atom:link href="https://youngkin.github.io/categories/c/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Raspberry Pi GPIO - Introduction To Programming Broadcom BCM2835 ARM Peripherals</title>
+      <link>https://youngkin.github.io/post/gpioprogramming/</link>
+      <pubDate>Sat, 02 Apr 2022 13:13:42 -0600</pubDate>
+      
+      <guid>https://youngkin.github.io/post/gpioprogramming/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Raspberry Pi GPIO - Using SPI to display alphanumeric characters on a MAX7219 Dot Matrix Display Module</title>
+      <link>https://youngkin.github.io/post/spidotmatrixmodule/</link>
+      <pubDate>Sat, 02 Apr 2022 13:13:42 -0600</pubDate>
+      
+      <guid>https://youngkin.github.io/post/spidotmatrixmodule/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>
