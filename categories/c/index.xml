@@ -20,14 +20,5 @@
       <description></description>
     </item>
     
-    <item>
-      <title>Raspberry Pi GPIO - Using SPI to display alphanumeric characters on a MAX7219 Dot Matrix Display Module</title>
-      <link>https://youngkin.github.io/post/spidotmatrixmodule/</link>
-      <pubDate>Sat, 02 Apr 2022 13:13:42 -0600</pubDate>
-      
-      <guid>https://youngkin.github.io/post/spidotmatrixmodule/</guid>
-      <description></description>
-    </item>
-    
   </channel>
 </rss>
