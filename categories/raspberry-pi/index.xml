@@ -6,15 +6,24 @@
     <description>Recent content in Raspberry Pi on Rich Youngkin</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 02 Apr 2022 13:13:42 -0600</lastBuildDate>
+    <lastBuildDate>Sat, 23 Apr 2022 08:08:42 -0600</lastBuildDate>
     
 	<atom:link href="https://youngkin.github.io/categories/raspberry-pi/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
+      <title>Raspberry Pi GPIO - Using SPI to display arbitrary patterns on a MAX7219 Dot Matrix Display Module</title>
+      <link>https://youngkin.github.io/post/spidotmatrixmodule/</link>
+      <pubDate>Sat, 23 Apr 2022 08:08:42 -0600</pubDate>
+      
+      <guid>https://youngkin.github.io/post/spidotmatrixmodule/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>Raspberry Pi GPIO - Introduction To Programming Broadcom BCM2835 ARM Peripherals</title>
       <link>https://youngkin.github.io/post/gpioprogramming/</link>
-      <pubDate>Sat, 02 Apr 2022 13:13:42 -0600</pubDate>
+      <pubDate>Tue, 05 Apr 2022 13:13:42 -0600</pubDate>
       
       <guid>https://youngkin.github.io/post/gpioprogramming/</guid>
       <description></description>
