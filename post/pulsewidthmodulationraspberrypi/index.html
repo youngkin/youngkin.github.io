@@ -44,23 +44,23 @@
     
     
 
-    <meta name="keyword"  content="Rich, Youngkin, Raspberry, Pi, Docker, Kubernetes, Go, Golang, GPIO, Microservice">
-    <link rel="shortcut icon" href="/img/favicon.ico">
+    <meta name="keyword"  content="Rich, Youngkin, Raspberry Pi, Docker, Kubernetes, Go, Golang, GPIO, Microservice">
+    <link rel="shortcut icon" href="https://youngkin.github.io/img/favicon.ico">
 
-    <title>Pulse Width Modulation for Dummies-Rich Youngkin Topics in Software Engineering</title>
+    <title>Pulse Width Modulation for Dummies-Raspberry Pi GPIO Programming and Software Developent</title>
 
-    <link rel="canonical" href="/post/pulsewidthmodulationraspberrypi/">
+    <link rel="canonical" href="https://youngkin.github.io/post/pulsewidthmodulationraspberrypi/">
 
-    <link rel="stylesheet" href="/css/iDisqus.min.css"/>
+    <link rel="stylesheet" href="https://youngkin.github.io/css/iDisqus.min.css"/>
 	
     
-    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://youngkin.github.io/css/bootstrap.min.css">
 
     
-    <link rel="stylesheet" href="/css/hux-blog.min.css">
+    <link rel="stylesheet" href="https://youngkin.github.io/css/hux-blog.min.css">
 
     
-    <link rel="stylesheet" href="/css/zanshang.css">
+    <link rel="stylesheet" href="https://youngkin.github.io/css/zanshang.css">
     
     
     <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
@@ -70,13 +70,13 @@
 
     
     
-    <script src="/js/jquery.min.js"></script>
+    <script src="https://youngkin.github.io/js/jquery.min.js"></script>
     
     
-    <script src="/js/bootstrap.min.js"></script>
+    <script src="https://youngkin.github.io/js/bootstrap.min.js"></script>
     
     
-    <script src="/js/hux-blog.min.js"></script>
+    <script src="https://youngkin.github.io/js/hux-blog.min.js"></script>
 
     
     
@@ -95,7 +95,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="/">Rich Youngkin</a>
+            <a class="navbar-brand" href="https://youngkin.github.io/">Rich Youngkin</a>
         </div>
 
         
@@ -104,42 +104,42 @@
             <div class="navbar-collapse">
                 <ul class="nav navbar-nav navbar-right">
                     <li>
-                        <a href="/">Home</a>
+                        <a href="https://youngkin.github.io/">Home</a>
                     </li>
                     
                         
                         <li>
-                            <a href="/categories/barbeque">barbeque</a>
+                            <a href="https://youngkin.github.io/categories/barbeque">barbeque</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/blog">blog</a>
+                            <a href="https://youngkin.github.io/categories/blog">blog</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/c">c</a>
+                            <a href="https://youngkin.github.io/categories/c">c</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/go">go</a>
+                            <a href="https://youngkin.github.io/categories/go">go</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/gpio">gpio</a>
+                            <a href="https://youngkin.github.io/categories/gpio">gpio</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/kubernetes">kubernetes</a>
+                            <a href="https://youngkin.github.io/categories/kubernetes">kubernetes</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/raspberry-pi">raspberry-pi</a>
+                            <a href="https://youngkin.github.io/categories/raspberry-pi">raspberry-pi</a>
                         </li>
                         
                     
                     
 		    
-                        <li><a href="/top/about/">ABOUT</a></li>
+                        <li><a href="https://youngkin.github.io/top/about/">ABOUT</a></li>
                     
 
                     
@@ -194,19 +194,19 @@
                 <div class="post-heading">
                     <div class="tags">
                         
-                        <a class="tag" href="/tags/raspberry-pi" title="raspberry-pi">
+                        <a class="tag" href="https://youngkin.github.io/tags/raspberry-pi" title="raspberry-pi">
                             raspberry-pi
                         </a>
                         
-                        <a class="tag" href="/tags/go" title="Go">
+                        <a class="tag" href="https://youngkin.github.io/tags/go" title="Go">
                             Go
                         </a>
                         
-                        <a class="tag" href="/tags/c" title="C">
+                        <a class="tag" href="https://youngkin.github.io/tags/c" title="C">
                             C
                         </a>
                         
-                        <a class="tag" href="/tags/gpio" title="GPIO">
+                        <a class="tag" href="https://youngkin.github.io/tags/gpio" title="GPIO">
                             GPIO
                         </a>
                         
@@ -308,7 +308,7 @@
 <li>You should also consider getting a <a href="https://www.amazon.com/dp/B082PRVRYR/ref=sspa_dk_detail_2?psc=1&amp;pd_rd_i=B082PRVRYR&amp;pd_rd_w=8mKhr&amp;pf_rd_p=887084a2-5c34-4113-a4f8-b7947847c308&amp;pd_rd_wg=e9psa&amp;pf_rd_r=S09F37DF2G5FW8B8GX4B&amp;pd_rd_r=c065c120-e60b-45e9-b93b-f581f048cf46&amp;spLa=ZW5jcnlwdGVkUXVhbGlmaWVyPUFCMzhUQ09COFI2VlMmZW5jcnlwdGVkSWQ9QTA5NjU2ODUxRDkxNEYwSTYwV09KJmVuY3J5cHRlZEFkSWQ9QTAxOTg1MTUyRUhEUlc2VzQ2VDQ4JndpZGdldE5hbWU9c3BfZGV0YWlsJmFjdGlvbj1jbGlja1JlZGlyZWN0JmRvTm90TG9nQ2xpY2s9dHJ1ZQ==">40 pin female to female with a T-Type adapter</a> to attach the GPIO outputs to the breadboard. You can use only jumper wires, but the T-Type adapter will make things easier and will help prevent damage to the GPIO pins on the Raspberry Pi. If you elect not to buy the 40 pin cable with T-Type adapter you&rsquo;ll need to buy <a href="https://www.amazon.com/SinLoon-Breadboard-Arduino-Circuit-40-Pack/dp/B08M3QLL3Q/ref=pd_sbs_7/143-0445142-7950409?pd_rd_w=sVLrc&amp;pf_rd_p=8b76d7a7-ab83-4ddc-a92d-e3e33bfdbf03&amp;pf_rd_r=CDM5TGJT03VKF0ZFB577&amp;pd_rd_r=8e58fd82-8503-41cf-b8f2-c78eaeb78d25&amp;pd_rd_wg=tT1U0&amp;pd_rd_i=B08M3QLL3Q&amp;psc=1">male-to-female jumper wires</a>. Buying all these things separately will cost more than a kit however.</li>
 </ul>
 <p><a href="https://www.amazon.com/dp/B06WP7169Y/ref=sspa_dk_detail_5?psc=1&amp;pd_rd_i=B06WP7169Y&amp;pd_rd_w=OZVyf&amp;pf_rd_p=887084a2-5c34-4113-a4f8-b7947847c308&amp;pd_rd_wg=0V0IH&amp;pf_rd_r=623YJTBQ2CN2B2GYXQG5&amp;pd_rd_r=faa61f0f-3aec-4cf0-8e7e-d44eb1b3b92f&amp;spLa=ZW5jcnlwdGVkUXVhbGlmaWVyPUEyUVlDQzMzVVZBMFYxJmVuY3J5cHRlZElkPUEwMzExNzk4MUhGSjFSS0VKTlBROCZlbmNyeXB0ZWRBZElkPUEwMzYwNjg2UUdMRU44N0YzNzIwJndpZGdldE5hbWU9c3BfZGV0YWlsJmFjdGlvbj1jbGlja1JlZGlyZWN0JmRvTm90TG9nQ2xpY2s9dHJ1ZQ==">Here&rsquo;s a simple kit that has all of the above</a>. I&rsquo;m finding the <a href="https://www.amazon.com/gp/product/B09BMVT4CB/ref=ppx_yo_dt_b_asin_title_o02_s00?ie=UTF8&amp;psc=1">Sunfounder Raspberry Pi Ultimate Starter Kit</a> especially useful. NOTE: The Ultimate Starter Kit and the Raphael Kit are the same product.</p>
-<img style="border:1px solid black" src="/images/pwmfordummies/RaphaelKit.png" align="center" width="600" height="300"/>
+<img style="border:1px solid black" src="https://youngkin.github.io/images/pwmfordummies/RaphaelKit.png" align="center" width="600" height="300"/>
 <figcaption align="left"><center><i style="color:black;">Sunfounder Ultimate Starter/Raphael kit</i></center></figcaption>
 <p>You will also need some basic C  and Go programming knowledge as well as familiarity with logging on to a Raspberry Pi terminal, or into the desktop GUI that comes with some OS versions. Depending on the approach you take, you may need to connect a keyboard and monitor to the Raspberry Pi. I simply SSH into the Pi. You&rsquo;ll also need familiarity with how to use an editor like vim or nano.</p>
 <p>To compile and run the C program you&rsquo;ll need the WiringPi<sup id="fnref:5"><a href="#fn:5" class="footnote-ref" role="doc-noteref">5</a></sup> <sup id="fnref:11"><a href="#fn:11" class="footnote-ref" role="doc-noteref">11</a></sup> library. It&rsquo;s easy to get:</p>
@@ -341,7 +341,7 @@ Raspberry Pi Details:
 </ul>
 <h3 id="terminology">Terminology</h3>
 <p>My research into PWM involved reading several articles<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup> <sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup> <sup id="fnref:4"><a href="#fn:4" class="footnote-ref" role="doc-noteref">4</a></sup> as well as examining the code of several PWM software libraries in various languages <sup id="fnref:5"><a href="#fn:5" class="footnote-ref" role="doc-noteref">5</a></sup> <sup id="fnref:6"><a href="#fn:6" class="footnote-ref" role="doc-noteref">6</a></sup> <sup id="fnref:7"><a href="#fn:7" class="footnote-ref" role="doc-noteref">7</a></sup>. These various sources aren&rsquo;t completely consistent in the terminology they use. Here are some of the common terms, their aliases, and definitions. See the diagram below for a visual representation of the terms.</p>
-<img style="border:1px solid black" src="/images/pwmfordummies/PWMPulsePeriod.png" align="center" width="800" height="400"/>
+<img style="border:1px solid black" src="https://youngkin.github.io/images/pwmfordummies/PWMPulsePeriod.png" align="center" width="800" height="400"/>
 <figcaption align="left"><center><i style="color:black;">PWM timing diagram</i></center></figcaption>
 <ul>
 <li><strong>Frequency</strong> - Per Wikipedia <sup id="fnref:12"><a href="#fn:12" class="footnote-ref" role="doc-noteref">12</a></sup>, <em>frequency is the number of occurrences of a repeating event per unit of time</em>. In electronics an event is the peak of a wave to the next peak of the wave (analog). In digital terms an event is from the leading edge of one pulse to the leading edge of the next pulse. Frequency is measured in Hertz, which is the number of repeating events per second.</li>
@@ -366,10 +366,10 @@ Raspberry Pi Details:
 <p>The setup for this exercise is similar to a combination of the <a href="https://docs.sunfounder.com/projects/raphael-kit/en/latest/1.1.1_blinking_led_c.html">SunFounder Blinking LED</a> and <a href="https://docs.sunfounder.com/projects/raphael-kit/en/latest/1.1.2_rgb_led_c.html">Sunfounder RGB LED</a> projects. If you&rsquo;re familiar with wiring a breadboard the diagrams below may be all you need to get started. Otherwise it may be worth while looking at the Sunfounder LED projects and an <a href="http://wiki.sunfounder.cc/index.php?title=Breadboard_Basics_%E2%80%93_Types">introduction to breadboards</a><sup id="fnref:10"><a href="#fn:10" class="footnote-ref" role="doc-noteref">10</a></sup>. The resistor used in both diagrams is 220 Ohms.</p>
 <!--
 <p align="center">
-  <img style="border:1px solid black" src="/images/pwmfordummies/redledimage.jpeg" align="center" width="600" height="300"/>
+  <img style="border:1px solid black" src="https://youngkin.github.io/images/pwmfordummies/redledimage.jpeg" align="center" width="600" height="300"/>
 <figcaption align="left"><center><i style="color:black;">Red LED</i></center></figcaption>
 
-  <img style="border:1px solid black" src="/images/pwmfordummies/redled.png" align="center" width="600" height="300"/>
+  <img style="border:1px solid black" src="https://youngkin.github.io/images/pwmfordummies/redled.png" align="center" width="600" height="300"/>
   <figcaption align="left"><center><i style="color:black;">Red LED breadboard setup</i></center></figcaption>
 </p>
 -->
@@ -382,8 +382,8 @@ Raspberry Pi Details:
 </thead>
 <tbody>
 <tr>
-<td><img style="border:1px solid black" src="/images/pwmfordummies/redledimage2.jpg" width="600"/></td>
-<td><img style="border:1px solid black" src="/images/pwmfordummies/redled.png" height="600" width="600"/></td>
+<td><img style="border:1px solid black" src="https://youngkin.github.io/images/pwmfordummies/redledimage2.jpg" width="600"/></td>
+<td><img style="border:1px solid black" src="https://youngkin.github.io/images/pwmfordummies/redled.png" height="600" width="600"/></td>
 </tr>
 </tbody>
 </table>
@@ -397,8 +397,8 @@ Raspberry Pi Details:
 </thead>
 <tbody>
 <tr>
-<td><img style="border:1px solid black" src="/images/pwmfordummies/rgbledimage.jpg" width="300"/></td>
-<td><img style="border:1px solid black" src="/images/pwmfordummies/rgbled2.png" height="800" width="800"/></td>
+<td><img style="border:1px solid black" src="https://youngkin.github.io/images/pwmfordummies/rgbledimage.jpg" width="300"/></td>
+<td><img style="border:1px solid black" src="https://youngkin.github.io/images/pwmfordummies/rgbled2.png" height="800" width="800"/></td>
 </tr>
 </tbody>
 </table>
@@ -416,7 +416,7 @@ Raspberry Pi Details:
 <h3 id="driving-pwm-using-pwm-explorer">Driving PWM using PWM Explorer</h3>
 <p>PWM Explorer supports C and Go. Choosing C you can experiment with both Mark/Space and Balanced PWM Modes. The Go library I used, go-rpio<sup id="fnref:6"><a href="#fn:6" class="footnote-ref" role="doc-noteref">6</a></sup> only supports Mark/Space.</p>
 <p>As described in the <a href="#prerequisites">Prerequisites</a> section above, I wrote an application, called <em>PWM Explorer</em>, to experiment with PWM on a Raspberry Pi. This software can be used to drive PWM on both PWM and non-PWM pins. It also supports changing the various PWM parameters like divisor, range, and pulse width to provide visual feedback on the effect of these parameters on the behavior of the LEDs connected to the pins. This software is available on my <a href="https://github.com/youngkin/gpio">gpio GitHub repository</a><sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>.</p>
-<img style="border:1px solid black" src="/images/pwmfordummies/pwmexplorer.jpg" align="center" width="1000" height="1000"/>
+<img style="border:1px solid black" src="https://youngkin.github.io/images/pwmfordummies/pwmexplorer.jpg" align="center" width="1000" height="1000"/>
 <figcaption align="left"><center><i style="color:black;">PWM Explorer</i></center></figcaption>
 <p>The diagram above is a screenshot of the main program and has labels with brief descriptions of the various sections of the user interface. It&rsquo;s a text based UI so that it can be run on a Raspberry Pi that doesn&rsquo;t have the desktop capability installed. It can be run at the command line by navigating to the installation directory under the <code>gpio/pwmdemo/pwmexplorer</code> directory and running <code>sudo /usr/local/go/bin/go run main.go</code>. <code>sudo</code> is needed because some of the GPIO access requires <code>root</code> permissions. In addition to the main UI application there are 2 supporting programs in the <code>gpio/pwmdemo/pwmexplorer/apps</code> directory, <code>freqtest.go</code> and <code>freqtest.c</code>. These are the actual implementations of the code required to interact with the PWM capabilities on the Raspberry Pi 3B+ using the go-rpio and WiringPi libraries. They are written in Go and C respectively. The C program must be built prior to running PWM Explorer. This is accomplished by changing to the <code>gpio/pwmdemo/pwmexplorer/apps</code> directory and running <code>gcc -o freqtest freqtest.c -lwiringPi -lpthread</code>.</p>
 <p>There are a variety of PWM parameters supported. These are:</p>
@@ -736,13 +736,13 @@ Raspberry Pi Details:
                 <ul class="pager">
                     
                     <li class="previous">
-                        <a href="/post/sunfoundergpionotesled/" data-toggle="tooltip" data-placement="top" title="Raspberry Pi GPIO in Go and C - Blinking LED">&larr;
+                        <a href="https://youngkin.github.io/post/sunfoundergpionotesled/" data-toggle="tooltip" data-placement="top" title="Raspberry Pi GPIO in Go and C - Blinking LED">&larr;
                             Previous Post</a>
                     </li>
                     
                     
                     <li class="next">
-                        <a href="/post/sunfoundergpionotesrgbled/" data-toggle="tooltip" data-placement="top" title="Raspberry Pi GPIO in Go and C - RGB LED">Next
+                        <a href="https://youngkin.github.io/post/sunfoundergpionotesrgbled/" data-toggle="tooltip" data-placement="top" title="Raspberry Pi GPIO in Go and C - RGB LED">Next
                             Post &rarr;</a>
                     </li>
                     
@@ -775,7 +775,7 @@ Raspberry Pi Details:
                 
                 <section>
                     <hr class="hidden-sm hidden-xs">
-                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <h5><a href="https://youngkin.github.io/tags/">FEATURED TAGS</a></h5>
                     <div class="tags">
                         
                         
@@ -786,7 +786,7 @@ Raspberry Pi Details:
                         
                         
                         
-                        <a href="/tags/c" title="c">
+                        <a href="https://youngkin.github.io/tags/c" title="c">
                             c
                         </a>
                         
@@ -796,15 +796,6 @@ Raspberry Pi Details:
                         
                         
                         
-                        <a href="/tags/docker" title="docker">
-                            docker
-                        </a>
-                        
-                        
-                        
-                        <a href="/tags/elasticsearch" title="elasticsearch">
-                            elasticsearch
-                        </a>
                         
                         
                         
@@ -812,21 +803,19 @@ Raspberry Pi Details:
                         
                         
                         
-                        <a href="/tags/go" title="go">
+                        
+                        <a href="https://youngkin.github.io/tags/go" title="go">
                             go
                         </a>
                         
                         
                         
-                        <a href="/tags/gpio" title="gpio">
+                        <a href="https://youngkin.github.io/tags/gpio" title="gpio">
                             gpio
                         </a>
                         
                         
                         
-                        <a href="/tags/grafana" title="grafana">
-                            grafana
-                        </a>
                         
                         
                         
@@ -837,8 +826,7 @@ Raspberry Pi Details:
                         
                         
                         
-                        
-                        <a href="/tags/kubernetes" title="kubernetes">
+                        <a href="https://youngkin.github.io/tags/kubernetes" title="kubernetes">
                             kubernetes
                         </a>
                         
@@ -854,25 +842,13 @@ Raspberry Pi Details:
                         
                         
                         
-                        <a href="/tags/mysql" title="mysql">
-                            mysql
-                        </a>
                         
                         
                         
-                        <a href="/tags/networking" title="networking">
-                            networking
-                        </a>
                         
                         
                         
-                        <a href="/tags/prometheus" title="prometheus">
-                            prometheus
-                        </a>
-                        
-                        
-                        
-                        <a href="/tags/raspberry-pi" title="raspberry-pi">
+                        <a href="https://youngkin.github.io/tags/raspberry-pi" title="raspberry-pi">
                             raspberry-pi
                         </a>
                         
@@ -881,10 +857,6 @@ Raspberry Pi Details:
                         
                         
                         
-                        
-                        <a href="/tags/traefik" title="traefik">
-                            traefik
-                        </a>
                         
                         
                     </div>

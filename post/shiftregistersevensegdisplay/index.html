@@ -44,23 +44,23 @@
     
     
 
-    <meta name="keyword"  content="Rich, Youngkin, Raspberry, Pi, Docker, Kubernetes, Go, Golang, GPIO, Microservice">
-    <link rel="shortcut icon" href="/img/favicon.ico">
+    <meta name="keyword"  content="Rich, Youngkin, Raspberry Pi, Docker, Kubernetes, Go, Golang, GPIO, Microservice">
+    <link rel="shortcut icon" href="https://youngkin.github.io/img/favicon.ico">
 
-    <title>Raspberry Pi GPIO in Go and C - Using a Shift Register &amp; 7 Segment Display-Rich Youngkin Topics in Software Engineering</title>
+    <title>Raspberry Pi GPIO in Go and C - Using a Shift Register &amp; 7 Segment Display-Raspberry Pi GPIO Programming and Software Developent</title>
 
-    <link rel="canonical" href="/post/shiftregistersevensegdisplay/">
+    <link rel="canonical" href="https://youngkin.github.io/post/shiftregistersevensegdisplay/">
 
-    <link rel="stylesheet" href="/css/iDisqus.min.css"/>
+    <link rel="stylesheet" href="https://youngkin.github.io/css/iDisqus.min.css"/>
 	
     
-    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://youngkin.github.io/css/bootstrap.min.css">
 
     
-    <link rel="stylesheet" href="/css/hux-blog.min.css">
+    <link rel="stylesheet" href="https://youngkin.github.io/css/hux-blog.min.css">
 
     
-    <link rel="stylesheet" href="/css/zanshang.css">
+    <link rel="stylesheet" href="https://youngkin.github.io/css/zanshang.css">
     
     
     <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
@@ -70,13 +70,13 @@
 
     
     
-    <script src="/js/jquery.min.js"></script>
+    <script src="https://youngkin.github.io/js/jquery.min.js"></script>
     
     
-    <script src="/js/bootstrap.min.js"></script>
+    <script src="https://youngkin.github.io/js/bootstrap.min.js"></script>
     
     
-    <script src="/js/hux-blog.min.js"></script>
+    <script src="https://youngkin.github.io/js/hux-blog.min.js"></script>
 
     
     
@@ -95,7 +95,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="/">Rich Youngkin</a>
+            <a class="navbar-brand" href="https://youngkin.github.io/">Rich Youngkin</a>
         </div>
 
         
@@ -104,42 +104,42 @@
             <div class="navbar-collapse">
                 <ul class="nav navbar-nav navbar-right">
                     <li>
-                        <a href="/">Home</a>
+                        <a href="https://youngkin.github.io/">Home</a>
                     </li>
                     
                         
                         <li>
-                            <a href="/categories/barbeque">barbeque</a>
+                            <a href="https://youngkin.github.io/categories/barbeque">barbeque</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/blog">blog</a>
+                            <a href="https://youngkin.github.io/categories/blog">blog</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/c">c</a>
+                            <a href="https://youngkin.github.io/categories/c">c</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/go">go</a>
+                            <a href="https://youngkin.github.io/categories/go">go</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/gpio">gpio</a>
+                            <a href="https://youngkin.github.io/categories/gpio">gpio</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/kubernetes">kubernetes</a>
+                            <a href="https://youngkin.github.io/categories/kubernetes">kubernetes</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/raspberry-pi">raspberry-pi</a>
+                            <a href="https://youngkin.github.io/categories/raspberry-pi">raspberry-pi</a>
                         </li>
                         
                     
                     
 		    
-                        <li><a href="/top/about/">ABOUT</a></li>
+                        <li><a href="https://youngkin.github.io/top/about/">ABOUT</a></li>
                     
 
                     
@@ -194,19 +194,19 @@
                 <div class="post-heading">
                     <div class="tags">
                         
-                        <a class="tag" href="/tags/raspberry-pi" title="raspberry-pi">
+                        <a class="tag" href="https://youngkin.github.io/tags/raspberry-pi" title="raspberry-pi">
                             raspberry-pi
                         </a>
                         
-                        <a class="tag" href="/tags/go" title="Go">
+                        <a class="tag" href="https://youngkin.github.io/tags/go" title="Go">
                             Go
                         </a>
                         
-                        <a class="tag" href="/tags/c" title="C">
+                        <a class="tag" href="https://youngkin.github.io/tags/c" title="C">
                             C
                         </a>
                         
-                        <a class="tag" href="/tags/gpio" title="GPIO">
+                        <a class="tag" href="https://youngkin.github.io/tags/gpio" title="GPIO">
                             GPIO
                         </a>
                         
@@ -295,7 +295,7 @@
 <li>You should also consider getting a <a href="https://www.amazon.com/dp/B082PRVRYR/ref=sspa_dk_detail_2?psc=1&amp;pd_rd_i=B082PRVRYR&amp;pd_rd_w=8mKhr&amp;pf_rd_p=887084a2-5c34-4113-a4f8-b7947847c308&amp;pd_rd_wg=e9psa&amp;pf_rd_r=S09F37DF2G5FW8B8GX4B&amp;pd_rd_r=c065c120-e60b-45e9-b93b-f581f048cf46&amp;spLa=ZW5jcnlwdGVkUXVhbGlmaWVyPUFCMzhUQ09COFI2VlMmZW5jcnlwdGVkSWQ9QTA5NjU2ODUxRDkxNEYwSTYwV09KJmVuY3J5cHRlZEFkSWQ9QTAxOTg1MTUyRUhEUlc2VzQ2VDQ4JndpZGdldE5hbWU9c3BfZGV0YWlsJmFjdGlvbj1jbGlja1JlZGlyZWN0JmRvTm90TG9nQ2xpY2s9dHJ1ZQ==">40 pin female to female with a T-Type adapter</a> to attach the GPIO outputs to the breadboard. You can use only jumper wires, but the T-Type adapter will make things easier and will help prevent damage to the GPIO pins on the Raspberry Pi. If you elect not to buy the 40 pin cable with T-Type adapter you&rsquo;ll need to buy <a href="https://www.amazon.com/SinLoon-Breadboard-Arduino-Circuit-40-Pack/dp/B08M3QLL3Q/ref=pd_sbs_7/143-0445142-7950409?pd_rd_w=sVLrc&amp;pf_rd_p=8b76d7a7-ab83-4ddc-a92d-e3e33bfdbf03&amp;pf_rd_r=CDM5TGJT03VKF0ZFB577&amp;pd_rd_r=8e58fd82-8503-41cf-b8f2-c78eaeb78d25&amp;pd_rd_wg=tT1U0&amp;pd_rd_i=B08M3QLL3Q&amp;psc=1">male-to-female jumper wires</a>. Buying all these things separately will cost more than a kit however.</li>
 </ul>
 <p><a href="https://www.amazon.com/dp/B06WP7169Y/ref=sspa_dk_detail_5?psc=1&amp;pd_rd_i=B06WP7169Y&amp;pd_rd_w=OZVyf&amp;pf_rd_p=887084a2-5c34-4113-a4f8-b7947847c308&amp;pd_rd_wg=0V0IH&amp;pf_rd_r=623YJTBQ2CN2B2GYXQG5&amp;pd_rd_r=faa61f0f-3aec-4cf0-8e7e-d44eb1b3b92f&amp;spLa=ZW5jcnlwdGVkUXVhbGlmaWVyPUEyUVlDQzMzVVZBMFYxJmVuY3J5cHRlZElkPUEwMzExNzk4MUhGSjFSS0VKTlBROCZlbmNyeXB0ZWRBZElkPUEwMzYwNjg2UUdMRU44N0YzNzIwJndpZGdldE5hbWU9c3BfZGV0YWlsJmFjdGlvbj1jbGlja1JlZGlyZWN0JmRvTm90TG9nQ2xpY2s9dHJ1ZQ==">Here&rsquo;s a simple kit</a> that has all (most?) of the above. The photo of the kit appears to show a shift register, but I can&rsquo;t be sure. I&rsquo;m finding the <a href="https://www.amazon.com/gp/product/B09BMVT4CB/ref=ppx_yo_dt_b_asin_title_o02_s00?ie=UTF8&amp;psc=1">Sunfounder Raspberry Pi Ultimate Starter Kit</a> especially useful. NOTE: The Ultimate Starter Kit and the Raphael Kit are the same product.</p>
-<img style="border:1px solid black" src="/images/pwmfordummies/RaphaelKit.png" align="center" width="600" height="300"/>
+<img style="border:1px solid black" src="https://youngkin.github.io/images/pwmfordummies/RaphaelKit.png" align="center" width="600" height="300"/>
 <figcaption align="left"><center><i style="color:black;">Sunfounder Ultimate Starter/Raphael kit</i></center></figcaption>
 <p>You will also need some basic C  and Go programming knowledge as well as familiarity with logging on to a Raspberry Pi terminal, or into the desktop GUI that comes with some OS versions. Depending on the approach you take, you may need to connect a keyboard and monitor to the Raspberry Pi. I simply SSH into the Pi. You&rsquo;ll also need familiarity with how to use an editor like vim or nano.</p>
 <p>To compile and run the C program you&rsquo;ll need the <a href="https://github.com/WiringPi">WiringPi</a> library. It&rsquo;s easy to get:</p>
@@ -330,15 +330,15 @@ Raspberry Pi Details:
 </thead>
 <tbody>
 <tr>
-<td><img style="border:1px solid black" src="/images/sevensegdisplay/7segmentdisplaypinout.png" align="center" width="150"/></td>
-<td><img style="border:1px solid black" src="/images/sevensegdisplay/sevensegmentdisplaydiagram.png" align="center" width="200"/></td>
+<td><img style="border:1px solid black" src="https://youngkin.github.io/images/sevensegdisplay/7segmentdisplaypinout.png" align="center" width="150"/></td>
+<td><img style="border:1px solid black" src="https://youngkin.github.io/images/sevensegdisplay/sevensegmentdisplaydiagram.png" align="center" width="200"/></td>
 </tr>
 </tbody>
 </table>
 <figcaption align="left"><center><i style="color:black;"><a href="https://www.circuitbasics.com/arduino-7-segment-display-tutorial/">Image Credit: Circuit Basics</a></i></center></figcaption>
 <p>First of all, the diagram to the above left shows the pinout designations for the 7-segment display. This diagram shows the middle pins on the top and the bottom with a (-) annotation. This designates those pins to be the ground pins for the display. The letters on the remaining pins correspond to the letters in the LED identification diagram on the right. For example, applying power to the &lsquo;A&rsquo; pin on the display will light up the LED labeled &lsquo;A&rsquo; in the diagram to the right. The letters &ldquo;DP&rdquo; stand for decimal point.</p>
 <p>For this project we need what is known as a common cathode 7-segment display. This is what the diagram above left is showing <em>(the middle pins on the top and the bottom have a (-) annotation)</em>. All this means is that all the negative terminals of the LEDs in the display are connected to a common ground pin. Common anode is the other type, which as you might expect, means all the LEDs&rsquo; positive terminals are connected to the same pin.</p>
-<img style="border:1px solid black" src="/images/sevensegdisplay/commoncathodeoranode.png" align="center" width="600" height="300"/>
+<img style="border:1px solid black" src="https://youngkin.github.io/images/sevensegdisplay/commoncathodeoranode.png" align="center" width="600" height="300"/>
 <figcaption align="left"><center><i style="color:black;"><a href="https://www.circuitbasics.com/arduino-7-segment-display-tutorial/">Image Credit: Circuit Basics</a></i></center></figcaption>
 <p>If you&rsquo;re using the Sunfounder kit the 7-segment display is a common cathode display. If you got a 7-segment display from another source you might want to verify it&rsquo;s type. Determining whether a 7-segment display is a common cathode or common anode is fairly easy to do. Paraphrasing from <a href="https://www.circuitbasics.com/arduino-7-segment-display-tutorial/">How to set up seven segment displays on the Arduino</a>, <em>which is also the source of the above diagram</em>, the steps are as follows:</p>
 <blockquote>
@@ -377,7 +377,7 @@ Raspberry Pi Details:
 <li>Output or storage register - This is another series of connected flip-flop devices that transfer the serial data in parallel to a connected device. This register is comprised of outputs that are named in sequence from Qa to Qh, and Qh&rsquo; (more on Qh&rsquo; below).</li>
 </ul>
 <p>This anatomy is shown graphically in the following, albeit somewhat complex, diagram from the <a href="https://www.ti.com/lit/ds/symlink/cd74hc595.pdf?ts=1636840974607&amp;ref_url=https%253A%252F%252Fwww.google.com%252F">Texas Instruments CD74HC595 8-Bit Shift Registers with 3-State Output Registers datasheet</a>. The first column of 8 boxes to the left, labeled C1 or C2, comprise the input shift register. The second column of 8 boxes to the right, labeled C3, comprise the output shift register. The output register&rsquo;s output pins can be seen at the far right, labeled Qa through Qh, and Qh&rsquo;. The input and control channels, as shown by OE, RCLK, SRCLR, SRCLK, and SER in the upper left of the diagram, are discussed in more detail below.</p>
-<img style="border:1px solid black" src="/images/sevensegdisplay/74HC595Schematic.png" align="center" width="600"/>
+<img style="border:1px solid black" src="https://youngkin.github.io/images/sevensegdisplay/74HC595Schematic.png" align="center" width="600"/>
 <figcaption align="left"><center><i style="color:black;"><a href=https://www.ti.com/lit/ds/symlink/cd74hc595.pdf?ts=1636840974607&ref_url=https%253A%252F%252Fwww.google.com%252F">TI CD74HC595 schematic diagram - Image Credit: Texas Instruments</a></i></center></figcaption>
 <p>More information pertaining to the Q* names for the registers&rsquo; outputs is provided below.</p>
 <p>It is a little confusing for the entire device to be called shift register as well as the input component to also be called shift register. To differentiate between the two, if it&rsquo;s not clear from the context, I&rsquo;ll make sure to reference which one I&rsquo;m referring to when the term is used later in the article.</p>
@@ -390,8 +390,8 @@ Raspberry Pi Details:
 </thead>
 <tbody>
 <tr>
-<td><img style="border:1px solid black" src="/images/sevensegdisplay/74hc595shiftregister.png" align="center" width="600" /></td>
-<td><img style="border:1px solid black" src="/images/sevensegdisplay/74HC595Photo.png" align="center" width="370"/></td>
+<td><img style="border:1px solid black" src="https://youngkin.github.io/images/sevensegdisplay/74hc595shiftregister.png" align="center" width="600" /></td>
+<td><img style="border:1px solid black" src="https://youngkin.github.io/images/sevensegdisplay/74HC595Photo.png" align="center" width="370"/></td>
 </tr>
 </tbody>
 </table>
@@ -562,17 +562,17 @@ Raspberry Pi Details:
 </thead>
 <tbody>
 <tr>
-<td><img style="border:1px solid black" src="/images/sevensegdisplay/7segmentdisplaypinout.png" align="center" width="150"/></td>
-<td><img style="border:1px solid black" src="/images/sevensegdisplay/sevensegmentdisplaydiagram.png" align="center" width="200"/></td>
+<td><img style="border:1px solid black" src="https://youngkin.github.io/images/sevensegdisplay/7segmentdisplaypinout.png" align="center" width="150"/></td>
+<td><img style="border:1px solid black" src="https://youngkin.github.io/images/sevensegdisplay/sevensegmentdisplaydiagram.png" align="center" width="200"/></td>
 </tr>
 </tbody>
 </table>
 <figcaption align="left"><center><i style="color:black;"><a href="https://www.circuitbasics.com/arduino-7-segment-display-tutorial/">Image Credit: Circuit Basics</a></i></center></figcaption>
 <p>7-segment display pins A-F will have the value 1, G and DP will have the values 0. Mapping this to the above LED Identification diagram we can see that the number displayed will be <code>0</code>.</p>
 <h2 id="setup-and-code">Setup and Code</h2>
-<img style="border:1px solid black" src="/images/sevensegdisplay/breadboard.png" align="center" width="800"/>
+<img style="border:1px solid black" src="https://youngkin.github.io/images/sevensegdisplay/breadboard.png" align="center" width="800"/>
 <figcaption align="left"><center><i style="color:black;">Sunfounder wiring diagram - <a href="https://docs.sunfounder.com/projects/raphael-kit/en/latest/1.1.4_7-segment_display_c.html">Image Credit - Sunfounder</a></i></center></figcaption>
-<img style="border:1px solid black" src="/images/sevensegdisplay/flatbreadboard2.png" align="center" width="800"/>
+<img style="border:1px solid black" src="https://youngkin.github.io/images/sevensegdisplay/flatbreadboard2.png" align="center" width="800"/>
 <figcaption align="left"><center><i style="color:black;">Actual wiring (mostly) - Image Credit: Author</i></center></figcaption>
 <p>The breadboard should be wired as illustrated in the above diagram <em>(as indicated in the <a href="https://docs.sunfounder.com/projects/raphael-kit/en/latest/1.1.4_7-segment_display_c.html">Sunfounder 7-Segment Display</a> project documentation)</em>. One very important thing to note, something that I spent way too much time debugging, is that the resistor connecting the ground pin on the 7-segment display must be connected to the ground or negative bus on the breadboard. In all my prior projects I&rsquo;ve connected the resistor to the positive breadboard bus. I initially missed this detail and the 7-segment display didn&rsquo;t display anything. One other thing I got wrong on the initial wiring is that I had the 74HC595 output register pins connected incorrectly to the 7-segment display. This is easy to do. I debugged this by noting which LED segments lit up for which expected number. After going through several numbers it became apparent that I had the &lsquo;G&rsquo; and &lsquo;E&rsquo; pins on the 7-segment display reversed.</p>
 <p>If you&rsquo;re unfamiliar  with breadboards and breadboard diagrams this <a href="https://www.sciencebuddies.org/science-fair-projects/references/how-to-use-a-breadboard">breadboard tutorial </a> should be helpful.</p>
@@ -589,7 +589,7 @@ Raspberry Pi Details:
 
 <p>Most of this is pretty well explained by the embedded comments, but I&rsquo;ll mention of few highlights.</p>
 <p>Lines 12 and 13 provide information on how to build and run the program.</p>
-<p><img style="border:1px solid black" src="/images/sevensegdisplay/74hc595shiftregister.png" align="center" width="300" /></p>
+<p><img style="border:1px solid black" src="https://youngkin.github.io/images/sevensegdisplay/74hc595shiftregister.png" align="center" width="300" /></p>
 <figcaption align="left"><center><i style="color:black;"><a href=https://www.ti.com/lit/ds/symlink/cd74hc595.pdf?ts=1636840974607&ref_url=https%253A%252F%252Fwww.google.com%252F">Image Credit: Texas Instruments</a></i></center></figcaption>
 <p>Lines 27 and 28 define the GPIO pins that drive the SRCLR and OE pins respectively. Note that the GPIO pin numbers are the <a href="https://github.com/WiringPi/WiringPi">WiringPi</a> pin numbers. If you decide you want to see this behavior in action, wire pin 24 to the SRCLR shift register pin, and wire pin 29 to the OE shift register pin instead of positive and ground respectively.</p>
 <p>Lines 32 and 33 define an array, <code>SegCode</code>, that contains the hexadecimal numbers that will be shifted into the shift register in order to display a number that matches the index of a particular number in the array. For example, to display an 8 <code>SegCode[8]</code> should be used. Note that these numbers reflect the use of the MSB form of shifting. The numbers would be different if the LSB shifting form were used. For example, the number to use to display 0, as shown on line 32, is <code>0x3F</code> (<code>0011 1111</code>). To display 0 using the LSB method the hex number <code>0xFC</code>(<code>1111 1100</code>) and the C right-shift operator, <code>&gt;&gt;</code>, should be used.</p>
@@ -763,13 +763,13 @@ Raspberry Pi Details:
                 <ul class="pager">
                     
                     <li class="previous">
-                        <a href="/post/ledbargraph/" data-toggle="tooltip" data-placement="top" title="Raspberry Pi GPIO in Go and C - LED Bar Graph">&larr;
+                        <a href="https://youngkin.github.io/post/ledbargraph/" data-toggle="tooltip" data-placement="top" title="Raspberry Pi GPIO in Go and C - LED Bar Graph">&larr;
                             Previous Post</a>
                     </li>
                     
                     
                     <li class="next">
-                        <a href="/post/gpioprogramming/" data-toggle="tooltip" data-placement="top" title="Raspberry Pi GPIO - Introduction To Programming Broadcom BCM2835 ARM Peripherals">Next
+                        <a href="https://youngkin.github.io/post/gpioprogramming/" data-toggle="tooltip" data-placement="top" title="Raspberry Pi GPIO - Introduction To Programming Broadcom BCM2835 ARM Peripherals">Next
                             Post &rarr;</a>
                     </li>
                     
@@ -802,7 +802,7 @@ Raspberry Pi Details:
                 
                 <section>
                     <hr class="hidden-sm hidden-xs">
-                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <h5><a href="https://youngkin.github.io/tags/">FEATURED TAGS</a></h5>
                     <div class="tags">
                         
                         
@@ -813,7 +813,7 @@ Raspberry Pi Details:
                         
                         
                         
-                        <a href="/tags/c" title="c">
+                        <a href="https://youngkin.github.io/tags/c" title="c">
                             c
                         </a>
                         
@@ -823,15 +823,6 @@ Raspberry Pi Details:
                         
                         
                         
-                        <a href="/tags/docker" title="docker">
-                            docker
-                        </a>
-                        
-                        
-                        
-                        <a href="/tags/elasticsearch" title="elasticsearch">
-                            elasticsearch
-                        </a>
                         
                         
                         
@@ -839,21 +830,19 @@ Raspberry Pi Details:
                         
                         
                         
-                        <a href="/tags/go" title="go">
+                        
+                        <a href="https://youngkin.github.io/tags/go" title="go">
                             go
                         </a>
                         
                         
                         
-                        <a href="/tags/gpio" title="gpio">
+                        <a href="https://youngkin.github.io/tags/gpio" title="gpio">
                             gpio
                         </a>
                         
                         
                         
-                        <a href="/tags/grafana" title="grafana">
-                            grafana
-                        </a>
                         
                         
                         
@@ -864,8 +853,7 @@ Raspberry Pi Details:
                         
                         
                         
-                        
-                        <a href="/tags/kubernetes" title="kubernetes">
+                        <a href="https://youngkin.github.io/tags/kubernetes" title="kubernetes">
                             kubernetes
                         </a>
                         
@@ -881,25 +869,13 @@ Raspberry Pi Details:
                         
                         
                         
-                        <a href="/tags/mysql" title="mysql">
-                            mysql
-                        </a>
                         
                         
                         
-                        <a href="/tags/networking" title="networking">
-                            networking
-                        </a>
                         
                         
                         
-                        <a href="/tags/prometheus" title="prometheus">
-                            prometheus
-                        </a>
-                        
-                        
-                        
-                        <a href="/tags/raspberry-pi" title="raspberry-pi">
+                        <a href="https://youngkin.github.io/tags/raspberry-pi" title="raspberry-pi">
                             raspberry-pi
                         </a>
                         
@@ -908,10 +884,6 @@ Raspberry Pi Details:
                         
                         
                         
-                        
-                        <a href="/tags/traefik" title="traefik">
-                            traefik
-                        </a>
                         
                         
                     </div>

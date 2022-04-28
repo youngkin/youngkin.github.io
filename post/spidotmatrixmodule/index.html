@@ -44,23 +44,23 @@
     
     
 
-    <meta name="keyword"  content="Rich, Youngkin, Raspberry, Pi, Docker, Kubernetes, Go, Golang, GPIO, Microservice">
-    <link rel="shortcut icon" href="/img/favicon.ico">
+    <meta name="keyword"  content="Rich, Youngkin, Raspberry Pi, Docker, Kubernetes, Go, Golang, GPIO, Microservice">
+    <link rel="shortcut icon" href="https://youngkin.github.io/img/favicon.ico">
 
-    <title>Raspberry Pi GPIO - Using SPI to display arbitrary patterns on a MAX7219 Dot Matrix Display Module-Rich Youngkin Topics in Software Engineering</title>
+    <title>Raspberry Pi GPIO - Using SPI to display arbitrary patterns on a MAX7219 Dot Matrix Display Module-Raspberry Pi GPIO Programming and Software Developent</title>
 
-    <link rel="canonical" href="/post/spidotmatrixmodule/">
+    <link rel="canonical" href="https://youngkin.github.io/post/spidotmatrixmodule/">
 
-    <link rel="stylesheet" href="/css/iDisqus.min.css"/>
+    <link rel="stylesheet" href="https://youngkin.github.io/css/iDisqus.min.css"/>
 	
     
-    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://youngkin.github.io/css/bootstrap.min.css">
 
     
-    <link rel="stylesheet" href="/css/hux-blog.min.css">
+    <link rel="stylesheet" href="https://youngkin.github.io/css/hux-blog.min.css">
 
     
-    <link rel="stylesheet" href="/css/zanshang.css">
+    <link rel="stylesheet" href="https://youngkin.github.io/css/zanshang.css">
     
     
     <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
@@ -70,13 +70,13 @@
 
     
     
-    <script src="/js/jquery.min.js"></script>
+    <script src="https://youngkin.github.io/js/jquery.min.js"></script>
     
     
-    <script src="/js/bootstrap.min.js"></script>
+    <script src="https://youngkin.github.io/js/bootstrap.min.js"></script>
     
     
-    <script src="/js/hux-blog.min.js"></script>
+    <script src="https://youngkin.github.io/js/hux-blog.min.js"></script>
 
     
     
@@ -95,7 +95,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="/">Rich Youngkin</a>
+            <a class="navbar-brand" href="https://youngkin.github.io/">Rich Youngkin</a>
         </div>
 
         
@@ -104,42 +104,42 @@
             <div class="navbar-collapse">
                 <ul class="nav navbar-nav navbar-right">
                     <li>
-                        <a href="/">Home</a>
+                        <a href="https://youngkin.github.io/">Home</a>
                     </li>
                     
                         
                         <li>
-                            <a href="/categories/barbeque">barbeque</a>
+                            <a href="https://youngkin.github.io/categories/barbeque">barbeque</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/blog">blog</a>
+                            <a href="https://youngkin.github.io/categories/blog">blog</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/c">c</a>
+                            <a href="https://youngkin.github.io/categories/c">c</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/go">go</a>
+                            <a href="https://youngkin.github.io/categories/go">go</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/gpio">gpio</a>
+                            <a href="https://youngkin.github.io/categories/gpio">gpio</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/kubernetes">kubernetes</a>
+                            <a href="https://youngkin.github.io/categories/kubernetes">kubernetes</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/raspberry-pi">raspberry-pi</a>
+                            <a href="https://youngkin.github.io/categories/raspberry-pi">raspberry-pi</a>
                         </li>
                         
                     
                     
 		    
-                        <li><a href="/top/about/">ABOUT</a></li>
+                        <li><a href="https://youngkin.github.io/top/about/">ABOUT</a></li>
                     
 
                     
@@ -194,15 +194,15 @@
                 <div class="post-heading">
                     <div class="tags">
                         
-                        <a class="tag" href="/tags/raspberry-pi" title="raspberry-pi">
+                        <a class="tag" href="https://youngkin.github.io/tags/raspberry-pi" title="raspberry-pi">
                             raspberry-pi
                         </a>
                         
-                        <a class="tag" href="/tags/c" title="C">
+                        <a class="tag" href="https://youngkin.github.io/tags/c" title="C">
                             C
                         </a>
                         
-                        <a class="tag" href="/tags/gpio" title="GPIO">
+                        <a class="tag" href="https://youngkin.github.io/tags/gpio" title="GPIO">
                             GPIO
                         </a>
                         
@@ -304,13 +304,13 @@
 <h2 id="prerequisites">Prerequisites</h2>
 <p>If you don&rsquo;t have one, you&rsquo;ll need a Raspberry Pi. I used a Raspberry Pi 3B+ with the &lsquo;stretch&rsquo; or later version of the Raspbian OS. The BCM2835 library referenced below supports Raspberry Pi models 1 through 4.</p>
 <p>Next you&rsquo;ll need is a <a href="https://www.amazon.com/dp/B082KBF7MM/ref=sspa_dk_detail_4?psc=1&amp;pd_rd_i=B082KBF7MM&amp;pd_rd_w=1tGTV&amp;pf_rd_p=887084a2-5c34-4113-a4f8-b7947847c308&amp;pd_rd_wg=fX8JB&amp;pf_rd_r=44DE0RS1E9FD42RBYC7R&amp;pd_rd_r=47cbdc7f-7834-455f-9429-ef74a438bd45&amp;spLa=ZW5jcnlwdGVkUXVhbGlmaWVyPUFVVkdZVUZRNUw3ODkmZW5jcnlwdGVkSWQ9QTA4MzI4MzYyU0VLNzBJM0cxRUVMJmVuY3J5cHRlZEFkSWQ9QTA0Mjk1NTMzSzNSWlNFUjU0NURBJndpZGdldE5hbWU9c3BfZGV0YWlsJmFjdGlvbj1jbGlja1JlZGlyZWN0JmRvTm90TG9nQ2xpY2s9dHJ1ZQ==">breadboard</a>, some <a href="https://www.amazon.com/dp/B08HZ26ZLF/ref=syn_sd_onsite_desktop_19?psc=1&amp;spLa=ZW5jcnlwdGVkUXVhbGlmaWVyPUExRFpLWElCRjg1MUNMJmVuY3J5cHRlZElkPUEwMjMyMTE1M01aOFE3U1BQS09YSiZlbmNyeXB0ZWRBZElkPUEwODE5NTMxMktEMTlZRjEyQjBJNiZ3aWRnZXROYW1lPXNkX29uc2l0ZV9kZXNrdG9wJmFjdGlvbj1jbGlja1JlZGlyZWN0JmRvTm90TG9nQ2xpY2s9dHJ1ZQ==">jumper wires</a>, and a <a href="https://www.amazon.com/dp/B07VM6HXN5/ref=sspa_dk_detail_5?pf_rd_p=0c758152-61cd-452f-97a6-17f070f654b8&amp;pd_rd_wg=wF4pR&amp;pf_rd_r=8MBD40495EV7X8RR61NP&amp;pd_rd_w=A5eiC&amp;pd_rd_r=281b8d49-a176-4535-bc99-bd6108f5bc24&amp;s=toys-and-games&amp;spLa=ZW5jcnlwdGVkUXVhbGlmaWVyPUE1NDJPSEtMOFRCWjImZW5jcnlwdGVkSWQ9QTA4MTEwODgyN0lZRFdWVkhIOFRaJmVuY3J5cHRlZEFkSWQ9QTA4NzU0NjYyQkE5UTNXTzM3SjIwJndpZGdldE5hbWU9c3BfZGV0YWlsJmFjdGlvbj1jbGlja1JlZGlyZWN0JmRvTm90TG9nQ2xpY2s9dHJ1ZQ&amp;th=1">MAX7219 Dot Matrix Display</a>. You should also consider getting a <a href="https://www.amazon.com/dp/B082PRVRYR/ref=sspa_dk_detail_2?psc=1&amp;pd_rd_i=B082PRVRYR&amp;pd_rd_w=8mKhr&amp;pf_rd_p=887084a2-5c34-4113-a4f8-b7947847c308&amp;pd_rd_wg=e9psa&amp;pf_rd_r=S09F37DF2G5FW8B8GX4B&amp;pd_rd_r=c065c120-e60b-45e9-b93b-f581f048cf46&amp;spLa=ZW5jcnlwdGVkUXVhbGlmaWVyPUFCMzhUQ09COFI2VlMmZW5jcnlwdGVkSWQ9QTA5NjU2ODUxRDkxNEYwSTYwV09KJmVuY3J5cHRlZEFkSWQ9QTAxOTg1MTUyRUhEUlc2VzQ2VDQ4JndpZGdldE5hbWU9c3BfZGV0YWlsJmFjdGlvbj1jbGlja1JlZGlyZWN0JmRvTm90TG9nQ2xpY2s9dHJ1ZQ==">40 pin female to female with a T-Type adapter</a> to attach the GPIO outputs to the breadboard. You can use only jumper wires, but the adapter will make things easier and will help prevent damage to the GPIO pins on the Raspberry Pi. If you elect not to buy the 40 pin cable with T-Type adapter you&rsquo;ll need to buy <a href="https://www.amazon.com/SinLoon-Breadboard-Arduino-Circuit-40-Pack/dp/B08M3QLL3Q/ref=pd_sbs_7/143-0445142-7950409?pd_rd_w=sVLrc&amp;pf_rd_p=8b76d7a7-ab83-4ddc-a92d-e3e33bfdbf03&amp;pf_rd_r=CDM5TGJT03VKF0ZFB577&amp;pd_rd_r=8e58fd82-8503-41cf-b8f2-c78eaeb78d25&amp;pd_rd_wg=tT1U0&amp;pd_rd_i=B08M3QLL3Q&amp;psc=1">male-to-female jumper wires</a>. However, a full electronics kit for a Raspberry Pi doesn&rsquo;t cost much more than these 4 components. I recommend buying the <a href="https://www.amazon.com/gp/product/B09BMVT4CB/ref=ppx_yo_dt_b_asin_title_o02_s00?ie=UTF8&amp;psc=1">Sunfounder Raspberry Pi Ultimate Starter Kit</a>.</p>
-<img style="border:1px solid black" src="/images/pwmfordummies/RaphaelKit.png" align="center" width="600" height="300"/>
+<img style="border:1px solid black" src="https://youngkin.github.io/images/pwmfordummies/RaphaelKit.png" align="center" width="600" height="300"/>
 <figcaption align="left"><center><i style="color:black;">Sunfounder Ultimate Starter/Raphael kit</i></center></figcaption>
 <p>You will need some basic C programming knowledge as well as familiarity with logging on to a Raspberry Pi terminal, or into the desktop GUI that comes with some OS versions. Depending on the approach you take, you may need to connect a keyboard and monitor to the Raspberry Pi. I simply SSH into the Pi. You&rsquo;ll also need familiarity with how to use an editor like Vi or nano. And you&rsquo;ll need basic familiarity with the Linux command line.</p>
 <p>Finally, you&rsquo;ll need to clone or fork <a href="https://github.com/youngkin/gpio">my GPIO repository</a> as it contains underlying library code used to access GPIO capabilities on the BCM2835. As mentioned in other sections, this library code is based on the <a href="http://www.airspayce.com/mikem/bcm2835/index.html">BCM2835 C library</a> developed by Mike McCauley.</p>
 <h2 id="spi-serial-peripheral-interface-overview">SPI (Serial Peripheral Interface) Overview</h2>
 <p>SPI is used to send data serially to a peripheral that can accept or requires data in parallel. This is helpful because a relatively large set of parallel inputs can be written to using just 3 GPIO pins, excluding the power (VCC) and ground (GND) pins. If SPI wasn&rsquo;t used, one GPIO pin would be required for each parallel input. This could easily be prohibitive since pins are a limited resource. Let&rsquo;s see how this works with an example.</p>
-<img style="border:1px solid black" src="/images/bcm2835programming/MAX7219_Transparent.jpg" align="center" width="600" height="300"/>
+<img style="border:1px solid black" src="https://youngkin.github.io/images/bcm2835programming/MAX7219_Transparent.jpg" align="center" width="600" height="300"/>
 <figcaption align="left"><center><i style="color:black;">Image credit: Author</i></center></figcaption>
 <p>The diagram above shows the MAX7219 LED Dot Matrix Display. It&rsquo;s commonly used to display arbitrary shapes such as letters, numbers, and smiley faces.
 In addition to the MAX7219, SPI can be used to control a variety of peripherals to display images, take input from touchscreens, and interact with various sensors. <a href="https://en.wikipedia.org/wiki/Serial_Peripheral_Interface">Wikipedia has a good article</a> describing SPI in more detail.</p>
@@ -340,7 +340,7 @@ In addition to the MAX7219, SPI can be used to control a variety of peripherals 
 <li>(SPI)MISO - This stands for Master In Slave Out. This pin allows for the MAX7219 (or any SPI peripheral) to send data back to the BCM2835.</li>
 <li>(SPI)CS or (SPI)CE - This is a second chip select/chip enable pin. Having a second CS/CE pin allows the BCM2835 to control 2 SPI peripherals. As stated above, when the CS/CE pin is set to LOW the SPI peripheral will accept data from the BCM2835. So by setting one of the CS/CE pins to HIGH and the other to LOW we can control which slave can receive and send data. The article <a href="https://adikedia.com/2016/08/10/using-multiple-spi-slave-devices-with-wiringpi/">Using Multiple SPI Slave Devices with the Raspberry Pi</a> provides more information about how the 2 CE/CS pins are used. The following schematic illustrates how utilize 2 CE/CS pins:</li>
 </ol>
-<img style="border:1px solid black" src="/images/bcm2835programming/SPIMasterSlave.jpg" align="center" width="600" height="300"/>
+<img style="border:1px solid black" src="https://youngkin.github.io/images/bcm2835programming/SPIMasterSlave.jpg" align="center" width="600" height="300"/>
 <figcaption align="left"><center><i style="color:black;">Image credit: BCM2835 ARM Peripherals Guide</i></center></figcaption>
 <p>In the image above this schematic you may have noticed the 5 pins on the right-hand side of the MAX7219. These pins output the signals on the corresponding input pins to other MAX7219s. This allows more than two MAX7219s to be &ldquo;chained&rdquo; together to create larger displays, e.g., 128 LED or 256 LED displays. This process is called daisy-chaining. This can be done by connecting the output pins on the primary SPI peripheral to the corresponding input pins on the next peripheral in the chain. Daisy chaining can be used to display multiple characters on a logically larger LED matrix, or to create scrolling displays. This <a href="https://forum.arduino.cc/t/daisy-chaining-multiple-max7219-chips/3305">Arduino forum thread</a> provides a high level explanation about how to accomplish this. <a href="https://thesolaruniverse.wordpress.com/2016/05/10/news-ticker-with-three-max7219-8x8-dot-led-matrix-devices/">News ticker with three MAX7219 8×8 dot led matrix devices</a> is the best article I could find for implementing a specific project. However, it describes how to accomplish this with Sketch (a way to write Python based code snippets), not C. Between these 2 sources there might be enough hints about how to accomplish this using C. I may write a future article that describes how to do this in C.</p>
 <blockquote>
@@ -348,10 +348,10 @@ In addition to the MAX7219, SPI can be used to control a variety of peripherals 
 </blockquote>
 <p>The primary SPI interface on the BCM2835, SPI0, is implemented on GPIO pins 7-11. Pins 7 &amp; 8 are the 2 CE/CS pins available on the BCM2835. Pin 9 is MISO, 10 is MOSI, and 11 is the clock (SPICLK/SCLK). The BCM2835 has 2 auxilary SPI interfaces, SPI1 (AKA AUX_SPI0) and SPI2 (AKA AUX_SPI1). From the BCM2835 ARM Peripherals Guide, SPI1 is available on pins 16-21 and SPI2 on pins 35-39. These auxilary interfaces are available via the AUX I/O function.</p>
 <p>The following diagram shows a GPIO extension board frequently used to connect the BCM2835 GPIO pins to a breadboard (if you&rsquo;re not familiar with breadboards there&rsquo;ll be more on them later). The pins are labeled with their GPIO pin numbers or the I/O function (e.g., SPI) they support. Note the SPI pins are labeled on the board using the same terms as above:</p>
-<img style="border:1px solid black" src="/images/bcm2835programming/GPIOExtensionBoard.jpg" align="center" width="500" height="250"/>
+<img style="border:1px solid black" src="https://youngkin.github.io/images/bcm2835programming/GPIOExtensionBoard.jpg" align="center" width="500" height="250"/>
 <figcaption align="left"><center><i style="color:black;">Image credit: BCM2835 ARM Peripherals Guide</i></center></figcaption>
 <p>The following is a timing diagram that shows the actual signals being sent to the MAX7219 dot matrix display. It&rsquo;s a screenshot from the <a href="https://sigrok.org/wiki/PulseView">PulseView/sigrok logic analyzer</a> application. I used an inexpensive <a href="https://www.amazon.com/dp/B07K6HXDH1?psc=1&amp;ref=ppx_yo2ov_dt_b_product_details">logic analyzer device</a> to capture the signals displayed in PulseView.</p>
-<img style="border:1px solid black" src="/images/bcm2835programming/SPITimingLetterY.jpg" align="center" width="1000" height="500"/>
+<img style="border:1px solid black" src="https://youngkin.github.io/images/bcm2835programming/SPITimingLetterY.jpg" align="center" width="1000" height="500"/>
 <figcaption align="left"><center><i style="color:black;">Image credit: Author</i></center></figcaption>
 <p>This diagram shows the values for the first 3 rows of the LED matrix for the letter &ldquo;Y&rdquo;. Here&rsquo;s how to interpret it:</p>
 <ol>
@@ -390,7 +390,7 @@ In addition to the MAX7219, SPI can be used to control a variety of peripherals 
 </code></pre><p>The next section will provide some additional details about the SPI protocol and how to program the MAX7219.</p>
 <h2 id="setup-and-code">Setup and Code</h2>
 <p>The diagram below illustrates how to wire the breadboard to work with the MAX7219 LED dot matrix module example. If you&rsquo;re unfamiliar  with breadboards and breadboard diagrams this <a href="https://www.sciencebuddies.org/science-fair-projects/references/how-to-use-a-breadboard">breadboard tutorial</a> should be helpful.</p>
-<img style="border:1px solid black" src="/images/bcm2835programming/spiwiringdiagram.png" align="center" width="700" height="350"/>
+<img style="border:1px solid black" src="https://youngkin.github.io/images/bcm2835programming/spiwiringdiagram.png" align="center" width="700" height="350"/>
 <figcaption align="left"><center><i style="color:black;">Image credit: Sunfounder</i></center></figcaption>
 <p>The yellow wire is connected to the SPIMOSI pin (GPIO pin 10) on the Raspberry Pi and the DIN pin on the MAX7219. The blue wire is connected to SPISCLK or SCLK (GPIO pin 11) on the Raspberry Pi and the CLK pin on the MAX7219. The green wire is connected to SPICE0 or CE0 (GPIO pin 8) on the Raspberry Pi and the CS pin on the MAX7219. The red and black wires are connected to 5 volt power/VCC and ground/GND respectively.</p>
 <p>The next section will describe the main program that controls the MAX7219. The section following that describes the code that directly controls the I/O functions using the BCM2835 registers.</p>
@@ -473,7 +473,7 @@ The universal SPI master has been developed to work even with the most &lsquo;no
 <blockquote>
 <p>An operating system used the Device Tree to discover the topology of the hardware at runtime, and thereby support a majority of available hardware without hard coded information (assuming drivers were available for all devices).</p>
 </blockquote>
-<p>One of the pieces of information the device tree holds, and is important for our purposes, is the location and length of the I/O Peripherals partition in the BCM2835&rsquo;s physical address space (see <a href="https://youngkin.github.io/post/gpioprogramming/#addressing">Introduction To Programming Broadcom BCM2835 ARM Peripherals - Addressing</a> for details). Here&rsquo;s a hex dump of the contents of <code>/proc/device-tree/soc/ranges</code> on a Raspberry Pi 3B+:</p>
+<p>One of the pieces of information the device tree holds, and is important for our purposes, is the location and length of the I/O Peripherals partition in the BCM2835&rsquo;s physical address space (see <a href="https://youngkin.github.io/post/gpioprogramming/#addressing">Introduction To Programming Broadcom BCM2835 ARM Peripherals - Addressing</a> for details). Here&rsquo;s a hex dump of the contents of <code>/proc/device-tree/soc/ranges</code> on a Raspberry Pi 3B+ (the first 8 zeros are the address offset within /proc/device-tree/soc/ranges):</p>
 <pre><code>pi@pi-node1:/ $ hexdump -C /proc/device-tree/soc/ranges
 00000000  7e 00 00 00 3f 00 00 00  01 00 00 00 40 00 00 00  |~...?.......@...|
 00000010  40 00 00 00 00 00 10 00                           |@.......|
@@ -488,7 +488,13 @@ The format of the value of the ranges property is an arbitrary number of triplet
 
 <p>This next code snippet finds the <em>parent-bus-address</em> and <em>length</em> of the I/O peripherals block using the data from <code>/proc/device-tree/soc/ranges</code>. Recall that the parent bus address is the second entry in the triplet that also defines the child bus address and length. From the hex dump above, here is that triplet (array cell 0 is at the far left, array cell 11 is at the far right):</p>
 <pre><code>7e 00 00 00 3f 00 00 00  01 00 00 00
-</code></pre><p><strong>Lines 1 thru 4</strong> shift the contents of the <em>parent-bus-address</em>, <code>3f 00 00 00</code>, the bytes at <code>buf</code> offsets 4 thru 7, into <code>base_address</code>. <code>3F</code> is shifted into the high order byte of <code>base_address</code>. The remaining <code>buf</code> cells are likewise shifted into <code>base_address</code> from left (most significant) to right (least significant byte). After shifting is complete <code>base_address</code> will be set to <code>0x3F000000</code>. Looking back at the diagram in <a href="https://youngkin.github.io/post/gpioprogramming/#addressing">Introduction To Programming Broadcom BCM2835 ARM Peripherals - Addressing</a> you&rsquo;ll notice it <strong>DOESN&rsquo;T MATCH</strong> the base address of <code>0x20000000</code> in the <em>I/O Peripherals</em> address block in <em>ARM Physical Addresses</em>. This is because the diagram in the Addressing section is for the Raspberry Pi 1. This offset is different in the Raspberry Pi models 2 &amp; 3. And it&rsquo;s different yet again in the Raspberry Pi 4 model.</p>
+</code></pre><blockquote>
+<p>Note: The output of the command is somewhat different on a Raspberry Pi 4. It will look more like this:</p>
+<pre><code>pi@kubemaster:~ $ hexdump -C /proc/device-tree/soc/ranges
+00000000  7e 00 00 00 00 00 00 00  fe 00 00 00 01 80 00 00  |~...............|
+</code></pre><p>In this dump the starting address of the parent bus address is at offset 8, the value is <code>fe 00 00 00</code>. For the Raspberry Pi 3 it&rsquo;s at offset 4. In both cases the length of the the address is 4 bytes or 32 bits. The length of the I/O Peripherals partition starts at offset 12 and the value is <code>01 80 00 00</code>. Although the code snippet above doesn&rsquo;t reflect this difference, the code for the complete function does take this into account.</p>
+</blockquote>
+<p><strong>Lines 1 thru 4</strong> shift the contents of the <em>parent-bus-address</em>, <code>3f 00 00 00</code>, the bytes at <code>buf</code> offsets 4 thru 7, into <code>base_address</code>. <code>3F</code> is shifted into the high order byte of <code>base_address</code>. The remaining <code>buf</code> cells are likewise shifted into <code>base_address</code> from left (most significant) to right (least significant byte). After shifting is complete <code>base_address</code> will be set to <code>0x3F000000</code>. Looking back at the diagram in <a href="https://youngkin.github.io/post/gpioprogramming/#addressing">Introduction To Programming Broadcom BCM2835 ARM Peripherals - Addressing</a> you&rsquo;ll notice it <strong>DOESN&rsquo;T MATCH</strong> the base address of <code>0x20000000</code> in the <em>I/O Peripherals</em> address block in <em>ARM Physical Addresses</em>. This is because the diagram in the Addressing section is for the Raspberry Pi 1. This offset is different in the Raspberry Pi models 2 &amp; 3. And it&rsquo;s different yet again in the Raspberry Pi 4 model.</p>
 <p>Moving on, in a similar manner to <code>base_address</code>, <strong>lines 6 thru 9</strong> get the <em>length</em> by shifting from <code>buf</code> offsets 8 thru 11 into <code>peri-size</code>. For the Raspberry Pi 3B+, <code>0x01000000</code> is the expected length of the address block.</p>
 <script type="application/javascript" src="https://gist.github.com/youngkin/3f8ae5656e480195f3d7293061711016.js"></script>
 
@@ -691,7 +697,7 @@ new value      <span style="color:#f92672">=</span> <span style="color:#ae81ff">
                 <ul class="pager">
                     
                     <li class="previous">
-                        <a href="/post/gpioprogramming/" data-toggle="tooltip" data-placement="top" title="Raspberry Pi GPIO - Introduction To Programming Broadcom BCM2835 ARM Peripherals">&larr;
+                        <a href="https://youngkin.github.io/post/gpioprogramming/" data-toggle="tooltip" data-placement="top" title="Raspberry Pi GPIO - Introduction To Programming Broadcom BCM2835 ARM Peripherals">&larr;
                             Previous Post</a>
                     </li>
                     
@@ -725,7 +731,7 @@ new value      <span style="color:#f92672">=</span> <span style="color:#ae81ff">
                 
                 <section>
                     <hr class="hidden-sm hidden-xs">
-                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <h5><a href="https://youngkin.github.io/tags/">FEATURED TAGS</a></h5>
                     <div class="tags">
                         
                         
@@ -736,7 +742,7 @@ new value      <span style="color:#f92672">=</span> <span style="color:#ae81ff">
                         
                         
                         
-                        <a href="/tags/c" title="c">
+                        <a href="https://youngkin.github.io/tags/c" title="c">
                             c
                         </a>
                         
@@ -746,15 +752,6 @@ new value      <span style="color:#f92672">=</span> <span style="color:#ae81ff">
                         
                         
                         
-                        <a href="/tags/docker" title="docker">
-                            docker
-                        </a>
-                        
-                        
-                        
-                        <a href="/tags/elasticsearch" title="elasticsearch">
-                            elasticsearch
-                        </a>
                         
                         
                         
@@ -762,21 +759,19 @@ new value      <span style="color:#f92672">=</span> <span style="color:#ae81ff">
                         
                         
                         
-                        <a href="/tags/go" title="go">
+                        
+                        <a href="https://youngkin.github.io/tags/go" title="go">
                             go
                         </a>
                         
                         
                         
-                        <a href="/tags/gpio" title="gpio">
+                        <a href="https://youngkin.github.io/tags/gpio" title="gpio">
                             gpio
                         </a>
                         
                         
                         
-                        <a href="/tags/grafana" title="grafana">
-                            grafana
-                        </a>
                         
                         
                         
@@ -787,8 +782,7 @@ new value      <span style="color:#f92672">=</span> <span style="color:#ae81ff">
                         
                         
                         
-                        
-                        <a href="/tags/kubernetes" title="kubernetes">
+                        <a href="https://youngkin.github.io/tags/kubernetes" title="kubernetes">
                             kubernetes
                         </a>
                         
@@ -804,25 +798,13 @@ new value      <span style="color:#f92672">=</span> <span style="color:#ae81ff">
                         
                         
                         
-                        <a href="/tags/mysql" title="mysql">
-                            mysql
-                        </a>
                         
                         
                         
-                        <a href="/tags/networking" title="networking">
-                            networking
-                        </a>
                         
                         
                         
-                        <a href="/tags/prometheus" title="prometheus">
-                            prometheus
-                        </a>
-                        
-                        
-                        
-                        <a href="/tags/raspberry-pi" title="raspberry-pi">
+                        <a href="https://youngkin.github.io/tags/raspberry-pi" title="raspberry-pi">
                             raspberry-pi
                         </a>
                         
@@ -831,10 +813,6 @@ new value      <span style="color:#f92672">=</span> <span style="color:#ae81ff">
                         
                         
                         
-                        
-                        <a href="/tags/traefik" title="traefik">
-                            traefik
-                        </a>
                         
                         
                     </div>

@@ -44,23 +44,23 @@
     
     
 
-    <meta name="keyword"  content="Rich, Youngkin, Raspberry, Pi, Docker, Kubernetes, Go, Golang, GPIO, Microservice">
-    <link rel="shortcut icon" href="/img/favicon.ico">
+    <meta name="keyword"  content="Rich, Youngkin, Raspberry Pi, Docker, Kubernetes, Go, Golang, GPIO, Microservice">
+    <link rel="shortcut icon" href="https://youngkin.github.io/img/favicon.ico">
 
-    <title>Raspberry Pi GPIO - Introduction To Programming Broadcom BCM2835 ARM Peripherals-Rich Youngkin Topics in Software Engineering</title>
+    <title>Raspberry Pi GPIO - Introduction To Programming Broadcom BCM2835 ARM Peripherals-Raspberry Pi GPIO Programming and Software Developent</title>
 
-    <link rel="canonical" href="/post/gpioprogramming/">
+    <link rel="canonical" href="https://youngkin.github.io/post/gpioprogramming/">
 
-    <link rel="stylesheet" href="/css/iDisqus.min.css"/>
+    <link rel="stylesheet" href="https://youngkin.github.io/css/iDisqus.min.css"/>
 	
     
-    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://youngkin.github.io/css/bootstrap.min.css">
 
     
-    <link rel="stylesheet" href="/css/hux-blog.min.css">
+    <link rel="stylesheet" href="https://youngkin.github.io/css/hux-blog.min.css">
 
     
-    <link rel="stylesheet" href="/css/zanshang.css">
+    <link rel="stylesheet" href="https://youngkin.github.io/css/zanshang.css">
     
     
     <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
@@ -70,13 +70,13 @@
 
     
     
-    <script src="/js/jquery.min.js"></script>
+    <script src="https://youngkin.github.io/js/jquery.min.js"></script>
     
     
-    <script src="/js/bootstrap.min.js"></script>
+    <script src="https://youngkin.github.io/js/bootstrap.min.js"></script>
     
     
-    <script src="/js/hux-blog.min.js"></script>
+    <script src="https://youngkin.github.io/js/hux-blog.min.js"></script>
 
     
     
@@ -95,7 +95,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="/">Rich Youngkin</a>
+            <a class="navbar-brand" href="https://youngkin.github.io/">Rich Youngkin</a>
         </div>
 
         
@@ -104,42 +104,42 @@
             <div class="navbar-collapse">
                 <ul class="nav navbar-nav navbar-right">
                     <li>
-                        <a href="/">Home</a>
+                        <a href="https://youngkin.github.io/">Home</a>
                     </li>
                     
                         
                         <li>
-                            <a href="/categories/barbeque">barbeque</a>
+                            <a href="https://youngkin.github.io/categories/barbeque">barbeque</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/blog">blog</a>
+                            <a href="https://youngkin.github.io/categories/blog">blog</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/c">c</a>
+                            <a href="https://youngkin.github.io/categories/c">c</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/go">go</a>
+                            <a href="https://youngkin.github.io/categories/go">go</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/gpio">gpio</a>
+                            <a href="https://youngkin.github.io/categories/gpio">gpio</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/kubernetes">kubernetes</a>
+                            <a href="https://youngkin.github.io/categories/kubernetes">kubernetes</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/raspberry-pi">raspberry-pi</a>
+                            <a href="https://youngkin.github.io/categories/raspberry-pi">raspberry-pi</a>
                         </li>
                         
                     
                     
 		    
-                        <li><a href="/top/about/">ABOUT</a></li>
+                        <li><a href="https://youngkin.github.io/top/about/">ABOUT</a></li>
                     
 
                     
@@ -194,15 +194,15 @@
                 <div class="post-heading">
                     <div class="tags">
                         
-                        <a class="tag" href="/tags/raspberry-pi" title="raspberry-pi">
+                        <a class="tag" href="https://youngkin.github.io/tags/raspberry-pi" title="raspberry-pi">
                             raspberry-pi
                         </a>
                         
-                        <a class="tag" href="/tags/c" title="C">
+                        <a class="tag" href="https://youngkin.github.io/tags/c" title="C">
                             C
                         </a>
                         
-                        <a class="tag" href="/tags/gpio" title="GPIO">
+                        <a class="tag" href="https://youngkin.github.io/tags/gpio" title="GPIO">
                             GPIO
                         </a>
                         
@@ -299,7 +299,7 @@
 <h2 id="prerequisites">Prerequisites</h2>
 <p>If you don&rsquo;t have one, you&rsquo;ll need a Raspberry Pi. I used a Raspberry Pi 3B+ with the &lsquo;stretch&rsquo; version of the Raspbian OS. See <a href="https://projects.raspberrypi.org/en/projects/raspberry-pi-setting-up">How to setup a new Raspberry Pi from scratch</a> if you don&rsquo;t already have a Raspberry Pi and need help setting one up.</p>
 <p>Next you&rsquo;ll need is a <a href="https://www.amazon.com/dp/B082KBF7MM/ref=sspa_dk_detail_4?psc=1&amp;pd_rd_i=B082KBF7MM&amp;pd_rd_w=1tGTV&amp;pf_rd_p=887084a2-5c34-4113-a4f8-b7947847c308&amp;pd_rd_wg=fX8JB&amp;pf_rd_r=44DE0RS1E9FD42RBYC7R&amp;pd_rd_r=47cbdc7f-7834-455f-9429-ef74a438bd45&amp;spLa=ZW5jcnlwdGVkUXVhbGlmaWVyPUFVVkdZVUZRNUw3ODkmZW5jcnlwdGVkSWQ9QTA4MzI4MzYyU0VLNzBJM0cxRUVMJmVuY3J5cHRlZEFkSWQ9QTA0Mjk1NTMzSzNSWlNFUjU0NURBJndpZGdldE5hbWU9c3BfZGV0YWlsJmFjdGlvbj1jbGlja1JlZGlyZWN0JmRvTm90TG9nQ2xpY2s9dHJ1ZQ==">breadboard</a>, some <a href="https://www.amazon.com/dp/B08HZ26ZLF/ref=syn_sd_onsite_desktop_19?psc=1&amp;spLa=ZW5jcnlwdGVkUXVhbGlmaWVyPUExRFpLWElCRjg1MUNMJmVuY3J5cHRlZElkPUEwMjMyMTE1M01aOFE3U1BQS09YSiZlbmNyeXB0ZWRBZElkPUEwODE5NTMxMktEMTlZRjEyQjBJNiZ3aWRnZXROYW1lPXNkX29uc2l0ZV9kZXNrdG9wJmFjdGlvbj1jbGlja1JlZGlyZWN0JmRvTm90TG9nQ2xpY2s9dHJ1ZQ==">jumper wires</a>, <a href="https://www.amazon.com/Gikfun-Resistor-Experiment-Raspberry-Arduino/dp/B01G3FCMVA/ref=sr_1_19?keywords=220+ohm+resistor&amp;qid=1648933499&amp;sr=8-19">a 220 Ohm resistor, and an LED</a>. You should also consider getting a <a href="https://www.amazon.com/dp/B082PRVRYR/ref=sspa_dk_detail_2?psc=1&amp;pd_rd_i=B082PRVRYR&amp;pd_rd_w=8mKhr&amp;pf_rd_p=887084a2-5c34-4113-a4f8-b7947847c308&amp;pd_rd_wg=e9psa&amp;pf_rd_r=S09F37DF2G5FW8B8GX4B&amp;pd_rd_r=c065c120-e60b-45e9-b93b-f581f048cf46&amp;spLa=ZW5jcnlwdGVkUXVhbGlmaWVyPUFCMzhUQ09COFI2VlMmZW5jcnlwdGVkSWQ9QTA5NjU2ODUxRDkxNEYwSTYwV09KJmVuY3J5cHRlZEFkSWQ9QTAxOTg1MTUyRUhEUlc2VzQ2VDQ4JndpZGdldE5hbWU9c3BfZGV0YWlsJmFjdGlvbj1jbGlja1JlZGlyZWN0JmRvTm90TG9nQ2xpY2s9dHJ1ZQ==">40 pin female to female with a T-Type adapter</a> to attach the GPIO outputs to the breadboard. You can use only jumper wires, but the adapter will make things easier and will help prevent damage to the GPIO pins on the Raspberry Pi. If you elect not to buy the 40 pin cable with T-Type adapter you&rsquo;ll need to buy <a href="https://www.amazon.com/SinLoon-Breadboard-Arduino-Circuit-40-Pack/dp/B08M3QLL3Q/ref=pd_sbs_7/143-0445142-7950409?pd_rd_w=sVLrc&amp;pf_rd_p=8b76d7a7-ab83-4ddc-a92d-e3e33bfdbf03&amp;pf_rd_r=CDM5TGJT03VKF0ZFB577&amp;pd_rd_r=8e58fd82-8503-41cf-b8f2-c78eaeb78d25&amp;pd_rd_wg=tT1U0&amp;pd_rd_i=B08M3QLL3Q&amp;psc=1">male-to-female jumper wires</a>. Buying all these things separately will cost more than a kit however. <a href="https://www.amazon.com/dp/B06WP7169Y/ref=sspa_dk_detail_5?psc=1&amp;pd_rd_i=B06WP7169Y&amp;pd_rd_w=OZVyf&amp;pf_rd_p=887084a2-5c34-4113-a4f8-b7947847c308&amp;pd_rd_wg=0V0IH&amp;pf_rd_r=623YJTBQ2CN2B2GYXQG5&amp;pd_rd_r=faa61f0f-3aec-4cf0-8e7e-d44eb1b3b92f&amp;spLa=ZW5jcnlwdGVkUXVhbGlmaWVyPUEyUVlDQzMzVVZBMFYxJmVuY3J5cHRlZElkPUEwMzExNzk4MUhGSjFSS0VKTlBROCZlbmNyeXB0ZWRBZElkPUEwMzYwNjg2UUdMRU44N0YzNzIwJndpZGdldE5hbWU9c3BfZGV0YWlsJmFjdGlvbj1jbGlja1JlZGlyZWN0JmRvTm90TG9nQ2xpY2s9dHJ1ZQ==">Here&rsquo;s a simple kit that has all of the above</a>. If you expect to follow this series I recommend buying the <a href="https://www.amazon.com/gp/product/B09BMVT4CB/ref=ppx_yo_dt_b_asin_title_o02_s00?ie=UTF8&amp;psc=1">Sunfounder Raspberry Pi Ultimate Starter Kit</a>.</p>
-<img style="border:1px solid black" src="/images/pwmfordummies/RaphaelKit.png" align="center" width="600" height="300"/>
+<img style="border:1px solid black" src="https://youngkin.github.io/images/pwmfordummies/RaphaelKit.png" align="center" width="600" height="300"/>
 <figcaption align="left"><center><i style="color:black;">Sunfounder Ultimate Starter/Raphael kit</i></center></figcaption>
 <p>You&rsquo;ll need some basic C programming knowledge as well as familiarity with logging on to a Raspberry Pi terminal, or into the desktop GUI that comes with some OS versions. Depending on the approach you take, you may need to connect a keyboard and monitor to the Raspberry Pi. I simply SSH into the Pi. You&rsquo;ll need familiarity with how to use an editor like Vi or nano. You&rsquo;ll also need basic familiarity with the Linux command line.</p>
 <p>Finally, you&rsquo;ll need to clone or fork <a href="https://github.com/youngkin/gpio">my GPIO repository</a> as it contains underlying library code used to access GPIO capabilities on the BCM2835. As mentioned in other sections, this library code is based on the <a href="http://www.airspayce.com/mikem/bcm2835/index.html">BCM2835 C library</a> developed by Mike McCauley.</p>
@@ -338,7 +338,7 @@
 <p>Accomplishing this uses the GPIO I/O  functions. More accurately it uses the GPIO registers to set the pin&rsquo;s function (e.g., output) and to control the behavior of the peripheral, an LED in this case.</p>
 <h4 id="spi-serial-peripheral-interface">SPI (Serial Peripheral Interface)</h4>
 <p>SPI is used to send data serially to a peripheral that can accept or requires data in parallel. This is helpful because a relatively large set of parallel inputs can be written to using just 3 GPIO pins not including power (VCC) and ground (GND). If SPI wasn&rsquo;t used, one GPIO pin would be required for each parallel input. This could easily be prohibitive since pins are a limited resource. Let&rsquo;s see how this works with an example.</p>
-<img style="border:1px solid black" src="/images/bcm2835programming/MAX7219_Transparent.jpg" align="center" width="600" height="300"/>
+<img style="border:1px solid black" src="https://youngkin.github.io/images/bcm2835programming/MAX7219_Transparent.jpg" align="center" width="600" height="300"/>
 <figcaption align="left"><center><i style="color:black;">Image credit: Author</i></center></figcaption>
 <p>The diagram above shows the MAX7219 LED Dot Matrix Display. It&rsquo;s commonly used to display display arbitrary shapes such as letters, numbers, and smiley faces. It controls an 8x8 matrix of LEDs. Controlling an LED requires 1 pin excluding power or ground. An 8x8 LED matrix has 64 LEDs. This number is well in excess of the 26 or 40 GPIO pins available on a standard Raspberry Pis. As explained below, utilizing SPI requires considerably fewer GPIO pins.</p>
 <p>The MAX7219 has the following input pins:</p>
@@ -366,11 +366,11 @@
 <li>(SPI)MISO - This stands for Master In Slave Out. This pin allows for the MAX7219 (or any SPI peripheral) to send data back to the BCM2835.</li>
 <li>(SPI)CS or (SPI)CE - This is a second chip select/chip enable pin. Having a second CS/CE pin allows the BCM2835 to control 2 SPI peripherals. As stated above, when the CS/CE pin is set to LOW the SPI peripheral will accept data from the BCM2835. So by setting one of the CS/CE pins to HIGH and the other to LOW we can control which slave can receive and send data. The article <a href="https://adikedia.com/2016/08/10/using-multiple-spi-slave-devices-with-wiringpi/">Using Multiple SPI Slave Devices with the Raspberry Pi</a> provides more information about how the 2 CE/CS pins are used. The following schematic illustrates how this is done:</li>
 </ol>
-<img style="border:1px solid black" src="/images/bcm2835programming/SPIMasterSlave.jpg" align="center" width="600" height="300"/>
+<img style="border:1px solid black" src="https://youngkin.github.io/images/bcm2835programming/SPIMasterSlave.jpg" align="center" width="600" height="300"/>
 <figcaption align="left"><center><i style="color:black;">Image credit: BCM2835 ARM Peripherals Guide</i></center></figcaption>
 <p>The primary SPI interface on the BCM2835, SPI0, is implemented on GPIO pins 7-11. Pins 7 &amp; 8 are the 2 CE/CS pins available on the BCM2835. Pin 9 is MISO, 10 is MOSI, and 11 is the clock (SPICLK/SCLK). The BCM2835 has 2 auxilary SPI interfaces, SPI1 (AKA AUX_SPI0) and SPI2 (AKA AUX_SPI1). From the BCM2835 ARM Peripherals Guide, SPI1 is available on pins 16-21 and SPI2 on pins 35-39. These auxilary interfaces are available via the AUX I/O function.</p>
 <p>The following diagram shows a GPIO extension board frequently used to connect the BCM2835 GPIO pins to a breadboard. The pins are labeled with there GPIO pin numbers or the I/O function (e.g., SPI) they support Note the SPI pins are labeled on the board using the same terms as above:</p>
-<img style="border:1px solid black" src="/images/bcm2835programming/GPIOExtensionBoard.jpg" align="center" width="500" height="250200"/>
+<img style="border:1px solid black" src="https://youngkin.github.io/images/bcm2835programming/GPIOExtensionBoard.jpg" align="center" width="500" height="250200"/>
 <figcaption align="left"><center><i style="color:black;">Image credit: BCM2835 ARM Peripherals Guide</i></center></figcaption>
 <p>In addition to the MAX7219, SPI can be used to control a variety of peripherals to display images, take input from touchscreens, and interact with various sensors. <a href="https://en.wikipedia.org/wiki/Serial_Peripheral_Interface">Wikipedia has a good article</a> describing SPI in more detail.</p>
 <p>My article titled <a href="http://youngkin.github.io/post/spidotmatrixmodule/">Raspberry Pi GPIO - Using SPI to display arbitrary patterns on a MAX7219 Dot Matrix Display Module</a> provides detailed coverage of the SPI I/O function and how to program it. Similar to this article, it also includes detailed coverage of how to directly program the BCM2835 using the associated registers on the BCM2835, but for SPI instead of general GPIO I/O functionality. By reading that article you&rsquo;ll gain a deeper understanding of how to use the BCM2835 registers to program the I/O functionality supported by the BCM2835.</p>
@@ -378,7 +378,7 @@
 <p>PWM is used to convert a digital signal, like that produced by the BCM2835, into a simulated analog signal. It is simulated in the sense that it&rsquo;s not a true analog signal. It&rsquo;s still a digital signal but it cycles so fast that, much like a video, it appears to be an analog signal. Many peripherals like electric motors, dimmable LEDs, and color LEDs require an analog signal. As with SPI there are dedicated pins that can be enabled to utilize the PWM I/O function. These are GPIO pins 12, 13, 18, and 19. With these pins the BCM2835 supports something called hardware PWM. The PWM functionality is embedded into the BCM2835. It implements a hardware based clock loop that controls the frequency of the simulated analog signal. It is possible to use other GPIO pins for PWM, this is called software PWM. However, in software PWM the clock loop is written in the code that runs on the Raspberry Pi CPU. Since that CPU is doing many other things it isn&rsquo;t possible to create a reliable clock signal. This can result in some undesirable side effects such as a flickering LED in place of a dim LED. See my articles <a href="https://youngkin.github.io/post/sunfoundergpionotesrgbled/">Raspberry Pi GPIO in Go and C - RGB LED</a> and <a href="https://youngkin.github.io/post/pulsewidthmodulationraspberrypi/">Pulse Width Modulation for Dummies</a> for more information about PWM as well as examples of PWM in use.</p>
 <h3 id="addressing">Addressing</h3>
 <p>All GPIO I/O functions are accessed via registers. These registers are located at various offsets in the on-board memory. Accessing the registers requires a knowledge of how addressing works on the BCM2835 was well as on the Raspberry Pi. Here&rsquo;s a diagram from the <a href="https://www.raspberrypi.org/app/uploads/2012/02/BCM2835-ARM-Peripherals.pdf">BCM2835 ARM Peripherals guide</a>, section 1.2.1, showing how memory is mapped from the Pi&rsquo;s physical address to the BCM2835 addresses.</p>
-<img style="border:1px solid black" src="/images/bcm2835programming/BCM2835Addressing.jpg" align="center" width="1000" height="500"/>
+<img style="border:1px solid black" src="https://youngkin.github.io/images/bcm2835programming/BCM2835Addressing.jpg" align="center" width="1000" height="500"/>
 <figcaption align="left"><center><i style="color:black;">BCM2835 Addressing</i></center></figcaption>
 <p>The Raspberry Pi maps the BCM2835 memory to the Pi&rsquo;s physical address of <code>0x2000 0000</code>. This is shown in the middle column labeled &ldquo;ARM Physical Addresses&rdquo;. The gray shaded area labeled I/0 peripherals is the Pi&rsquo;s physical memory location of the BCM2835&rsquo;s peripherals (e.g., GPIO pins). Moving towards the left you&rsquo;ll see a gold box labeled &ldquo;VC/ARM MMU&rdquo;. This is the <a href="https://en.wikipedia.org/wiki/Memory_management_unit">Memory Management Unit</a> that is responsible for mapping the Pi&rsquo;s physical memory to the BCM2835 memory. Following the line from the middle column&rsquo;s &ldquo;I/O Peripherals&rdquo; partition, through the VC/ARM MMU, to the far left column titled &ldquo;VC CPU Bus Addresses&rdquo; leads to the &ldquo;I/O Peripherals&rdquo; partition on the BCM2835&rsquo;s CPU address bus. It&rsquo;s address is <code>0x7E00 0000</code>.</p>
 <p>The I/O peripheral addresses can be made available to the application through one of 2 ways. The traditional way is via the <code>/dev/mem</code> device mounted on the file system. Accessing this device requires root privileges. A newer method became available starting with the Raspberry Pi 2. This method accesses the I/O peripheral addresses via <code>/dev/gpio</code>. An advantage of using this method is that it doesn&rsquo;t require root access. A disadvantage to using this method is that only the GPIO I/O functionality of the BCM2835 can be accessed. This means advanced capabilities like PWM and SPI are not available. Accessing the I/O peripherals using <code>/dev/mem</code> also requires a little more work, namely mapping the physical memory from <code>/dev/mem</code> to the application&rsquo;s virtual memory. This will be covered in more detail later.</p>
@@ -403,7 +403,7 @@
 <p>The GPIO register set can be used to control many other functions of a GPIO pin in addition to selecting the function and setting/clearing a pin&rsquo;s value. It can also be used to read the value of a pin. As discussed in the I/O functions section above other things that can be managed include specifying how state changes are to be detected (rising/falling edge detection) and how to set the voltage of a pin when it&rsquo;s in an indeterminate state (pull-up/down resistors). Discussing these other registers is an advanced topic and is beyond the scope of this article.</p>
 <h2 id="setup-and-code">Setup and Code</h2>
 <p>This section starts with a program that causes an LED to blink. It&rsquo;s fairly simple and will show the basic steps needed to program the BCM2835. The next part of this section will cover the BCM2835 programming in more detail. But before all that, here&rsquo;s how to wire the breadboard to work with the blinking LED example.</p>
-<img style="border:1px solid black" src="/images/pwmfordummies/blinkingLED.png" align="center" width="600" height="300"/>
+<img style="border:1px solid black" src="https://youngkin.github.io/images/pwmfordummies/blinkingLED.png" align="center" width="600" height="300"/>
 <figcaption align="left"><center><i style="color:black;">Image credit: Sunfounder</i></center></figcaption>
 <p>The breadboard should be wired as illustrated in the above diagram. Note that the (bent) long lead of the LED, the anode, is connected to the 3.3 volt power pin via the resister and the cathode, or ground, is connected to GPIO pin 17. If you&rsquo;re unfamiliar  with breadboards and breadboard diagrams this <a href="https://www.sciencebuddies.org/science-fair-projects/references/how-to-use-a-breadboard">breadboard tutorial </a> should be helpful.</p>
 <p>This section will first describe the main program that blinks an LED. After that it goes into detail about how the code that interacts with the BCM2835 works to control the I/O functions.</p>
@@ -580,13 +580,13 @@ The format of the value of the ranges property is an arbitrary number of triplet
                 <ul class="pager">
                     
                     <li class="previous">
-                        <a href="/post/shiftregistersevensegdisplay/" data-toggle="tooltip" data-placement="top" title="Raspberry Pi GPIO in Go and C - Using a Shift Register &amp; 7 Segment Display">&larr;
+                        <a href="https://youngkin.github.io/post/shiftregistersevensegdisplay/" data-toggle="tooltip" data-placement="top" title="Raspberry Pi GPIO in Go and C - Using a Shift Register &amp; 7 Segment Display">&larr;
                             Previous Post</a>
                     </li>
                     
                     
                     <li class="next">
-                        <a href="/post/spidotmatrixmodule/" data-toggle="tooltip" data-placement="top" title="Raspberry Pi GPIO - Using SPI to display arbitrary patterns on a MAX7219 Dot Matrix Display Module">Next
+                        <a href="https://youngkin.github.io/post/spidotmatrixmodule/" data-toggle="tooltip" data-placement="top" title="Raspberry Pi GPIO - Using SPI to display arbitrary patterns on a MAX7219 Dot Matrix Display Module">Next
                             Post &rarr;</a>
                     </li>
                     
@@ -619,7 +619,7 @@ The format of the value of the ranges property is an arbitrary number of triplet
                 
                 <section>
                     <hr class="hidden-sm hidden-xs">
-                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <h5><a href="https://youngkin.github.io/tags/">FEATURED TAGS</a></h5>
                     <div class="tags">
                         
                         
@@ -630,7 +630,7 @@ The format of the value of the ranges property is an arbitrary number of triplet
                         
                         
                         
-                        <a href="/tags/c" title="c">
+                        <a href="https://youngkin.github.io/tags/c" title="c">
                             c
                         </a>
                         
@@ -640,15 +640,6 @@ The format of the value of the ranges property is an arbitrary number of triplet
                         
                         
                         
-                        <a href="/tags/docker" title="docker">
-                            docker
-                        </a>
-                        
-                        
-                        
-                        <a href="/tags/elasticsearch" title="elasticsearch">
-                            elasticsearch
-                        </a>
                         
                         
                         
@@ -656,21 +647,19 @@ The format of the value of the ranges property is an arbitrary number of triplet
                         
                         
                         
-                        <a href="/tags/go" title="go">
+                        
+                        <a href="https://youngkin.github.io/tags/go" title="go">
                             go
                         </a>
                         
                         
                         
-                        <a href="/tags/gpio" title="gpio">
+                        <a href="https://youngkin.github.io/tags/gpio" title="gpio">
                             gpio
                         </a>
                         
                         
                         
-                        <a href="/tags/grafana" title="grafana">
-                            grafana
-                        </a>
                         
                         
                         
@@ -681,8 +670,7 @@ The format of the value of the ranges property is an arbitrary number of triplet
                         
                         
                         
-                        
-                        <a href="/tags/kubernetes" title="kubernetes">
+                        <a href="https://youngkin.github.io/tags/kubernetes" title="kubernetes">
                             kubernetes
                         </a>
                         
@@ -698,25 +686,13 @@ The format of the value of the ranges property is an arbitrary number of triplet
                         
                         
                         
-                        <a href="/tags/mysql" title="mysql">
-                            mysql
-                        </a>
                         
                         
                         
-                        <a href="/tags/networking" title="networking">
-                            networking
-                        </a>
                         
                         
                         
-                        <a href="/tags/prometheus" title="prometheus">
-                            prometheus
-                        </a>
-                        
-                        
-                        
-                        <a href="/tags/raspberry-pi" title="raspberry-pi">
+                        <a href="https://youngkin.github.io/tags/raspberry-pi" title="raspberry-pi">
                             raspberry-pi
                         </a>
                         
@@ -725,10 +701,6 @@ The format of the value of the ranges property is an arbitrary number of triplet
                         
                         
                         
-                        
-                        <a href="/tags/traefik" title="traefik">
-                            traefik
-                        </a>
                         
                         
                     </div>

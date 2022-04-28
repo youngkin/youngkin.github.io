@@ -44,23 +44,23 @@
     
     
 
-    <meta name="keyword"  content="Rich, Youngkin, Raspberry, Pi, Docker, Kubernetes, Go, Golang, GPIO, Microservice">
-    <link rel="shortcut icon" href="/img/favicon.ico">
+    <meta name="keyword"  content="Rich, Youngkin, Raspberry Pi, Docker, Kubernetes, Go, Golang, GPIO, Microservice">
+    <link rel="shortcut icon" href="https://youngkin.github.io/img/favicon.ico">
 
-    <title>Raspberry Pi GPIO in Go and C - LED Bar Graph-Rich Youngkin Topics in Software Engineering</title>
+    <title>Raspberry Pi GPIO in Go and C - LED Bar Graph-Raspberry Pi GPIO Programming and Software Developent</title>
 
-    <link rel="canonical" href="/post/ledbargraph/">
+    <link rel="canonical" href="https://youngkin.github.io/post/ledbargraph/">
 
-    <link rel="stylesheet" href="/css/iDisqus.min.css"/>
+    <link rel="stylesheet" href="https://youngkin.github.io/css/iDisqus.min.css"/>
 	
     
-    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://youngkin.github.io/css/bootstrap.min.css">
 
     
-    <link rel="stylesheet" href="/css/hux-blog.min.css">
+    <link rel="stylesheet" href="https://youngkin.github.io/css/hux-blog.min.css">
 
     
-    <link rel="stylesheet" href="/css/zanshang.css">
+    <link rel="stylesheet" href="https://youngkin.github.io/css/zanshang.css">
     
     
     <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
@@ -70,13 +70,13 @@
 
     
     
-    <script src="/js/jquery.min.js"></script>
+    <script src="https://youngkin.github.io/js/jquery.min.js"></script>
     
     
-    <script src="/js/bootstrap.min.js"></script>
+    <script src="https://youngkin.github.io/js/bootstrap.min.js"></script>
     
     
-    <script src="/js/hux-blog.min.js"></script>
+    <script src="https://youngkin.github.io/js/hux-blog.min.js"></script>
 
     
     
@@ -95,7 +95,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="/">Rich Youngkin</a>
+            <a class="navbar-brand" href="https://youngkin.github.io/">Rich Youngkin</a>
         </div>
 
         
@@ -104,42 +104,42 @@
             <div class="navbar-collapse">
                 <ul class="nav navbar-nav navbar-right">
                     <li>
-                        <a href="/">Home</a>
+                        <a href="https://youngkin.github.io/">Home</a>
                     </li>
                     
                         
                         <li>
-                            <a href="/categories/barbeque">barbeque</a>
+                            <a href="https://youngkin.github.io/categories/barbeque">barbeque</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/blog">blog</a>
+                            <a href="https://youngkin.github.io/categories/blog">blog</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/c">c</a>
+                            <a href="https://youngkin.github.io/categories/c">c</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/go">go</a>
+                            <a href="https://youngkin.github.io/categories/go">go</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/gpio">gpio</a>
+                            <a href="https://youngkin.github.io/categories/gpio">gpio</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/kubernetes">kubernetes</a>
+                            <a href="https://youngkin.github.io/categories/kubernetes">kubernetes</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/raspberry-pi">raspberry-pi</a>
+                            <a href="https://youngkin.github.io/categories/raspberry-pi">raspberry-pi</a>
                         </li>
                         
                     
                     
 		    
-                        <li><a href="/top/about/">ABOUT</a></li>
+                        <li><a href="https://youngkin.github.io/top/about/">ABOUT</a></li>
                     
 
                     
@@ -194,19 +194,19 @@
                 <div class="post-heading">
                     <div class="tags">
                         
-                        <a class="tag" href="/tags/raspberry-pi" title="raspberry-pi">
+                        <a class="tag" href="https://youngkin.github.io/tags/raspberry-pi" title="raspberry-pi">
                             raspberry-pi
                         </a>
                         
-                        <a class="tag" href="/tags/go" title="Go">
+                        <a class="tag" href="https://youngkin.github.io/tags/go" title="Go">
                             Go
                         </a>
                         
-                        <a class="tag" href="/tags/c" title="C">
+                        <a class="tag" href="https://youngkin.github.io/tags/c" title="C">
                             C
                         </a>
                         
-                        <a class="tag" href="/tags/gpio" title="GPIO">
+                        <a class="tag" href="https://youngkin.github.io/tags/gpio" title="GPIO">
                             GPIO
                         </a>
                         
@@ -263,7 +263,7 @@
 <p>This is the fourth article in a series that explores GPIO programming on a Raspberry Pi 3B+. It is a supplement to the <a href="https://docs.sunfounder.com/projects/raphael-kit/en/latest/1.1.3_led_bar_graph_c.html">Sunfounder LED Bar Graph</a> project. You can find the full series <a href="https://youngkin.github.io/categories/gpio/">here</a>. The code for the series can be found in my <a href="https://github.com/youngkin/gpio">gpio repository</a>.</p>
 <p>The <a href="https://docs.sunfounder.com/projects/raphael-kit/en/latest/1.1.3_led_bar_graph_c.html">Sunfounder LED Bar Graph</a> project provides very good documentation regarding how to set up the project as well as describing the C code. This article is more geared towards describing what an LED bar graph is, what it&rsquo;s good for, and how to control an LED bar graph using Go as well as C.</p>
 <p>LED bar graphs consist of several LEDs embedded into a single component. In the picture below the bar graph contains 10 LEDs arranged side-by-side.</p>
-<img style="border:1px solid white; padding: 15px;" src="/images/ledbargraph/bargraphimage.png" align="center" width="800"/>
+<img style="border:1px solid white; padding: 15px;" src="https://youngkin.github.io/images/ledbargraph/bargraphimage.png" align="center" width="800"/>
 <figcaption align="left"><center><i style="color:black;">LED Bar Graph</i></center></figcaption>
 LED bar graphs have several uses including:
 <ul>
@@ -286,7 +286,7 @@ LED bar graphs have several uses including:
 <li>You should also consider getting a <a href="https://www.amazon.com/dp/B082PRVRYR/ref=sspa_dk_detail_2?psc=1&amp;pd_rd_i=B082PRVRYR&amp;pd_rd_w=8mKhr&amp;pf_rd_p=887084a2-5c34-4113-a4f8-b7947847c308&amp;pd_rd_wg=e9psa&amp;pf_rd_r=S09F37DF2G5FW8B8GX4B&amp;pd_rd_r=c065c120-e60b-45e9-b93b-f581f048cf46&amp;spLa=ZW5jcnlwdGVkUXVhbGlmaWVyPUFCMzhUQ09COFI2VlMmZW5jcnlwdGVkSWQ9QTA5NjU2ODUxRDkxNEYwSTYwV09KJmVuY3J5cHRlZEFkSWQ9QTAxOTg1MTUyRUhEUlc2VzQ2VDQ4JndpZGdldE5hbWU9c3BfZGV0YWlsJmFjdGlvbj1jbGlja1JlZGlyZWN0JmRvTm90TG9nQ2xpY2s9dHJ1ZQ==">40 pin female to female with a T-Type adapter</a> to attach the GPIO outputs to the breadboard. You can use only jumper wires, but the T-Type adapter will make things easier and will help prevent damage to the GPIO pins on the Raspberry Pi. If you elect not to buy the 40 pin cable with T-Type adapter you&rsquo;ll need to buy <a href="https://www.amazon.com/SinLoon-Breadboard-Arduino-Circuit-40-Pack/dp/B08M3QLL3Q/ref=pd_sbs_7/143-0445142-7950409?pd_rd_w=sVLrc&amp;pf_rd_p=8b76d7a7-ab83-4ddc-a92d-e3e33bfdbf03&amp;pf_rd_r=CDM5TGJT03VKF0ZFB577&amp;pd_rd_r=8e58fd82-8503-41cf-b8f2-c78eaeb78d25&amp;pd_rd_wg=tT1U0&amp;pd_rd_i=B08M3QLL3Q&amp;psc=1">male-to-female jumper wires</a>. Buying all these things separately will cost more than a kit however.</li>
 </ul>
 <p><a href="https://www.amazon.com/dp/B06WP7169Y/ref=sspa_dk_detail_5?psc=1&amp;pd_rd_i=B06WP7169Y&amp;pd_rd_w=OZVyf&amp;pf_rd_p=887084a2-5c34-4113-a4f8-b7947847c308&amp;pd_rd_wg=0V0IH&amp;pf_rd_r=623YJTBQ2CN2B2GYXQG5&amp;pd_rd_r=faa61f0f-3aec-4cf0-8e7e-d44eb1b3b92f&amp;spLa=ZW5jcnlwdGVkUXVhbGlmaWVyPUEyUVlDQzMzVVZBMFYxJmVuY3J5cHRlZElkPUEwMzExNzk4MUhGSjFSS0VKTlBROCZlbmNyeXB0ZWRBZElkPUEwMzYwNjg2UUdMRU44N0YzNzIwJndpZGdldE5hbWU9c3BfZGV0YWlsJmFjdGlvbj1jbGlja1JlZGlyZWN0JmRvTm90TG9nQ2xpY2s9dHJ1ZQ==">Here&rsquo;s a simple kit that has all of the above</a>. I&rsquo;m finding the <a href="https://www.amazon.com/gp/product/B09BMVT4CB/ref=ppx_yo_dt_b_asin_title_o02_s00?ie=UTF8&amp;psc=1">Sunfounder Raspberry Pi Ultimate Starter Kit</a> especially useful. NOTE: The Ultimate Starter Kit and the Raphael Kit are the same product.</p>
-<img style="border:1px solid black" src="/images/pwmfordummies/RaphaelKit.png" align="center" width="600" height="300"/>
+<img style="border:1px solid black" src="https://youngkin.github.io/images/pwmfordummies/RaphaelKit.png" align="center" width="600" height="300"/>
 <figcaption align="left"><center><i style="color:black;">Sunfounder Ultimate Starter/Raphael kit</i></center></figcaption>
 <p>You will also need some basic C  and Go programming knowledge as well as familiarity with logging on to a Raspberry Pi terminal, or into the desktop GUI that comes with some OS versions. Depending on the approach you take, you may need to connect a keyboard and monitor to the Raspberry Pi. I simply SSH into the Pi. You&rsquo;ll also need familiarity with how to use an editor like vim or nano.</p>
 <p>To compile and run the C program you&rsquo;ll need the <a href="https://github.com/WiringPi">WiringPi</a> library. It&rsquo;s easy to get:</p>
@@ -309,9 +309,9 @@ Raspberry Pi Details:
 <p>For Go development you&rsquo;ll also need the <a href="https://github.com/stianeikeland/go-rpio">go-rpio</a> library.</p>
 <p>If you want to veer away from the cookbook style of the Sunfounder docs you&rsquo;ll need some basic knowledge of Linux . For example, I won&rsquo;t be explaining what <strong>root privileges</strong> are.</p>
 <h2 id="setup-and-code">Setup and Code</h2>
-<img style="border:1px solid black" src="/images/ledbargraph/breadboard.png" align="center" width="600" height="300"/>
+<img style="border:1px solid black" src="https://youngkin.github.io/images/ledbargraph/breadboard.png" align="center" width="600" height="300"/>
 <figcaption align="left"><center><i style="color:black;">Sunfounder wiring diagram</i></center></figcaption>
-<img style="border:1px solid black" src="/images/ledbargraph/ledbargraph.png" align="center" width="600" height="300"/>
+<img style="border:1px solid black" src="https://youngkin.github.io/images/ledbargraph/ledbargraph.png" align="center" width="600" height="300"/>
 <figcaption align="left"><center><i style="color:black;">Actual wiring</i></center></figcaption>
 <p>The breadboard should be wired as illustrated in the above diagram. If you&rsquo;re unfamiliar  with breadboards and breadboard diagrams this <a href="https://www.sciencebuddies.org/science-fair-projects/references/how-to-use-a-breadboard">breadboard tutorial </a> should be helpful.</p>
 <p>One thing to note about the wiring diagram is that the resistors are all attached to the breadboard&rsquo;s positive power bus on one side and the positive terminals of the LED bar graph on the other (<em>Label Side</em>). This means the LED bar graph is always getting power. In order for power to flow through a component one of the component&rsquo;s terminals must be receiving power and the other must either not be receiving power or be connected to a negative or ground terminal. As noted, the resistors are directly attached to the power bus. In this diagram the GPIO pins are connected to the bar graph&rsquo;s negative terminals. GPIO pins are set to either <strong>HIGH</strong> or <strong>LOW</strong> when in output mode <em>(i.e., the pins are written to)</em>. <strong>HIGH</strong> means voltage is flowing to the pin, <strong>LOW</strong> means no voltage is flowing to the pin. Since completing a circuit requires one side of the circuit to have zero volts, and the bar graph is always receiving power via the power bus, the GPIO pins must be set to <strong>LOW</strong> voltage for current to flow and the LEDs to illuminate. In the code sections below, the LEDs are set to <strong>LOW</strong> when the LEDs should be illuminated.</p>
@@ -376,13 +376,13 @@ Raspberry Pi Details:
                 <ul class="pager">
                     
                     <li class="previous">
-                        <a href="/post/sunfoundergpionotesrgbled/" data-toggle="tooltip" data-placement="top" title="Raspberry Pi GPIO in Go and C - RGB LED">&larr;
+                        <a href="https://youngkin.github.io/post/sunfoundergpionotesrgbled/" data-toggle="tooltip" data-placement="top" title="Raspberry Pi GPIO in Go and C - RGB LED">&larr;
                             Previous Post</a>
                     </li>
                     
                     
                     <li class="next">
-                        <a href="/post/shiftregistersevensegdisplay/" data-toggle="tooltip" data-placement="top" title="Raspberry Pi GPIO in Go and C - Using a Shift Register &amp; 7 Segment Display">Next
+                        <a href="https://youngkin.github.io/post/shiftregistersevensegdisplay/" data-toggle="tooltip" data-placement="top" title="Raspberry Pi GPIO in Go and C - Using a Shift Register &amp; 7 Segment Display">Next
                             Post &rarr;</a>
                     </li>
                     
@@ -415,7 +415,7 @@ Raspberry Pi Details:
                 
                 <section>
                     <hr class="hidden-sm hidden-xs">
-                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <h5><a href="https://youngkin.github.io/tags/">FEATURED TAGS</a></h5>
                     <div class="tags">
                         
                         
@@ -426,7 +426,7 @@ Raspberry Pi Details:
                         
                         
                         
-                        <a href="/tags/c" title="c">
+                        <a href="https://youngkin.github.io/tags/c" title="c">
                             c
                         </a>
                         
@@ -436,15 +436,6 @@ Raspberry Pi Details:
                         
                         
                         
-                        <a href="/tags/docker" title="docker">
-                            docker
-                        </a>
-                        
-                        
-                        
-                        <a href="/tags/elasticsearch" title="elasticsearch">
-                            elasticsearch
-                        </a>
                         
                         
                         
@@ -452,21 +443,19 @@ Raspberry Pi Details:
                         
                         
                         
-                        <a href="/tags/go" title="go">
+                        
+                        <a href="https://youngkin.github.io/tags/go" title="go">
                             go
                         </a>
                         
                         
                         
-                        <a href="/tags/gpio" title="gpio">
+                        <a href="https://youngkin.github.io/tags/gpio" title="gpio">
                             gpio
                         </a>
                         
                         
                         
-                        <a href="/tags/grafana" title="grafana">
-                            grafana
-                        </a>
                         
                         
                         
@@ -477,8 +466,7 @@ Raspberry Pi Details:
                         
                         
                         
-                        
-                        <a href="/tags/kubernetes" title="kubernetes">
+                        <a href="https://youngkin.github.io/tags/kubernetes" title="kubernetes">
                             kubernetes
                         </a>
                         
@@ -494,25 +482,13 @@ Raspberry Pi Details:
                         
                         
                         
-                        <a href="/tags/mysql" title="mysql">
-                            mysql
-                        </a>
                         
                         
                         
-                        <a href="/tags/networking" title="networking">
-                            networking
-                        </a>
                         
                         
                         
-                        <a href="/tags/prometheus" title="prometheus">
-                            prometheus
-                        </a>
-                        
-                        
-                        
-                        <a href="/tags/raspberry-pi" title="raspberry-pi">
+                        <a href="https://youngkin.github.io/tags/raspberry-pi" title="raspberry-pi">
                             raspberry-pi
                         </a>
                         
@@ -521,10 +497,6 @@ Raspberry Pi Details:
                         
                         
                         
-                        
-                        <a href="/tags/traefik" title="traefik">
-                            traefik
-                        </a>
                         
                         
                     </div>
