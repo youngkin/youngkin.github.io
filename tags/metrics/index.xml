@@ -1,25 +1,19 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Metrics on Rich Youngkin</title>
+    <title>Metrics on Raspberry Pi Programming</title>
     <link>https://youngkin.github.io/tags/metrics/</link>
-    <description>Recent content in Metrics on Rich Youngkin</description>
+    <description>Recent content in Metrics on Raspberry Pi Programming</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 26 Aug 2020 13:06:44 -0600</lastBuildDate>
-    
-	<atom:link href="https://youngkin.github.io/tags/metrics/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Wed, 26 Aug 2020 13:06:44 -0600</lastBuildDate><atom:link href="https://youngkin.github.io/tags/metrics/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Kubernetes Application Monitoring on a Raspberry Pi Cluster</title>
       <link>https://youngkin.github.io/post/kuberenetes-application-monitoring-on-a-reaspberry-pi-cluster/</link>
       <pubDate>Wed, 26 Aug 2020 13:06:44 -0600</pubDate>
       
       <guid>https://youngkin.github.io/post/kuberenetes-application-monitoring-on-a-reaspberry-pi-cluster/</guid>
-      <description>Photo by Andres Dallimonti on Unsplash
- The full text of this article can be found on Medium  This article is about monitoring applications deployed to a Kubernetes cluster running on Raspberry Pis, specifically the monitoring infrastructure.
-It’s important to note that while the focus of this article is the Raspberry Pi platform, much of what’s described, except for the ARM specific areas, is applicable to other hardware platforms.</description>
+      <description>This article is about monitoring applications deployed to Kubernetes running on Raspberry Pis.</description>
     </item>
     
   </channel>

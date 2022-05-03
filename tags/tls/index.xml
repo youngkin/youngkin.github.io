@@ -1,23 +1,19 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>TLS on Rich Youngkin</title>
+    <title>TLS on Raspberry Pi Programming</title>
     <link>https://youngkin.github.io/tags/tls/</link>
-    <description>Recent content in TLS on Rich Youngkin</description>
+    <description>Recent content in TLS on Raspberry Pi Programming</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 20 Sep 2020 13:09:42 -0600</lastBuildDate>
-    
-	<atom:link href="https://youngkin.github.io/tags/tls/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Sun, 20 Sep 2020 13:09:42 -0600</lastBuildDate><atom:link href="https://youngkin.github.io/tags/tls/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Create Secure Clients and Servers in Golang Using HTTPS</title>
       <link>https://youngkin.github.io/post/gohttpsclientserver/</link>
       <pubDate>Sun, 20 Sep 2020 13:09:42 -0600</pubDate>
       
       <guid>https://youngkin.github.io/post/gohttpsclientserver/</guid>
-      <description>Overview The purpose of this article is to show how to write secure web services and clients using Go and HTTPS. In researching how to accomplish this I came across numerous articles and gists. However, none of them provided the complete picture I needed to implement a robust client or server. Most of them only provided terse code examples with equally terse examples regarding how to create the certificates needed for the code to work.</description>
+      <description>Create secure web clients and services in Golang using HTTPS</description>
     </item>
     
   </channel>

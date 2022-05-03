@@ -1,24 +1,19 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Cluster on Rich Youngkin</title>
+    <title>Cluster on Raspberry Pi Programming</title>
     <link>https://youngkin.github.io/tags/cluster/</link>
-    <description>Recent content in Cluster on Rich Youngkin</description>
+    <description>Recent content in Cluster on Raspberry Pi Programming</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 26 Aug 2020 13:01:02 -0600</lastBuildDate>
-    
-	<atom:link href="https://youngkin.github.io/tags/cluster/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Wed, 26 Aug 2020 13:01:02 -0600</lastBuildDate><atom:link href="https://youngkin.github.io/tags/cluster/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>How to Set Up a Raspberry Pi Cluster</title>
       <link>https://youngkin.github.io/post/how_to_set_up_a_raspberry_pi_cluster/</link>
       <pubDate>Wed, 26 Aug 2020 13:01:02 -0600</pubDate>
       
       <guid>https://youngkin.github.io/post/how_to_set_up_a_raspberry_pi_cluster/</guid>
-      <description>Photo by Jonathan on Unsplash
- The full text of this article can be found on Medium.  This article covers what you need to know to setup your own Raspberry Pi cluster, including you what you need to buy, how to install the OS and configure the Raspberry Pis, how to set up networking, and other things you need to know to sinplify ongoing administration and maintenance of the cluster.</description>
+      <description>This article tells you what you need to buy, the OS install, and the networking setup to create a Raspberry Pi cluster.</description>
     </item>
     
   </channel>

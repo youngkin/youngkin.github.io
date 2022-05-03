@@ -1,23 +1,19 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>C on Rich Youngkin</title>
+    <title>C on Raspberry Pi Programming</title>
     <link>https://youngkin.github.io/categories/c/</link>
-    <description>Recent content in C on Rich Youngkin</description>
+    <description>Recent content in C on Raspberry Pi Programming</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 23 Apr 2022 08:08:42 -0600</lastBuildDate>
-    
-	<atom:link href="https://youngkin.github.io/categories/c/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Sat, 23 Apr 2022 08:08:42 -0600</lastBuildDate><atom:link href="https://youngkin.github.io/categories/c/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Raspberry Pi GPIO - Using SPI to display arbitrary patterns on a MAX7219 Dot Matrix Display Module</title>
       <link>https://youngkin.github.io/post/spidotmatrixmodule/</link>
       <pubDate>Sat, 23 Apr 2022 08:08:42 -0600</pubDate>
       
       <guid>https://youngkin.github.io/post/spidotmatrixmodule/</guid>
-      <description></description>
+      <description>Learn how to use SPI by directly programming the BCM2835 to control GPIO pins</description>
     </item>
     
     <item>
@@ -26,7 +22,52 @@
       <pubDate>Tue, 05 Apr 2022 13:13:42 -0600</pubDate>
       
       <guid>https://youngkin.github.io/post/gpioprogramming/</guid>
-      <description></description>
+      <description>Learn how to directly program the BCM2835 on a Raspberry Pi using its registers to perform tasks such as writing to a GPIO pin or using advanced capabilites such as SPI.</description>
+    </item>
+    
+    <item>
+      <title>Raspberry Pi GPIO in Go and C - Using a Shift Register &amp; 7 Segment Display</title>
+      <link>https://youngkin.github.io/post/shiftregistersevensegdisplay/</link>
+      <pubDate>Fri, 19 Nov 2021 13:13:42 -0600</pubDate>
+      
+      <guid>https://youngkin.github.io/post/shiftregistersevensegdisplay/</guid>
+      <description>What are shift registers &amp; 7-Segment displays and how to program them on a Raspberry Pi using C &amp; Golang</description>
+    </item>
+    
+    <item>
+      <title>Raspberry Pi GPIO in Go and C - LED Bar Graph</title>
+      <link>https://youngkin.github.io/post/ledbargraph/</link>
+      <pubDate>Mon, 08 Nov 2021 13:13:42 -0600</pubDate>
+      
+      <guid>https://youngkin.github.io/post/ledbargraph/</guid>
+      <description>How to control an LED bar graph in Go and C</description>
+    </item>
+    
+    <item>
+      <title>Raspberry Pi GPIO in Go and C - RGB LED</title>
+      <link>https://youngkin.github.io/post/sunfoundergpionotesrgbled/</link>
+      <pubDate>Mon, 01 Nov 2021 13:13:42 -0600</pubDate>
+      
+      <guid>https://youngkin.github.io/post/sunfoundergpionotesrgbled/</guid>
+      <description>Use Pulse Width Modulation (PWM) on a Raspberry Pi to drive an RGB LED in Go and C</description>
+    </item>
+    
+    <item>
+      <title>Pulse Width Modulation for Dummies</title>
+      <link>https://youngkin.github.io/post/pulsewidthmodulationraspberrypi/</link>
+      <pubDate>Thu, 21 Oct 2021 13:13:42 -0600</pubDate>
+      
+      <guid>https://youngkin.github.io/post/pulsewidthmodulationraspberrypi/</guid>
+      <description>An overview of PWM, with code examples, on the Raspberry Pi.</description>
+    </item>
+    
+    <item>
+      <title>Raspberry Pi GPIO in Go and C - Blinking LED</title>
+      <link>https://youngkin.github.io/post/sunfoundergpionotesled/</link>
+      <pubDate>Fri, 01 Oct 2021 13:13:42 -0600</pubDate>
+      
+      <guid>https://youngkin.github.io/post/sunfoundergpionotesled/</guid>
+      <description>How to use the Raspberry Pi&#39;s GPIO pins to cause an LED to blink</description>
     </item>
     
   </channel>

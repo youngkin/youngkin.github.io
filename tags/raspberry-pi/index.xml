@@ -1,23 +1,19 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Raspberry Pi on Rich Youngkin</title>
+    <title>Raspberry Pi on Raspberry Pi Programming</title>
     <link>https://youngkin.github.io/tags/raspberry-pi/</link>
-    <description>Recent content in Raspberry Pi on Rich Youngkin</description>
+    <description>Recent content in Raspberry Pi on Raspberry Pi Programming</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 23 Apr 2022 08:08:42 -0600</lastBuildDate>
-    
-	<atom:link href="https://youngkin.github.io/tags/raspberry-pi/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Sat, 23 Apr 2022 08:08:42 -0600</lastBuildDate><atom:link href="https://youngkin.github.io/tags/raspberry-pi/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Raspberry Pi GPIO - Using SPI to display arbitrary patterns on a MAX7219 Dot Matrix Display Module</title>
       <link>https://youngkin.github.io/post/spidotmatrixmodule/</link>
       <pubDate>Sat, 23 Apr 2022 08:08:42 -0600</pubDate>
       
       <guid>https://youngkin.github.io/post/spidotmatrixmodule/</guid>
-      <description></description>
+      <description>Learn how to use SPI by directly programming the BCM2835 to control GPIO pins</description>
     </item>
     
     <item>
@@ -26,7 +22,7 @@
       <pubDate>Tue, 05 Apr 2022 13:13:42 -0600</pubDate>
       
       <guid>https://youngkin.github.io/post/gpioprogramming/</guid>
-      <description></description>
+      <description>Learn how to directly program the BCM2835 on a Raspberry Pi using its registers to perform tasks such as writing to a GPIO pin or using advanced capabilites such as SPI.</description>
     </item>
     
     <item>
@@ -35,7 +31,7 @@
       <pubDate>Fri, 19 Nov 2021 13:13:42 -0600</pubDate>
       
       <guid>https://youngkin.github.io/post/shiftregistersevensegdisplay/</guid>
-      <description></description>
+      <description>What are shift registers &amp; 7-Segment displays and how to program them on a Raspberry Pi using C &amp; Golang</description>
     </item>
     
     <item>
@@ -44,7 +40,7 @@
       <pubDate>Mon, 08 Nov 2021 13:13:42 -0600</pubDate>
       
       <guid>https://youngkin.github.io/post/ledbargraph/</guid>
-      <description></description>
+      <description>How to control an LED bar graph in Go and C</description>
     </item>
     
     <item>
@@ -53,7 +49,7 @@
       <pubDate>Mon, 01 Nov 2021 13:13:42 -0600</pubDate>
       
       <guid>https://youngkin.github.io/post/sunfoundergpionotesrgbled/</guid>
-      <description></description>
+      <description>Use Pulse Width Modulation (PWM) on a Raspberry Pi to drive an RGB LED in Go and C</description>
     </item>
     
     <item>
@@ -62,7 +58,7 @@
       <pubDate>Thu, 21 Oct 2021 13:13:42 -0600</pubDate>
       
       <guid>https://youngkin.github.io/post/pulsewidthmodulationraspberrypi/</guid>
-      <description>&lt;p&gt;This is the second article in a series that explores &lt;a href=&#34;https://youngkin.github.io/categories/gpio/&#34;&gt;GPIO programming on a Raspberry Pi 3B+&lt;/a&gt;. This article provides some details about hardware and software based PWM on the Raspberry Pi, specifically the 3B+ with the &lt;a href=&#34;https://www.raspberrypi.org/app/uploads/2012/02/BCM2835-ARM-Peripherals.pdf&#34;&gt;Broadcomm BCM2835 board&lt;/a&gt;. This article has an accompanying application, &lt;a href=&#34;https://github.com/youngkin/gpio&#34;&gt;PWM Explorer&lt;/a&gt;&lt;sup id=&#34;fnref:1&#34;&gt;&lt;a href=&#34;#fn:1&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;1&lt;/a&gt;&lt;/sup&gt;, that can be used to experiment with PWM settings and capabilities.&lt;/p&gt;</description>
+      <description>An overview of PWM, with code examples, on the Raspberry Pi.</description>
     </item>
     
     <item>
@@ -71,7 +67,7 @@
       <pubDate>Fri, 01 Oct 2021 13:13:42 -0600</pubDate>
       
       <guid>https://youngkin.github.io/post/sunfoundergpionotesled/</guid>
-      <description>&lt;p&gt;This is the first article in a series that explores GPIO programming on a Raspberry Pi 3B+. You can find the full series &lt;a href=&#34;../../categories/gpio&#34;&gt;here&lt;/a&gt;. It is a supplement to the &lt;a href=&#34;https://docs.sunfounder.com/projects/raphael-kit/en/latest/1.1.1_blinking_led_c.html&#34;&gt;Sunfounder Blinking LED project&lt;/a&gt;. The code samples will be in Go and C.&lt;/p&gt;</description>
+      <description>How to use the Raspberry Pi&#39;s GPIO pins to cause an LED to blink</description>
     </item>
     
     <item>
@@ -80,8 +76,7 @@
       <pubDate>Wed, 26 Aug 2020 13:07:25 -0600</pubDate>
       
       <guid>https://youngkin.github.io/post/how-to-install-mariadb-an-a-raspberry-pi/</guid>
-      <description>This article covers how to install and configure MariaDB, a feature-equivalent alternative to MySQL, on a Raspberry Pi. Installing is relatively straightforward. Configuring the database is somewhat more involved but still quite manageable.
-The full text of this article can be found on Medium  This is the sixth and final article in the Develop and Deploy Kubernetes Applications on a Raspberry Pi Cluster series. It marks the transition from a purely Raspberry Pi focus to software development more generally.</description>
+      <description>This article covers installing MariaDB, a MySQL compatible DBMS, on a Raspberry Pi</description>
     </item>
     
     <item>
@@ -90,9 +85,7 @@ The full text of this article can be found on Medium  This is the sixth and fina
       <pubDate>Wed, 26 Aug 2020 13:06:44 -0600</pubDate>
       
       <guid>https://youngkin.github.io/post/kuberenetes-application-monitoring-on-a-reaspberry-pi-cluster/</guid>
-      <description>Photo by Andres Dallimonti on Unsplash
- The full text of this article can be found on Medium  This article is about monitoring applications deployed to a Kubernetes cluster running on Raspberry Pis, specifically the monitoring infrastructure.
-It’s important to note that while the focus of this article is the Raspberry Pi platform, much of what’s described, except for the ARM specific areas, is applicable to other hardware platforms.</description>
+      <description>This article is about monitoring applications deployed to Kubernetes running on Raspberry Pis.</description>
     </item>
     
     <item>
@@ -101,8 +94,7 @@ It’s important to note that while the focus of this article is the Raspberry P
       <pubDate>Wed, 26 Aug 2020 13:05:37 -0600</pubDate>
       
       <guid>https://youngkin.github.io/post/install-kuberenetes-ingress-on-a-raspberry-pi-cluster/</guid>
-      <description>Photo by Tianshu Liu on Unsplash
- The full text of this article can be found on Medium  This is the fourth article in the series described in Develop and Deploy Kubernetes Applications on a Raspberry Pi Cluster. The previous article described how to install Kubernetes on a Raspberry Pi cluster. This article is about Kubernetes Ingress. The next article, Kubernetes Application Monitoring on a Raspberry Pi Cluster, covers setting up Prometheus, Grafana, and a Elasticsearch, Fluentd, and Kibana (EFK) stack on the cluster.</description>
+      <description>This article describes how to setup Kubernetes Ingress using the Traefik ingress controller.</description>
     </item>
     
     <item>
@@ -111,9 +103,7 @@ It’s important to note that while the focus of this article is the Raspberry P
       <pubDate>Wed, 26 Aug 2020 13:04:50 -0600</pubDate>
       
       <guid>https://youngkin.github.io/post/install-kubernetes-on-a-respberry-pi-cluster/</guid>
-      <description>Photo by Flavio Gasperini on Unsplash
- The full text of this article can be found on Medium  This is the third article in the series described in Develop and Deploy Kubernetes Applications on a Raspberry Pi Cluster. The previous article covered setting up a Raspberry Pi cluster. The next article is How to Install Kubernetes Ingress on a Raspberry Pi Cluster.
-This article is where the rubber meets the road, getting a fully operational, multi-node, Kubernetes cluster up and running on a Raspberry Pi cluster.</description>
+      <description>Want to install Kubernetes on a Raspberry Pi cluster? Read on to find out how.</description>
     </item>
     
     <item>
@@ -122,8 +112,7 @@ This article is where the rubber meets the road, getting a fully operational, mu
       <pubDate>Wed, 26 Aug 2020 13:01:02 -0600</pubDate>
       
       <guid>https://youngkin.github.io/post/how_to_set_up_a_raspberry_pi_cluster/</guid>
-      <description>Photo by Jonathan on Unsplash
- The full text of this article can be found on Medium.  This article covers what you need to know to setup your own Raspberry Pi cluster, including you what you need to buy, how to install the OS and configure the Raspberry Pis, how to set up networking, and other things you need to know to sinplify ongoing administration and maintenance of the cluster.</description>
+      <description>This article tells you what you need to buy, the OS install, and the networking setup to create a Raspberry Pi cluster.</description>
     </item>
     
     <item>
@@ -132,7 +121,7 @@ This article is where the rubber meets the road, getting a fully operational, mu
       <pubDate>Wed, 26 Aug 2020 01:01:31 -0600</pubDate>
       
       <guid>https://youngkin.github.io/post/develop_and_deploy_kubernetes_applications_on_a_raspberry_pi_cluster/</guid>
-      <description>&lt;p&gt;Want to set up a Kubernetes lab, but don&amp;rsquo;t want use Minikube or spend a lot of money on hardware. This is the first post in a series that describes how to set up a complete Kubernetes cluster on a cluster of Raspberry Pis. This will include topics such as setting up a logging infrastructure, monitoring, Ingress, and other platform level capabilities.&lt;/p&gt;</description>
+      <description>This is the first post in a series that describes how to set up a Kubernetes cluster on a cluster of Raspberry Pis.</description>
     </item>
     
   </channel>
