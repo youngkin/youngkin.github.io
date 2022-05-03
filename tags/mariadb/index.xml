@@ -13,7 +13,20 @@
       <pubDate>Wed, 26 Aug 2020 13:07:25 -0600</pubDate>
       
       <guid>https://youngkin.github.io/post/how-to-install-mariadb-an-a-raspberry-pi/</guid>
-      <description>This article covers installing MariaDB, a MySQL compatible DBMS, on a Raspberry Pi</description>
+      <description>&lt;p&gt;This article covers how to install and configure &lt;a href=&#34;https://mariadb.org/&#34;&gt;MariaDB&lt;/a&gt;, a feature-equivalent alternative to MySQL, on a Raspberry Pi. Installing is relatively straightforward. Configuring the database is somewhat more involved but still quite manageable.&lt;/p&gt;
+&lt;h2 id=&#34;the-full-text-of-this-article-can-be-found-on-mediumhttpsmediumcombetter-programminghow-to-install-mysql-on-a-raspberry-pi-ad3f69b4a094sourcefriends_linkskd4fdd7c2a467b2ac2e6beaded27365bd&#34;&gt;The full text of this article can be found on &lt;a href=&#34;https://medium.com/better-programming/how-to-install-mysql-on-a-raspberry-pi-ad3f69b4a094?source=friends_link&amp;amp;sk=d4fdd7c2a467b2ac2e6beaded27365bd&#34;&gt;Medium&lt;/a&gt;&lt;/h2&gt;
+&lt;hr&gt;
+&lt;p&gt;This is the sixth and final article in the &lt;a href=&#34;https://medium.com/better-programming/develop-and-deploy-kubernetes-applications-on-a-raspberry-pi-cluster-fbd4d97a904c&#34;&gt;Develop and Deploy Kubernetes Applications on a Raspberry Pi Cluster&lt;/a&gt; series. It marks the transition from a purely Raspberry Pi focus to software development more generally. With the installation of a database, we will have a full-featured platform that meets our requirements for application development and deployment.&lt;/p&gt;
+&lt;h2 id=&#34;articles-in-the-series&#34;&gt;Articles in the Series&lt;/h2&gt;
+&lt;p&gt;The full set of articles are:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://medium.com/better-programming/setup-a-raspberry-pi-cluster-ff484a1c6be9&#34;&gt;Set up a Raspberry Pi Cluster&lt;/a&gt; : Describes how to set up and configure a group of Raspberry Pis into a cluster. This includes defining the networking within the cluster and to an external network.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://medium.com/better-programming/install-kubernetes-on-a-raspberry-pi-cluster-49ad9a762d08&#34;&gt;Install Kubernetes on a Raspberry Pi Cluster&lt;/a&gt;: This includes installing &amp;amp; configuring Kubernetes as well as building and deploying a simple service. This latter step involves a minimal application that can be used to test the Kubernetes cluster as well as simple external network access to the application.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://medium.com/@RichYoungkin/install-kubernetes-ingress-on-a-raspberry-pi-cluster-e8d5086c5009&#34;&gt;Install Kubernetes Ingress on a Raspberry Pi Cluster&lt;/a&gt;: Ingress is a useful way to support external access to services inside the cluster. In this article I’ll be describe how to install, configure, and test Traefik as an Ingress Controller. This article also includes installing and configuring Helm. Helm will be used to deploy Traefik. Helm will also be used in later articles in the series.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://medium.com/better-programming/kubernetes-application-monitoring-on-a-raspberry-pi-cluster-fa8f2762b00c&#34;&gt;Kubernetes Application Monitoring on a Raspberry Pi Cluster&lt;/a&gt; — Install Prometheus, Grafana, and an EFK (Elasticsearch/Fluentd/Kibana) as a monitoring stack. It also covers installing Telegraf on the cluster to monitor machine level metrics for hosts on the cluster. E.g., CPU load and temperature, disk usage&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://medium.com/better-programming/how-to-install-mysql-on-a-raspberry-pi-ad3f69b4a094&#34;&gt;How to Install MariaDB on a Raspberry Pi&lt;/a&gt; — The title says it all. One thing to note, MariaDB is a drop-in replacement for MySQL&lt;/li&gt;
+&lt;/ul&gt;
+</description>
     </item>
     
   </channel>
