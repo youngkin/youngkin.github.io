@@ -3,62 +3,6 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>https://youngkin.github.io/post/tinylettertest3/</loc>
-    <lastmod>2022-05-03T08:08:42-06:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
-    <loc>https://youngkin.github.io/post/tinylettertest4/</loc>
-    <lastmod>2022-05-03T08:08:42-06:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
-    <loc>https://youngkin.github.io/categories/</loc>
-    <lastmod>2022-05-03T08:08:42-06:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
-    <loc>https://youngkin.github.io/post/</loc>
-    <lastmod>2022-05-03T08:08:42-06:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
-    <loc>https://youngkin.github.io/tags/raspberry-pi/</loc>
-    <lastmod>2022-05-03T08:08:42-06:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
-    <loc>https://youngkin.github.io/categories/raspberry-pi/</loc>
-    <lastmod>2022-05-03T08:08:42-06:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
-    <loc>https://youngkin.github.io/</loc>
-    <lastmod>2022-05-03T08:08:42-06:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
-    <loc>https://youngkin.github.io/tags/</loc>
-    <lastmod>2022-05-03T08:08:42-06:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
     <loc>https://youngkin.github.io/tags/c/</loc>
     <lastmod>2022-04-23T08:08:42-06:00</lastmod>
     <changefreq>weekly</changefreq>
@@ -67,6 +11,13 @@
   
   <url>
     <loc>https://youngkin.github.io/categories/c/</loc>
+    <lastmod>2022-04-23T08:08:42-06:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://youngkin.github.io/categories/</loc>
     <lastmod>2022-04-23T08:08:42-06:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
@@ -87,7 +38,42 @@
   </url>
   
   <url>
+    <loc>https://youngkin.github.io/post/</loc>
+    <lastmod>2022-04-23T08:08:42-06:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://youngkin.github.io/tags/raspberry-pi/</loc>
+    <lastmod>2022-04-23T08:08:42-06:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://youngkin.github.io/categories/raspberry-pi/</loc>
+    <lastmod>2022-04-23T08:08:42-06:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
     <loc>https://youngkin.github.io/post/spidotmatrixmodule/</loc>
+    <lastmod>2022-04-23T08:08:42-06:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://youngkin.github.io/</loc>
+    <lastmod>2022-04-23T08:08:42-06:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://youngkin.github.io/tags/</loc>
     <lastmod>2022-04-23T08:08:42-06:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
