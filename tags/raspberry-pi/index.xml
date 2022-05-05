@@ -8,14 +8,15 @@
     <language>en-us</language>
     <lastBuildDate>Tue, 03 May 2022 08:08:42 -0600</lastBuildDate><atom:link href="https://youngkin.github.io/tags/raspberry-pi/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Testing Subscriptions using TinyLetter and Zapier</title>
-      <link>https://youngkin.github.io/post/testtinyletterzapier/</link>
+      <title>2nd Take on Testing Subscriptions using TinyLetter and Zapier</title>
+      <link>https://youngkin.github.io/post/testtinyletter2/</link>
       <pubDate>Tue, 03 May 2022 08:08:42 -0600</pubDate>
       
-      <guid>https://youngkin.github.io/post/testtinyletterzapier/</guid>
-      <description>&lt;p&gt;Do TinyLetter/Zapier subscriptions really work?&lt;/p&gt;
+      <guid>https://youngkin.github.io/post/testtinyletter2/</guid>
+      <description>&lt;p&gt;Do TinyLetter/Zapier subscriptions really work with HTML output?&lt;/p&gt;
 &lt;h2 id=&#34;overview&#34;&gt;Overview&lt;/h2&gt;
-&lt;p&gt;Testing &lt;strong&gt;TinyLetter/Zapier&lt;/strong&gt; subscription/newsletter service by adding this dummy article and verifying that the newsletter shows up in a subscriber&amp;rsquo;s inbox and that all newsletter links work.&lt;/p&gt;</description>
+&lt;p&gt;Testing &lt;strong&gt;TinyLetter/Zapier&lt;/strong&gt; subscription/newsletter service by adding this dummy article and verifying that the newsletter shows up in a subscriber&amp;rsquo;s inbox and that all newsletter links work.&lt;/p&gt;
+&lt;h3 id=&#34;2nd-level-header&#34;&gt;2nd level header&lt;/h3&gt;</description>
     </item>
     
     <item>
