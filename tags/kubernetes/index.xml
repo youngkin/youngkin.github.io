@@ -13,30 +13,7 @@
       <pubDate>Wed, 26 Aug 2020 13:06:44 -0600</pubDate>
       
       <guid>https://youngkin.github.io/post/kuberenetes-application-monitoring-on-a-reaspberry-pi-cluster/</guid>
-      <description>&lt;blockquote&gt;
-&lt;p&gt;Photo by &lt;a href=&#34;https://unsplash.com/@dallimonti?utm_source=unsplash&amp;amp;utm_medium=referral&amp;amp;utm_content=creditCopyText&#34;&gt;Andres Dallimonti&lt;/a&gt; on &lt;a href=&#34;https://unsplash.com/s/photos/sailor?utm_source=unsplash&amp;amp;utm_medium=referral&amp;amp;utm_content=creditCopyText&#34;&gt;Unsplash&lt;/a&gt;&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;h2 id=&#34;the-full-text-of-this-article-can-be-found-on-mediumhttpsmediumcombetter-programmingkubernetes-application-monitoring-on-a-raspberry-pi-cluster-fa8f2762b00csourcefriends_linksk81553ee8e61a841e43143a8e73c1bb9e&#34;&gt;The full text of this article can be found on &lt;a href=&#34;https://medium.com/better-programming/kubernetes-application-monitoring-on-a-raspberry-pi-cluster-fa8f2762b00c?source=friends_link&amp;amp;sk=81553ee8e61a841e43143a8e73c1bb9e&#34;&gt;Medium&lt;/a&gt;&lt;/h2&gt;
-&lt;hr&gt;
-&lt;p&gt;This article is about monitoring applications deployed to a Kubernetes cluster running on Raspberry Pis, specifically the monitoring infrastructure.&lt;/p&gt;
-&lt;p&gt;It’s important to note that while the focus of this article is the Raspberry Pi platform, much of what’s described, except for the ARM specific areas, is applicable to other hardware platforms.&lt;/p&gt;
-&lt;p&gt;This is the fifth article in the &lt;a href=&#34;https://medium.com/better-programming/develop-and-deploy-kubernetes-applications-on-a-raspberry-pi-cluster-fbd4d97a904c?source=friends_link&amp;amp;sk=df18f8cdfc8b90aa25b2b6676346d1ec&#34;&gt;Develop and Deploy Kubernetes Applications on a Raspberry Pi Cluster&lt;/a&gt; series. The previous article, &lt;a href=&#34;https://medium.com/better-programming/install-kubernetes-ingress-on-a-raspberry-pi-cluster-e8d5086c5009?source=friends_link&amp;amp;sk=148c7e4d0c276bad20fa7f2ce902736e&#34;&gt;Installing Kubernetes Ingress on a Raspberry Pi Cluster&lt;/a&gt; is a prerequisite and must be completed before performing the steps described in this article.&lt;/p&gt;
-&lt;h2 id=&#34;overview&#34;&gt;Overview&lt;/h2&gt;
-&lt;p&gt;Any production-grade application needs a good monitoring stack. For most applications, this will include a mix of logging and metrics.&lt;/p&gt;
-&lt;p&gt;Metrics are recorded by an application to track things like request rate, error rate, and request duration, also called &lt;a href=&#34;https://www.weave.works/blog/the-red-method-key-metrics-for-microservices-architecture/&#34;&gt;RED&lt;/a&gt;. Metrics are good for quickly identifying problems — e.g., an excessive error rate or an unacceptable request duration. Metrics don’t identify what caused a particular problem, only that a problem event occurred. Prometheus is one framework that provides an application the ability to record and store metrics at a relatively low cost.&lt;/p&gt;
-&lt;p&gt;Logging typically involves writing records to a file or stdout. Log records usually include things like timestamps and details about an event that occurred. For example, a log record might contain information about a malformed HTTP request and include information about the requesting client as well as information about what specifically was wrong with the request. As such, logs are very good for investigating and troubleshooting problems.&lt;/p&gt;
-&lt;p&gt;Both metrics and logging have a place in application monitoring. Metrics are relatively cheap and are easy to alert on. Metrics have a downside relative to logging in that they contain no context, just information that something happened. In contrast, logs can provide the context needed to investigate and troubleshoot a problem. The downside to logging is all that context is expensive relative to metrics. Metrics are very small, often just a label, a number, and a timestamp. Logs can be quite voluminous, and it can be relatively hard to alert from a log record.&lt;/p&gt;
-&lt;p&gt;There are a number of resources that cover the philosophy and mechanics of monitoring. Two excellent resources are Google’s SRE guide, specifically &lt;a href=&#34;https://landing.google.com/sre/sre-book/chapters/monitoring-distributed-systems/&#34;&gt;Chapter 6: Monitoring Distributed Systems&lt;/a&gt;. Weaveworks has an excellent &lt;a href=&#34;https://www.weave.works/docs/cloud/latest/tasks/monitor/best-instrumenting/&#34;&gt;write-up on using metrics with Prometheus and Grafana&lt;/a&gt;. I’ve included other resources as well at the end of this article.&lt;/p&gt;
-&lt;h2 id=&#34;articles-in-the-series&#34;&gt;Articles in the Series&lt;/h2&gt;
-&lt;p&gt;The full set of articles are:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://medium.com/better-programming/setup-a-raspberry-pi-cluster-ff484a1c6be9&#34;&gt;Set up a Raspberry Pi Cluster&lt;/a&gt; : Describes how to set up and configure a group of Raspberry Pis into a cluster. This includes defining the networking within the cluster and to an external network.&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://medium.com/better-programming/install-kubernetes-on-a-raspberry-pi-cluster-49ad9a762d08&#34;&gt;Install Kubernetes on a Raspberry Pi Cluster&lt;/a&gt;: This includes installing &amp;amp; configuring Kubernetes as well as building and deploying a simple service. This latter step involves a minimal application that can be used to test the Kubernetes cluster as well as simple external network access to the application.&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://medium.com/@RichYoungkin/install-kubernetes-ingress-on-a-raspberry-pi-cluster-e8d5086c5009&#34;&gt;Install Kubernetes Ingress on a Raspberry Pi Cluster&lt;/a&gt;: Ingress is a useful way to support external access to services inside the cluster. In this article I’ll be describe how to install, configure, and test Traefik as an Ingress Controller. This article also includes installing and configuring Helm. Helm will be used to deploy Traefik. Helm will also be used in later articles in the series.&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://medium.com/better-programming/kubernetes-application-monitoring-on-a-raspberry-pi-cluster-fa8f2762b00c&#34;&gt;Kubernetes Application Monitoring on a Raspberry Pi Cluster&lt;/a&gt; — Install Prometheus, Grafana, and an EFK (Elasticsearch/Fluentd/Kibana) as a monitoring stack. It also covers installing Telegraf on the cluster to monitor machine level metrics for hosts on the cluster. E.g., CPU load and temperature, disk usage&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://medium.com/better-programming/how-to-install-mysql-on-a-raspberry-pi-ad3f69b4a094&#34;&gt;How to Install MariaDB on a Raspberry Pi&lt;/a&gt; — The title says it all. One thing to note, MariaDB is a drop-in replacement for MySQL&lt;/li&gt;
-&lt;/ul&gt;
-</description>
+      <description>This article is about monitoring applications deployed to Kubernetes running on Raspberry Pis.</description>
     </item>
     
     <item>
@@ -45,31 +22,7 @@
       <pubDate>Wed, 26 Aug 2020 13:05:37 -0600</pubDate>
       
       <guid>https://youngkin.github.io/post/install-kuberenetes-ingress-on-a-raspberry-pi-cluster/</guid>
-      <description>&lt;blockquote&gt;
-&lt;p&gt;Photo by &lt;a href=&#34;https://unsplash.com/@tianshu?utm_source=unsplash&amp;amp;utm_medium=referral&amp;amp;utm_content=creditCopyText&#34;&gt;Tianshu Liu&lt;/a&gt; on &lt;a href=&#34;https://unsplash.com/s/photos/sailor?utm_source=unsplash&amp;amp;utm_medium=referral&amp;amp;utm_content=creditCopyText&#34;&gt;Unsplash&lt;/a&gt;&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;h2 id=&#34;the-full-text-of-this-article-can-be-found-on-mediumhttpsmediumcombetter-programminginstall-kubernetes-ingress-on-a-raspberry-pi-cluster-e8d5086c5009sourcefriends_linksk148c7e4d0c276bad20fa7f2ce902736e&#34;&gt;The full text of this article can be found on &lt;a href=&#34;https://medium.com/better-programming/install-kubernetes-ingress-on-a-raspberry-pi-cluster-e8d5086c5009?source=friends_link&amp;amp;sk=148c7e4d0c276bad20fa7f2ce902736e&#34;&gt;Medium&lt;/a&gt;&lt;/h2&gt;
-&lt;hr&gt;
-&lt;p&gt;This is the fourth article in the series described in &lt;a href=&#34;https://medium.com/better-programming/develop-and-deploy-kubernetes-applications-on-a-raspberry-pi-cluster-fbd4d97a904c?source=friends_link&amp;amp;sk=df18f8cdfc8b90aa25b2b6676346d1ec&#34;&gt;Develop and Deploy Kubernetes Applications on a Raspberry Pi Cluster&lt;/a&gt;. The previous article described &lt;a href=&#34;https://medium.com/better-programming/how-to-install-kubernetes-on-a-raspberry-pi-cluster-49ad9a762d08?source=friends_link&amp;amp;sk=d9a6bba68c42a1321dd9008a92a1a330&#34;&gt;how to install Kubernetes on a Raspberry Pi cluster&lt;/a&gt;. This article is about Kubernetes Ingress. The next article, &lt;a href=&#34;https://medium.com/better-programming/kubernetes-application-monitoring-on-a-raspberry-pi-cluster-fa8f2762b00c?source=friends_link&amp;amp;sk=81553ee8e61a841e43143a8e73c1bb9e&#34;&gt;Kubernetes Application Monitoring on a Raspberry Pi Cluster&lt;/a&gt;, covers setting up Prometheus, Grafana, and a Elasticsearch, Fluentd, and Kibana (EFK) stack on the cluster.&lt;/p&gt;
-&lt;h2 id=&#34;overview&#34;&gt;Overview&lt;/h2&gt;
-&lt;p&gt;Ingress is a mechanism that allows clients in an external network to invoke services running in our Kubernetes cluster. There are other ways of accomplishing this in Kubernetes — e.g., kubectl expose…— NodePorts and load balancers. They each have pros and cons, but suffice it to say that Kubernetes Ingress provides additional capabilities that make it more attractive. These include:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;Service discovery&lt;/li&gt;
-&lt;li&gt;Canary-release routing&lt;/li&gt;
-&lt;li&gt;Rate limiting&lt;/li&gt;
-&lt;li&gt;Circuit breaking&lt;/li&gt;
-&lt;li&gt;And much more …&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&#34;articles-in-the-series&#34;&gt;Articles in the Series&lt;/h2&gt;
-&lt;p&gt;The full set of articles are:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://medium.com/better-programming/setup-a-raspberry-pi-cluster-ff484a1c6be9&#34;&gt;Set up a Raspberry Pi Cluster&lt;/a&gt; : Describes how to set up and configure a group of Raspberry Pis into a cluster. This includes defining the networking within the cluster and to an external network.&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://medium.com/better-programming/install-kubernetes-on-a-raspberry-pi-cluster-49ad9a762d08&#34;&gt;Install Kubernetes on a Raspberry Pi Cluster&lt;/a&gt;: This includes installing &amp;amp; configuring Kubernetes as well as building and deploying a simple service. This latter step involves a minimal application that can be used to test the Kubernetes cluster as well as simple external network access to the application.&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://medium.com/@RichYoungkin/install-kubernetes-ingress-on-a-raspberry-pi-cluster-e8d5086c5009&#34;&gt;Install Kubernetes Ingress on a Raspberry Pi Cluster&lt;/a&gt;: Ingress is a useful way to support external access to services inside the cluster. In this article I’ll be describe how to install, configure, and test Traefik as an Ingress Controller. This article also includes installing and configuring Helm. Helm will be used to deploy Traefik. Helm will also be used in later articles in the series.&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://medium.com/better-programming/kubernetes-application-monitoring-on-a-raspberry-pi-cluster-fa8f2762b00c&#34;&gt;Kubernetes Application Monitoring on a Raspberry Pi Cluster&lt;/a&gt; — Install Prometheus, Grafana, and an EFK (Elasticsearch/Fluentd/Kibana) as a monitoring stack. It also covers installing Telegraf on the cluster to monitor machine level metrics for hosts on the cluster. E.g., CPU load and temperature, disk usage&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://medium.com/better-programming/how-to-install-mysql-on-a-raspberry-pi-ad3f69b4a094&#34;&gt;How to Install MariaDB on a Raspberry Pi&lt;/a&gt; — The title says it all. One thing to note, MariaDB is a drop-in replacement for MySQL&lt;/li&gt;
-&lt;/ul&gt;
-</description>
+      <description>This article describes how to setup Kubernetes Ingress using the Traefik ingress controller.</description>
     </item>
     
     <item>
@@ -78,23 +31,7 @@
       <pubDate>Wed, 26 Aug 2020 13:04:50 -0600</pubDate>
       
       <guid>https://youngkin.github.io/post/install-kubernetes-on-a-respberry-pi-cluster/</guid>
-      <description>&lt;blockquote&gt;
-&lt;p&gt;Photo by &lt;a href=&#34;https://unsplash.com/@flaviewxvx?utm_source=unsplash&amp;amp;utm_medium=referral&amp;amp;utm_content=creditCopyText&#34;&gt;Flavio Gasperini&lt;/a&gt; on &lt;a href=&#34;https://unsplash.com/s/photos/sailor?utm_source=unsplash&amp;amp;utm_medium=referral&amp;amp;utm_content=creditCopyText&#34;&gt;Unsplash&lt;/a&gt;&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;h2 id=&#34;the-full-text-of-this-article-can-be-found-on-mediumhttpsmediumcombetter-programminghow-to-install-kubernetes-on-a-raspberry-pi-cluster-49ad9a762d08sourcefriends_linkskd9a6bba68c42a1321dd9008a92a1a330&#34;&gt;The full text of this article can be found on &lt;a href=&#34;https://medium.com/better-programming/how-to-install-kubernetes-on-a-raspberry-pi-cluster-49ad9a762d08?source=friends_link&amp;amp;sk=d9a6bba68c42a1321dd9008a92a1a330&#34;&gt;Medium&lt;/a&gt;&lt;/h2&gt;
-&lt;hr&gt;
-&lt;p&gt;This is the third article in the series described in &lt;a href=&#34;https://medium.com/better-programming/develop-and-deploy-kubernetes-applications-on-a-raspberry-pi-cluster-fbd4d97a904c?source=friends_link&amp;amp;sk=df18f8cdfc8b90aa25b2b6676346d1ec&#34;&gt;Develop and Deploy Kubernetes Applications on a Raspberry Pi Cluster&lt;/a&gt;. The previous article covered &lt;a href=&#34;https://medium.com/better-programming/how-to-set-up-a-raspberry-pi-cluster-ff484a1c6be9?source=friends_link&amp;amp;sk=c679e5274ed39a5002e2b9ac97c966c7&#34;&gt;setting up a Raspberry Pi cluster&lt;/a&gt;. The next article is &lt;a href=&#34;https://medium.com/better-programming/install-kubernetes-ingress-on-a-raspberry-pi-cluster-e8d5086c5009?source=friends_link&amp;amp;sk=148c7e4d0c276bad20fa7f2ce902736e&#34;&gt;How to Install Kubernetes Ingress on a Raspberry Pi Cluster&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;This article is where the rubber meets the road, getting a fully operational, multi-node, Kubernetes cluster up and running on a Raspberry Pi cluster. This article assumes basic familiarity with Kubernetes.&lt;/p&gt;
-&lt;h2 id=&#34;articles-in-the-series&#34;&gt;Articles in the Series&lt;/h2&gt;
-&lt;p&gt;The full set of articles are:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://medium.com/better-programming/setup-a-raspberry-pi-cluster-ff484a1c6be9&#34;&gt;Set up a Raspberry Pi Cluster&lt;/a&gt; : Describes how to set up and configure a group of Raspberry Pis into a cluster. This includes defining the networking within the cluster and to an external network.&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://medium.com/better-programming/install-kubernetes-on-a-raspberry-pi-cluster-49ad9a762d08&#34;&gt;Install Kubernetes on a Raspberry Pi Cluster&lt;/a&gt;: This includes installing &amp;amp; configuring Kubernetes as well as building and deploying a simple service. This latter step involves a minimal application that can be used to test the Kubernetes cluster as well as simple external network access to the application.&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://medium.com/@RichYoungkin/install-kubernetes-ingress-on-a-raspberry-pi-cluster-e8d5086c5009&#34;&gt;Install Kubernetes Ingress on a Raspberry Pi Cluster&lt;/a&gt;: Ingress is a useful way to support external access to services inside the cluster. In this article I’ll be describe how to install, configure, and test Traefik as an Ingress Controller. This article also includes installing and configuring Helm. Helm will be used to deploy Traefik. Helm will also be used in later articles in the series.&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://medium.com/better-programming/kubernetes-application-monitoring-on-a-raspberry-pi-cluster-fa8f2762b00c&#34;&gt;Kubernetes Application Monitoring on a Raspberry Pi Cluster&lt;/a&gt; — Install Prometheus, Grafana, and an EFK (Elasticsearch/Fluentd/Kibana) as a monitoring stack. It also covers installing Telegraf on the cluster to monitor machine level metrics for hosts on the cluster. E.g., CPU load and temperature, disk usage&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://medium.com/better-programming/how-to-install-mysql-on-a-raspberry-pi-ad3f69b4a094&#34;&gt;How to Install MariaDB on a Raspberry Pi&lt;/a&gt; — The title says it all. One thing to note, MariaDB is a drop-in replacement for MySQL&lt;/li&gt;
-&lt;/ul&gt;
-</description>
+      <description>Want to install Kubernetes on a Raspberry Pi cluster? Read on to find out how.</description>
     </item>
     
     <item>
@@ -103,23 +40,7 @@
       <pubDate>Wed, 26 Aug 2020 01:01:31 -0600</pubDate>
       
       <guid>https://youngkin.github.io/post/develop_and_deploy_kubernetes_applications_on_a_raspberry_pi_cluster/</guid>
-      <description>&lt;p&gt;Want to set up a Kubernetes lab, but don&amp;rsquo;t want use Minikube or spend a lot of money on hardware. This is the first post in a series that describes how to set up a complete Kubernetes cluster on a cluster of Raspberry Pis. This will include topics such as setting up a logging infrastructure, monitoring, Ingress, and other platform level capabilities.&lt;/p&gt;
-&lt;hr&gt;
-&lt;h2 id=&#34;the-full-text-of-this-article-can-be-found-on-mediumhttpsmediumcombetter-programmingdevelop-and-deploy-kubernetes-applications-on-a-raspberry-pi-cluster-fbd4d97a904csourcefriends_linkskdf18f8cdfc8b90aa25b2b6676346d1ec&#34;&gt;The full text of this article can be found on &lt;a href=&#34;https://medium.com/better-programming/develop-and-deploy-kubernetes-applications-on-a-raspberry-pi-cluster-fbd4d97a904c?source=friends_link&amp;amp;sk=df18f8cdfc8b90aa25b2b6676346d1ec&#34;&gt;Medium&lt;/a&gt;&lt;/h2&gt;
-&lt;hr&gt;
-&lt;h1 id=&#34;overview&#34;&gt;Overview&lt;/h1&gt;
-&lt;p&gt;This article is the first in a series that follows my journey to develop and deploy Kubernetes and a sample microservices style application on a Raspberry Pi cluster.&lt;/p&gt;
-&lt;p&gt;Parts of this series are intended to be a meta-resource for developing and deploying Kubernetes applications on a Raspberry Pi cluster. Common tasks such as deploying an OS on Raspberry Pi are readily available in other resources. I won’t replicate information in this series. This series will provide details in areas that aren’t not present in other sources.&lt;/p&gt;
-&lt;p&gt;Tasks in this series that weren’t performed on a Raspberry Pi (e.g. the initial setup and various admin tasks) were performed on a MacBook Pro running Catalina.&lt;/p&gt;
-&lt;h2 id=&#34;articles-in-the-series&#34;&gt;Articles in the Series&lt;/h2&gt;
-&lt;p&gt;The full set of articles are:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://medium.com/better-programming/setup-a-raspberry-pi-cluster-ff484a1c6be9&#34;&gt;Set up a Raspberry Pi Cluster&lt;/a&gt; : Describes how to set up and configure a group of Raspberry Pis into a cluster. This includes defining the networking within the cluster and to an external network.&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://medium.com/better-programming/install-kubernetes-on-a-raspberry-pi-cluster-49ad9a762d08&#34;&gt;Install Kubernetes on a Raspberry Pi Cluster&lt;/a&gt;: This includes installing &amp;amp; configuring Kubernetes as well as building and deploying a simple service. This latter step involves a minimal application that can be used to test the Kubernetes cluster as well as simple external network access to the application.&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://medium.com/@RichYoungkin/install-kubernetes-ingress-on-a-raspberry-pi-cluster-e8d5086c5009&#34;&gt;Install Kubernetes Ingress on a Raspberry Pi Cluster&lt;/a&gt;: Ingress is a useful way to support external access to services inside the cluster. In this article I’ll be describe how to install, configure, and test Traefik as an Ingress Controller. This article also includes installing and configuring Helm. Helm will be used to deploy Traefik. Helm will also be used in later articles in the series.&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://medium.com/better-programming/kubernetes-application-monitoring-on-a-raspberry-pi-cluster-fa8f2762b00c&#34;&gt;Kubernetes Application Monitoring on a Raspberry Pi Cluster&lt;/a&gt; — Install Prometheus, Grafana, and an EFK (Elasticsearch/Fluentd/Kibana) as a monitoring stack. It also covers installing Telegraf on the cluster to monitor machine level metrics for hosts on the cluster. E.g., CPU load and temperature, disk usage&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://medium.com/better-programming/how-to-install-mysql-on-a-raspberry-pi-ad3f69b4a094&#34;&gt;How to Install MariaDB on a Raspberry Pi&lt;/a&gt; — The title says it all. One thing to note, MariaDB is a drop-in replacement for MySQL&lt;/li&gt;
-&lt;/ul&gt;</description>
+      <description>This is the first post in a series that describes how to set up a Kubernetes cluster on a cluster of Raspberry Pis.</description>
     </item>
     
   </channel>
